@@ -12,7 +12,14 @@
     It takes the data from the input then puts it to 128x128 canvas.
 </div>
 <hr>
-<input type="text" title="Type Enter to submit">
+<input type="text" title="Type Enter to submit"><button>Enter</button>
+<script>
+    document.querySelector("button").addEventListener("click", event => {
+        document.querySelector("input").dispatchEvent(new KeyboardEvent("keypress", {
+            key: "Enter"
+        }));
+    });
+</script>
 <hr>
 </body>
 </html>
