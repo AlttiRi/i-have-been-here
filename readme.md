@@ -23,3 +23,7 @@ Add:
     }
 }
 ```
+
+---
+
+https://alttiri.github.io/demo-extension/old/char-to-canvas-demo/canvas.html
