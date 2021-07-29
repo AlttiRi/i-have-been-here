@@ -1,4 +1,7 @@
 
+# demo-extension
+
+
 It's the demo extension that I use for some tests.
 
 ---
