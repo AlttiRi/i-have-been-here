@@ -40,7 +40,7 @@ async function toggle(enabled) {
 }
 
 export function enableBookmarksOpenerMode() {
-    Store.bookmarkOpenerMode.onValueOnce(checked => {
+    Store.bookmarkOpenerMode.onValueOnce(async (checked) => {
         chrome.contextMenus.create({
             id: "bookmark_opener",
             title: "Bookmark opener mode",
@@ -48,9 +48,12 @@ export function enableBookmarksOpenerMode() {
             type: "checkbox",
             checked
         });
-    });
-    Store.bookmarkOpenerMode.onValue(value => {
-        void toggle(value);
+        if (checked) {
+            await enable();
+        }
+        Store.bookmarkOpenerMode.onChanged(value => {
+            void toggle(value);
+        });
     });
     chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         if (info.menuItemId === "bookmark_opener") {

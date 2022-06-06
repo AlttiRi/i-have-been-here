@@ -30,7 +30,7 @@ class Store {
     // }
 
     /** @type {ObservableStoreLocalProperty} */
-    static bookmarkOpenerMode = new ObservableAsyncPropertyClass("bookmarkOpenerMode");
+    static bookmarkOpenerMode = new ObservableAsyncPropertyClass("bookmarkOpenerMode", false);
 
 
     /** @type {ObservableProperty} */

@@ -1,6 +1,6 @@
 {
-    "name": "xtenssn",
-    "version": "1.0.0",
+    "name": "demo-extension",
+    "version": "1.1.0",
     "type": "module",
     "devDependencies": {
         "@types/chrome": "0.0.142"

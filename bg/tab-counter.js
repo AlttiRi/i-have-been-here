@@ -70,8 +70,14 @@ export function updateIcons(tabs) {
     console.log("setIcons", tabs);
     tabs.forEach(async tab => {
         // todo refactor: some code related only to visited.js
-        const bom = await Store.bookmarkOpenerMode;
-        if (!bom) {
+        Store.bookmarkOpenerMode.onValue(async (bom) => {
+            if (bom) {
+                chrome.browserAction.setIcon({
+                    path: imgPath,
+                    tabId: tab.id
+                });
+                return;
+            }
             const visits = await getAllVisitUrls();
             if (visits.includes(tab.url)) {
                 chrome.browserAction.setIcon({
@@ -79,12 +85,7 @@ export function updateIcons(tabs) {
                     path: chrome.runtime.getURL("images/mark.png"),
                     tabId: tab.id
                 });
-                return;
             }
-        }
-        chrome.browserAction.setIcon({
-            path: imgPath,
-            tabId: tab.id
         });
     });
 }
