@@ -1,11 +1,9 @@
 import {
     emojiToDataURL,
     emojiToBlobURL,
-    extensionName,
-    inIncognitoContext,
     logPicture,
-    emojiToImageData, getActiveTabId
 } from "./util.js";
+import {extensionName, inIncognitoContext} from "./util-ext.js";
 import {countTabs} from "./bg/tab-counter.js"
 import {changeIconOnMessage} from "./bg/change-icon-on-message.js"
 import {logImageOnMessage} from "./bg/log-image.js"

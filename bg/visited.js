@@ -1,8 +1,9 @@
-import {dateToDayDateString, emojiToImageData, getActiveTab} from "../util.js";
+import {getActiveTab}        from "../util-ext-bg.js";
+import {dateToDayDateString} from "../util.js";
 import {updateIcons} from "./tab-counter.js";
 
 const messageTextAdd = "add-visited";
-const messageTextIs = "is-visited";
+const messageTextIs  = "is-visited";
 
 
 export function visitedBtnHandler() {

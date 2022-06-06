@@ -1,4 +1,4 @@
-import {extensionName} from "../util.js";
+import {extensionName} from "../util-ext.js";
 
 console.log(`[${extensionName}] background.js loaded`);
 

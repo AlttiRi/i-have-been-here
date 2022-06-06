@@ -1,4 +1,5 @@
-import {captureVisibleTab, executeScript, getActiveTab, getActiveTabId, logPicture} from "../util.js";
+import {captureVisibleTab, executeScript, getActiveTab} from "../util-ext-bg.js";
+import {logPicture} from "../util.js";
 
 export function logImageOnMessage(messageText) {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

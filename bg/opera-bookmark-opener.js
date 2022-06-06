@@ -1,4 +1,4 @@
-import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util.js";
+import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
 import {Store} from "./store.js";
 
 async function openBookmarks() {

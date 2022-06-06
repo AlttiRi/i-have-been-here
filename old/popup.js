@@ -1,4 +1,4 @@
-import {createBackgroundTab, focusOrCreateNewTab, queryTabs, openOptions} from "../util.js"
+import {createBackgroundTab, focusOrCreateNewTab, queryTabs, openOptions} from "../util-ext-bg.js"
 
 const extensionName = chrome.i18n.getMessage("extension_name");
 const text = document.querySelector("#text");

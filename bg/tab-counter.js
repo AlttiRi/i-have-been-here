@@ -1,7 +1,7 @@
 // Count tabs with separation for incognito and normal mode
 // + changes icon
 
-import {emojiToImageData, queryTabs} from "../util.js";
+import {queryTabs} from "../util-ext-bg.js";
 import {getAllVisitUrls} from "./visited.js";
 import {Store} from "./store.js";
 

@@ -1,6 +1,7 @@
-import {inIncognitoContext, logPicture, sendMessage} from "./util.js";
+import {logPicture} from "./util.js";
+import {sendMessage, inIncognitoContext} from "./util-ext.js";
 
-console.log("popup...");
+console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);
 
 

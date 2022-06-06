@@ -1,4 +1,6 @@
-import {emojiToImageData, inIncognitoContext, getActiveTabId} from "../util.js";
+import {getActiveTabId}     from "../util-ext-bg.js";
+import {inIncognitoContext} from "../util-ext.js";
+import {emojiToImageData}   from "../util.js";
 
 export function changeIconOnMessage(onMessage) {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
