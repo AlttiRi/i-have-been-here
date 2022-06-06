@@ -17,11 +17,11 @@ Remove:
 
 Add:
 ```
-"browser_specific_settings": {
-    "gecko": {
-        "id": "Demo@Demo"
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "Demo@Demo"
+        }
     }
-}
 ```
 
 ---
