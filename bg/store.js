@@ -15,22 +15,11 @@ const LS = hoistLS();
 
 class Store {
 
-    //todo
-    // /** @type {boolean} */
-    // static bookmarkOpenerModeProperty;
-    // UPD: Well, I forgot for that I wanted to do it
-
-    // /** @return {Promise<boolean>} */
-    // static get bookmarkOpenerMode() {
-    //     return getFromStoreLocal("bookmarkOpenerMode");
-    // }
-    // // Well, it does NOT return a promise (since it's a setter)
-    // static set bookmarkOpenerMode(value) {
-    //     return setToStoreLocal("bookmarkOpenerMode", value);
-    // }
-
     /** @type {ObservableStoreLocalProperty} */
     static bookmarkOpenerMode = new ObservableAsyncPropertyClass("bookmarkOpenerMode", false);
+
+    /** @type {ObservableStoreLocalProperty} */
+    static download_shelf = new ObservableAsyncPropertyClass("download_shelf", true);
 
 
     /** @type {ObservableProperty} */
@@ -42,12 +31,6 @@ class Store {
 
     // just a test
     static text = new LSObservablePropertyClass("text", "text");
-
-    // /** @type {LSObservableProperty} */
-    // static download_shelf = new LSObservablePropertyClass(true, "download_shelf");
-
-    /** @type {ObservableStoreLocalProperty} */
-    static download_shelf = new ObservableAsyncPropertyClass("download_shelf", true);
 
 
     /**
