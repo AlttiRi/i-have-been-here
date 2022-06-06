@@ -49,7 +49,7 @@ export function registerContextMenu(features = ["reload"]) {
                 checked
             });
         });
-        Store.on(Store.download_shelf, value => {
+        Store.download_shelf.onValue(value => {
             console.log("Store.download_shelf changed", value);
             chrome.downloads.setShelfEnabled(value);
         });
