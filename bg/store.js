@@ -43,8 +43,12 @@ class Store {
     // just a test
     static text = new LSObservablePropertyClass("text", "text");
 
-    /** @type {LSObservableProperty} */
-    static download_shelf = new LSObservablePropertyClass(true, "download_shelf");
+    // /** @type {LSObservableProperty} */
+    // static download_shelf = new LSObservablePropertyClass(true, "download_shelf");
+
+    /** @type {ObservableStoreLocalProperty} */
+    static download_shelf = new ObservableAsyncPropertyClass("download_shelf", true);
+
 
     /**
      * @typedef {ObservableProperty} property
@@ -119,9 +123,13 @@ function hoistObservableStoreLocalPropertyClass() {
         _valueOneTimeListeners = [];
         _ready = false;
         _value;
-        constructor(key) {
+        constructor(key, defaultValue) {
             this._key = key;
-            getFromStoreLocal(key).then(value => {
+            getFromStoreLocal(key).then(async (value) => {
+                if (value === undefined && defaultValue !== undefined) {
+                    await setToStoreLocal(key, defaultValue);
+                    value = defaultValue;
+                }
                 this._onValueHandler(value);
                 this._ready = true;
             });

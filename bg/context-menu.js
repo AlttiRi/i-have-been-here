@@ -40,27 +40,25 @@ export function registerContextMenu(features = ["reload"]) {
 
     if (features.includes("download_shelf") && chrome.downloads.setShelfEnabled) {
         const id = "download_shelf";
-        let checked = Store.download_shelf.value;
-
+        Store.download_shelf.onValueOnce(checked => {
+            chrome.contextMenus.create({
+                id: "download_shelf",
+                title: "Enable download shelf",
+                contexts: ["browser_action"],
+                type: "checkbox",
+                checked
+            });
+        });
         Store.on(Store.download_shelf, value => {
             console.log("Store.download_shelf changed", value);
             chrome.downloads.setShelfEnabled(value);
         });
-
-        chrome.contextMenus.create({
-            id: "download_shelf",
-            title: "Enable download shelf",
-            contexts: ["browser_action"],
-            type: "checkbox",
-            checked
-        });
-
-        chrome.downloads.setShelfEnabled(checked);
         chrome.contextMenus.onClicked.addListener((info, tab) => {
             if (info.menuItemId === id) {
-                checked = !checked;
-                Store.download_shelf = checked;
-                info.checked = checked;
+                Store.download_shelf.onValueOnce(checked => {
+                    info.checked = checked;
+                });
+                Store.download_shelf.value = !info.checked;
             }
         });
     }
