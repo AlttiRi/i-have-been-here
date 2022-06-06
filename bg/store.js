@@ -7,8 +7,9 @@ const defaultPopup = manifest.browser_action.default_popup;
 
 console.log("Store");
 
-const ObservablePropertyClass  = hoistObservablePropertyClass();
-const LSObservablePropertyClass = hoistLSObservableProperty(ObservablePropertyClass);
+const ObservablePropertyClass      = hoistObservablePropertyClass();
+const ObservableAsyncPropertyClass = hoistObservableStoreLocalPropertyClass();
+const LSObservablePropertyClass    = hoistLSObservableProperty(ObservablePropertyClass);
 const LS = hoistLS();
 
 
@@ -19,14 +20,17 @@ class Store {
     // static bookmarkOpenerModeProperty;
     // UPD: Well, I forgot for that I wanted to do it
 
-    /** @return {Promise<boolean>} */
-    static get bookmarkOpenerMode() {
-        return getFromStoreLocal("bookmarkOpenerMode");
-    }
-    // Well, it does NOT return a promise (since it's a setter)
-    static set bookmarkOpenerMode(value) {
-        return setToStoreLocal("bookmarkOpenerMode", value);
-    }
+    // /** @return {Promise<boolean>} */
+    // static get bookmarkOpenerMode() {
+    //     return getFromStoreLocal("bookmarkOpenerMode");
+    // }
+    // // Well, it does NOT return a promise (since it's a setter)
+    // static set bookmarkOpenerMode(value) {
+    //     return setToStoreLocal("bookmarkOpenerMode", value);
+    // }
+
+    /** @type {ObservableStoreLocalProperty} */
+    static bookmarkOpenerMode = new ObservableAsyncPropertyClass("bookmarkOpenerMode");
 
 
     /** @type {ObservableProperty} */
@@ -102,6 +106,61 @@ function hoistObservablePropertyClass() {
         }
     }
     return ObservableProperty;
+}
+
+function hoistObservableStoreLocalPropertyClass() {
+    /**
+     * @typedef {*} T
+     * @type ObservableProperty<T>
+     */
+    class ObservableStoreLocalProperty {
+        _listeners = [];
+        _valueListeners = [];
+        _valueOneTimeListeners = [];
+        _ready = false;
+        _value;
+        constructor(key) {
+            this._key = key;
+            getFromStoreLocal(key).then(value => {
+                this._onValueHandler(value);
+                this._ready = true;
+            });
+        }
+        _onValueHandler(value) {
+            this._value = value;
+            this._listeners.forEach(listener => listener(value));
+            this._valueListeners.forEach(listener => {
+                listener(value);
+                this._listeners.push(listener);
+            });
+            this._valueOneTimeListeners.forEach(listener => listener(value));
+            this._valueListeners = [];
+            this._valueOneTimeListeners = [];
+        }
+        set value(value) {
+            void setToStoreLocal(this._key, value).then(() => {
+                this._onValueHandler(value);
+            });
+            console.log("setter");
+        }
+        onValue(listener) {
+            this._valueListeners.push(listener);
+            if (this._ready) {
+                listener(this._value);
+            }
+        }
+        onValueOnce(listener) {
+            if (this._ready) {
+                listener(this._value);
+            } else {
+                this._valueOneTimeListeners.push(listener);
+            }
+        }
+        onChanged(listener) {
+            this._listeners.push(listener);
+        }
+    }
+    return ObservableStoreLocalProperty;
 }
 
 function hoistLSObservableProperty(ObservableProperty) {
