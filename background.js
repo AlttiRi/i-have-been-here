@@ -35,7 +35,8 @@ logPicture(emojiToDataURL("🔲"));
 
 chrome.storage.local.get(console.log);
 chrome.bookmarks.getTree(console.log);
-// chrome.bookmarks.getTree(o => console.log(JSON.stringify(o)));
+// chrome.storage.local.get(store => console.log(JSON.stringify(store, null, " ")));
+// chrome.bookmarks.getTree(bookmarks => console.log(JSON.stringify(bookmarks)));
 
 
 

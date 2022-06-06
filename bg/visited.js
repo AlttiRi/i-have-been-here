@@ -1,6 +1,7 @@
 import {getActiveTab}        from "../util-ext-bg.js";
 import {dateToDayDateString} from "../util.js";
 import {updateIcons} from "./tab-counter.js";
+import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
 
 const messageTextAdd = "add-visited";
 const messageTextIs  = "is-visited";
@@ -30,13 +31,7 @@ export async function getAllVisitUrls() {
 }
 
 async function getVisits() {
-    const key = "visited";
-    const urlsObject = await new Promise(resolve => {
-        chrome.storage.local.get([key], (res) => {
-            resolve(res[key]);
-        });
-    }) || {};
-    return urlsObject;
+    return await getFromStoreLocal("visited") || {};
 }
 async function getVisitsForActiveTabUrl() {
     const tab = await getActiveTab();
@@ -51,11 +46,8 @@ async function getVisitsForActiveTabUrl() {
 }
 
 async function updateVisits({visits, urlsObject, url}) {
-    const key = "visited";
     Object.assign(urlsObject, {[url]: visits});
-    await new Promise(resolve => {
-        chrome.storage.local.set({[key]: urlsObject}, () => resolve());
-    });
+    await setToStoreLocal("visited", urlsObject);
 }
 
 async function takeVisited(sendResponse) {

@@ -44,6 +44,7 @@ export function registerContextMenu(features = ["reload"]) {
 
         Store.on(Store.download_shelf, value => {
             console.log("Store.download_shelf changed", value);
+            chrome.downloads.setShelfEnabled(value);
         });
 
         chrome.contextMenus.create({
@@ -60,7 +61,6 @@ export function registerContextMenu(features = ["reload"]) {
                 checked = !checked;
                 Store.download_shelf = checked;
                 info.checked = checked;
-                chrome.downloads.setShelfEnabled(checked);
             }
         });
     }

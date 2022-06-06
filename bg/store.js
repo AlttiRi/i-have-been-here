@@ -1,3 +1,5 @@
+import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
+
 const manifest = chrome.runtime.getManifest();
 const defaultIcon = manifest.browser_action.default_icon;
 const defaultTitle = manifest.browser_action.default_title;
@@ -19,17 +21,11 @@ class Store {
 
     /** @return {Promise<boolean>} */
     static get bookmarkOpenerMode() {
-        return new Promise(resolve => {
-            chrome.storage.local.get(["bookmarkOpenerMode"], ({bookmarkOpenerMode}) => {
-                resolve(bookmarkOpenerMode);
-            });
-        });
+        return getFromStoreLocal("bookmarkOpenerMode");
     }
     // Well, it does NOT return a promise (since it's a setter)
     static set bookmarkOpenerMode(value) {
-        return new Promise(resolve => {
-            chrome.storage.local.set({bookmarkOpenerMode: value}, () => resolve());
-        });
+        return setToStoreLocal("bookmarkOpenerMode", value);
     }
 
 
