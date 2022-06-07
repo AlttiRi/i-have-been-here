@@ -100,3 +100,34 @@ export function dateToDayDateString(dateValue, utc = true) {
     return year + "." + pad(month) + "." + pad(date);
 }
 
+export class LS {
+    static getItem(name, defaultValue) {
+        const value = localStorage.getItem(name);
+        if (value === undefined) {
+            return undefined;
+        }
+        if (value === null) { // when there is no such item
+            LS.setItem(name, defaultValue);
+            return defaultValue;
+        }
+        return JSON.parse(value);
+    }
+    static setItem(name, value) {
+        localStorage.setItem(name, JSON.stringify(value));
+    }
+    static removeItem(name) {
+        localStorage.removeItem(name);
+    }
+    static pushItem(name, value) {
+        const array = LS.getItem(name, []);
+        array.push(value);
+        LS.setItem(name, array);
+    }
+    static popItem(name, value) {
+        const array = LS.getItem(name, []);
+        if (array.indexOf(value) !== -1) {
+            array.splice(array.indexOf(value), 1);
+            LS.setItem(name, array);
+        }
+    }
+}

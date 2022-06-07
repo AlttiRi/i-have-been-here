@@ -2,6 +2,7 @@ import {getActiveTab}        from "../util-ext-bg.js";
 import {dateToDayDateString} from "../util.js";
 import {updateIcons} from "./tab-counter.js";
 import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
+import {ComputedProperty, ObservableProperty, ObservableStoreLocalProperty} from "./ObservableProperies.js";
 
 const messageTextAdd = "add-visited";
 const messageTextIs  = "is-visited";
@@ -19,6 +20,14 @@ export function visitedBtnHandler() {
         }
     });
 }
+
+// todo?
+// /** @type {ObservableStoreLocalProperty} */
+// const visits = new ObservableStoreLocalProperty("visited", {});
+// /** @type {ComputedProperty} */
+// export const allVisitedUrls = new ComputedProperty(visits, visitsValue => {
+//     return Object.keys(visitsValue);
+// });
 
 export async function getAllVisitUrls() {
     const urlsObject = await getVisits()
