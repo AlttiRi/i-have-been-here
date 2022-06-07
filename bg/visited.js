@@ -29,6 +29,17 @@ export function visitedBtnHandler() {
 //     return Object.keys(visitsValue);
 // });
 
+export async function visitedIconDataIfRequired(tabUrl) {
+    const visits = await getAllVisitUrls();
+    if (visits.includes(tabUrl)) {
+        return {
+            // imageData: emojiToImageData("✅"),
+            path: chrome.runtime.getURL("images/mark.png")
+        };
+    }
+    return null;
+}
+
 export async function getAllVisitUrls() {
     const urlsObject = await getVisits()
     return Object.keys(urlsObject);

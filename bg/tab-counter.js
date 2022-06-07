@@ -2,7 +2,7 @@
 // + changes icon
 
 import {queryTabs} from "../util-ext-bg.js";
-import {getAllVisitUrls} from "./visited.js";
+import {visitedIconDataIfRequired} from "./visited.js";
 import {Store} from "./store.js";
 
 
@@ -69,23 +69,17 @@ function setDefaultIcon(path) {
 export function updateIcons(tabs) {
     console.log("setIcons", tabs);
     tabs.forEach(async tab => {
-        // todo refactor: some code related only to visited.js
+        // todo? a separate file with registration of icon changers
         Store.bookmarkOpenerMode.onValue(async (bom) => {
-            if (bom) {
-                chrome.browserAction.setIcon({
-                    path: imgPath,
-                    tabId: tab.id
-                });
-                return;
+            let tabCounterIconData = {path: imgPath};
+            let other = {};
+            if (!bom) {
+                other = await visitedIconDataIfRequired(tab.url);
             }
-            const visits = await getAllVisitUrls();
-            if (visits.includes(tab.url)) {
-                chrome.browserAction.setIcon({
-                    // imageData: emojiToImageData("✅"),
-                    path: chrome.runtime.getURL("images/mark.png"),
-                    tabId: tab.id
-                });
-            }
+            chrome.browserAction.setIcon({
+                ...(other || tabCounterIconData),
+                tabId: tab.id
+            });
         });
     });
 }
