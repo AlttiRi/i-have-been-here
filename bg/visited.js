@@ -9,19 +9,14 @@ const messageTextIs  = "is-visited";
 
 export function visitedBtnHandler() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message !== messageTextAdd) {
-            return;
+        if (message === messageTextAdd) {
+            void asyncHandler(sendResponse);
+            return true;
+        } else
+        if (message === messageTextIs) {
+            void takeVisited(sendResponse);
+            return true;
         }
-        asyncHandler(sendResponse).then(/*nothing*/);
-        return true;
-    });
-
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message !== messageTextIs) {
-            return;
-        }
-        takeVisited(sendResponse).then(/*nothing*/);
-        return true;
     });
 }
 

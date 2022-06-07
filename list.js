@@ -9,7 +9,7 @@ async function main() {
     const list = document.querySelector("#list");
 
     /** @type {Object} */
-    const visited = await getFromStoreLocal("visited") || {};
+    const visited = await getFromStoreLocal("visited");
     for (const entry of Object.entries(visited)) {
         const item = createListItem(entry);
         list.append(item);
