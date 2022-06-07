@@ -9,6 +9,10 @@ import {Store} from "./store.js";
  */
 export function registerContextMenu(features = ["reload"]) {
     if (features.includes("reload")) {
+        if (!chrome.runtime.getManifest().permissions.includes("contextMenus")) {
+            console.error(`No "contextMenus" permission!`);
+            return;
+        }
         const id = "reload_extension";
         chrome.contextMenus.create({
             id,
@@ -38,7 +42,11 @@ export function registerContextMenu(features = ["reload"]) {
         });
     }
 
-    if (features.includes("download_shelf") && chrome.downloads.setShelfEnabled) {
+    if (features.includes("download_shelf")) {
+        if (!chrome.downloads?.setShelfEnabled) {
+            console.error(`No "downloads", "downloads.shelf" permissions!`);
+            return;
+        }
         const id = "download_shelf";
         Store.download_shelf.onValueOnce(checked => {
             chrome.contextMenus.create({
