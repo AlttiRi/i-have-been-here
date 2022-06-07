@@ -72,7 +72,7 @@ export function updateIcons(tabs) {
         // todo? a separate file with registration of icon changers
         Store.bookmarkOpenerMode.onValue(async (bom) => {
             let tabCounterIconData = {path: imgPath};
-            let other = {};
+            let other = null;
             if (!bom) {
                 other = await visitedIconDataIfRequired(tab.url);
             }
