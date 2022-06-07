@@ -1,7 +1,7 @@
 import {LSObservableProperty, ObservableProperty, ObservableStoreLocalProperty} from "./ObservableProperies.js";
 
 const manifest = chrome.runtime.getManifest();
-const defaultIcon = manifest.browser_action.default_icon;
+const defaultIcon  = manifest.browser_action.default_icon;
 const defaultTitle = manifest.browser_action.default_title;
 const defaultPopup = manifest.browser_action.default_popup;
 

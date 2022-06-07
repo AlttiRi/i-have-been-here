@@ -26,12 +26,14 @@ export class ObservableAsyncProperty {
     }
 
     /** @abstract */
-    _asyncValueSetter = value => Promise.resolve();
+    _asyncValueSetter(value) {
+        return Promise.resolve();
+    }
     set value(value) {
+        console.log("setter", value);
         void this._asyncValueSetter(value).then(() => {
             this._onValueHandler(value);
         });
-        console.log("setter");
     }
     onValue(listener) {
         this._listeners.push(listener);
