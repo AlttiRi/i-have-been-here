@@ -39,24 +39,29 @@ function addListeners() {
         updateBadgesText(tabsArray);
     });
 
-    //todo if closed multiple tabs
+    //todo if closed multiple tabs? upd: it looks working
     chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
         console.log("delete", tabId, removeInfo);
-        tabsArray.splice(tabsArray.indexOf(tabsArray.find(tab => tab.id === tabId)) , 1);
-
-        updateBadgesText(tabsArray);
+        const index = tabsArray.indexOf(tabsArray.find(tab => tab.id === tabId));
+        if (index !== -1) {
+            tabsArray.splice(index, 1);
+            updateBadgesText(tabsArray);
+        } else {
+            console.error(`tab.id ${tabId} is not found`);
+        }
     });
 
     chrome.windows.onFocusChanged.addListener((windowId, filters) => {
         console.log("onFocusChanged", windowId);
-        if (windowId !== chrome.windows.WINDOW_ID_NONE) {
-            setDefaultIcon(imgPath);
-        }
+        // Does not seem to be required any more
+        // if (windowId !== chrome.windows.WINDOW_ID_NONE) { // incognito, devtools
+        //     setDefaultIcon(imgPath);
+        // }
     });
 }
 
 
-
+// Sets for all NEW (only!) windows
 function setDefaultIcon(path) {
     chrome.browserAction.setIcon({
         path
@@ -79,6 +84,10 @@ export function updateIcons(tabs) {
             chrome.browserAction.setIcon({
                 ...(other || tabCounterIconData),
                 tabId: tab.id
+            }, () => {
+                if (chrome.runtime.lastError) {
+                    console.log("[error] updateIcons", chrome.runtime.lastError.message);
+                }
             });
         });
     });
@@ -92,7 +101,7 @@ function updateBadgesText(tabs) {
             tabId: tab.id
         }, () => {
             if (chrome.runtime.lastError) { // if tab does not exists // todo debounce onclose event
-                console.log("updateBadgesText", chrome.runtime.lastError.message);
+                console.log("[error] updateBadgesText", chrome.runtime.lastError.message);
             }
         });
     });
