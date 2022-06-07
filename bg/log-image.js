@@ -1,4 +1,4 @@
-import {captureVisibleTab, executeScript, getActiveTab} from "../util-ext-bg.js";
+import {captureVisibleTab, executeScript, getActiveTab, sendMessageToTab} from "../util-ext-bg.js";
 import {logPicture} from "../util.js";
 
 export function logImageOnMessage(messageText) {
@@ -6,7 +6,7 @@ export function logImageOnMessage(messageText) {
         if (message !== messageText) {
             return;
         }
-        asyncHandler(sendResponse).then(/*nothing*/);
+        void asyncHandler(sendResponse);
         return true;
     });
 }
@@ -28,9 +28,9 @@ async function asyncHandler(sendResponse) {
         file: "content-log-image.js",
     });
 
-    chrome.tabs.sendMessage(tab.id,
-        {
-            text: "log-screenshot",
-            url: screenshotUrl
-        });
+    // Log the image in the web page console (send the message to the injected content script)
+    await sendMessageToTab(tab.id, {
+        text: "log-screenshot",
+        url: screenshotUrl
+    });
 }

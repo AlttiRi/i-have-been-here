@@ -14,6 +14,7 @@
             return;
         }
         logPicture(message.url);
+        return true;
     });
 
     function logPicture(url, scale = 0.5) {

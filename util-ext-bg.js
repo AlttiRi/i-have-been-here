@@ -28,11 +28,15 @@ export const getTitle = async function(details) {
     return new Promise(resolve => chrome.browserAction.getTitle(details, resolve));
 }
 
-
-
-export const sendMessageToTab = function(tabId, message) {
-    return new Promise(resolve => {
-        chrome.tabs.sendMessage(tabId, message, response => {
+// Requires to use `return true;`, or `sendResponse();` (since `responseCallback` is used in `chrome.tabs.sendMessage`)
+// in `chrome.runtime.onMessage.addListener` callback.
+// To prevent `The message port closed before a response was received.` error.
+export function sendMessageToTab(tabId, message) {
+    return new Promise((resolve, reject) => {
+        chrome.tabs.sendMessage(tabId, message, (response) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError.message);
+            }
             resolve(response);
         });
     });
