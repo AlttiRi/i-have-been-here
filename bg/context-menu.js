@@ -1,8 +1,9 @@
 /**
- * @typedef {"reload", "yandex_images", "download_shelf"} ContextMenuFeature
+ * @typedef {"reload", "yandex_images", "download_shelf", "open_list"} ContextMenuFeature
  */
 
 import {Store} from "./store.js";
+import {createBackgroundTab} from "../util-ext-bg.js";
 
 /**
  * @param {ContextMenuFeature[]} features
@@ -67,6 +68,21 @@ export function registerContextMenu(features = ["reload"]) {
                     info.checked = checked;
                 });
                 Store.download_shelf.value = !info.checked;
+            }
+        });
+    }
+
+    if (features.includes("open_list")) {
+        const id = "open_list";
+        chrome.contextMenus.create({
+            id,
+            title: "📃 Open list",
+            contexts: ["browser_action"],
+            type: "normal"
+        });
+        chrome.contextMenus.onClicked.addListener((info, tab) => {
+            if (info.menuItemId === id) {
+                createBackgroundTab(chrome.runtime.getURL("./list.html"));
             }
         });
     }

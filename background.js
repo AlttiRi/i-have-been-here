@@ -21,7 +21,7 @@ logImageOnMessage("take-screenshot");
 countTabs().then(/*nothing*/);
 enableBookmarksOpenerMode();
 visitedBtnHandler();
-registerContextMenu(["reload", "yandex_images", "download_shelf"]);
+registerContextMenu(["reload", "yandex_images", "download_shelf", "open_list"]);
 
 
 
