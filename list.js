@@ -45,7 +45,7 @@ function createListItem([key, value]) {
         <h3><a href="${key}" rel="noreferrer noopener">${key}</a></h3>        
         <div>${value.map(dateFormatter).join("")}</div>
     `;
-    elem.addEventListener("click", event => {
+    elem.querySelector("h3").addEventListener("click", event => {
         event.preventDefault();
         createBackgroundTab(event.target.href);
     })
