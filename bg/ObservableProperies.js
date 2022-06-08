@@ -25,7 +25,7 @@ export class ObservableAsyncProperty {
         this._oneTimeListeners = [];
     }
 
-    /** @abstract */
+    /** @default */
     _asyncValueSetter(value) {
         return Promise.resolve();
     }
