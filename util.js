@@ -1,5 +1,9 @@
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function logPicture(url, scale) {
-    logPictureAsync(url, scale).then(/*nothing*/)
+    void logPictureAsync(url, scale);
 }
 
 export async function logPictureAsync(url, scale = 0.5) {
