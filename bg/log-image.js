@@ -26,17 +26,19 @@ export function logImageOnMessage() {
 
 async function asyncHandler(sendResponse) {
     const tab = await getActiveTab();
-    const tabUrl = tab?.url;
 
     if (!tab) {
         console.log("[warning] no active tab available");
-        sendResponse({screenshotUrl: null, tabUrl});
+        sendResponse({screenshotUrl: null});
         return;
     }
 
-    const screenshotUrl = await captureVisibleTab({quality: 92});
-    sendResponse({screenshotUrl, tabUrl});
+    const tabUrl = tab.url;
+    const tabTitle = tab.title;
+    const date = Date.now();
 
+    const screenshotUrl = await captureVisibleTab({quality: 92});
+    sendResponse({screenshotUrl, tabUrl, tabTitle, date});
     logPicture(screenshotUrl);
 
     const injected = await executeScript({

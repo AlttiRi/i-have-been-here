@@ -16,13 +16,15 @@ changeIconButton.addEventListener("click", () => {
 });
 
 logScreenButton.addEventListener("click", async () => {
-	const response = await exchangeMessage("take-screenshot--message-exchange");
-	if (!response.screenshotUrl) {
+	const {screenshotUrl, tabUrl, tabTitle, date} = await exchangeMessage("take-screenshot--message-exchange");
+	if (!screenshotUrl) {
 		return;
 	}
-	logPicture(response.screenshotUrl);
-	imageElem.src = response.screenshotUrl;
-	imageElem.dataset.tabUrl = response.tabUrl;
+	logPicture(screenshotUrl);
+	imageElem.src = screenshotUrl;
+	imageElem.alt = tabTitle;
+	imageElem.dataset.tabUrl = tabUrl;
+	imageElem.dataset.date   = date;
 	saveButton.removeAttribute("disabled");
 });
 
