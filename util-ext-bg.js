@@ -28,7 +28,9 @@ export const getTitle = async function(details) {
     return new Promise(resolve => chrome.browserAction.getTitle(details, resolve));
 }
 
-// Requires to use `return true;`, or `sendResponse();` (since `responseCallback` is used in `chrome.tabs.sendMessage`)
+// Requires to use `sendResponse` (or `return true;`, with calling `sendResponse();` async way)
+// in content script listener (`chrome.runtime.onMessage.addListener`)
+// Since this function uses `responseCallback` in `chrome.tabs.sendMessage`
 // in `chrome.runtime.onMessage.addListener` callback.
 // To prevent `The message port closed before a response was received.` error.
 export function sendMessageToTab(tabId, message) {
@@ -37,6 +39,7 @@ export function sendMessageToTab(tabId, message) {
             if (chrome.runtime.lastError) {
                 reject(chrome.runtime.lastError.message);
             }
+            console.log("Tab response message:", response);
             resolve(response);
         });
     });

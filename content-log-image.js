@@ -14,7 +14,7 @@
             return;
         }
         logPicture(message.url);
-        return true;
+        sendResponse("[content script]: image logged"); // Required, since is sent from `sendMessageToTab` func
     });
 
     function logPicture(url, scale = 0.5) {
