@@ -4,5 +4,8 @@
     "type": "module",
     "devDependencies": {
         "@types/chrome": "0.0.142"
+    },
+    "dependencies": {
+        "@vue/reactivity": "3.2.37"
     }
 }
