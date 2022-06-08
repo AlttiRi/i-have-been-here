@@ -38,9 +38,13 @@ async function asyncHandler(sendResponse) {
     sendResponse({screenshotUrl, tabUrl});
 
     logPicture(screenshotUrl);
-    await executeScript({
+
+    const injected = await executeScript({
         file: "content-log-image.js",
     });
+    if (!injected) {
+        return;
+    }
 
     // Log the image in the web page console (send the message to the injected content script)
     await exchangeMessageWithTab(tab.id, {

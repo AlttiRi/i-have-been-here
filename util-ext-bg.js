@@ -59,26 +59,29 @@ export const allowedProtocols = ["http:", "https:", "file:", "ftp:"];
 
 /**
  * @param {chrome.tabs.InjectDetails} details
- * @return {Promise<any[]|*>}
+ * @return {Promise<boolean>}
  */
-export const executeScript = async function(details) {
+export async function executeScript(details) {
     const activeTab = await getActiveTab();
 
     if (!activeTab) {
         console.log("[warning] No active tab for injection.");
-        return;
+        return false;
     }
 
     if (!allowedProtocols.includes(new URL(activeTab.url).protocol)) {
         console.log("[warning] Not allowed protocol for injection.", activeTab.url);
-        return;
+        return false;
     }
 
-    return new Promise(resolve => {
+    const scriptResults = await new Promise(resolve => {
         chrome.tabs.executeScript(details, result => {
             resolve(result);
         });
     });
+    // console.log("[executeScript]", scriptResults); // [null]
+
+    return true;
 }
 
 export async function getActiveTabId(currentWindow) {

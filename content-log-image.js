@@ -1,5 +1,5 @@
 (function inject() {
-    const injectScriptId = "content__image_log";
+    const injectScriptId = "content-script__log-image";
     console.log("injecting: " + injectScriptId);
 
     const injected = window[injectScriptId];
@@ -15,7 +15,9 @@
         }
         const dataUrl = message.data;
         logPicture(dataUrl);
-        sendResponse("[content script]: image logged"); // Required, since is sent from `sendMessageToTab` func
+
+        // Required, since is sent from `sendMessageToTab` function
+        sendResponse("[content script]: image logged");
     });
 
     function logPicture(url, scale = 0.5) {
