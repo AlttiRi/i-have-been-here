@@ -26,6 +26,11 @@ export function setToStoreLocal(key, value) {
         });
     });
 }
+
+/**
+ * @param {string|array|object} [key]
+ * @return {Promise<string|array|object|undefined>}
+ */
 export function getFromStoreLocal(key) {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get(key ? [key] : null, object => {
