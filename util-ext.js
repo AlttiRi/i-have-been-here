@@ -3,11 +3,28 @@ export const extensionId = chrome.runtime.id;
 export const extensionUUID = chrome.i18n.getMessage("@@extension_id");
 export const inIncognitoContext = chrome.extension.inIncognitoContext;
 
-export function sendMessage(message) {
+/**
+ * Send message to bg, or ony extension's page (popup, options, a custom page)
+ * Also possible (not implemented in this wrapper) sending to another extension.
+ *
+ * It's possible to send a message FROM a content script, but not TO.
+ * For sending to a content script use `sendMessageToTab`
+ *
+ * The subscriber must use `sendResponse` to send response message back:
+ * `chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {`
+ * to prevent the `The message port closed before a response was received.` error.
+ * @see {exchangeMessageWithTab}
+ * @param {any} message
+ * @return {Promise<any>}
+ */
+export function exchangeMessage(message) {
     console.log("[sendMessage][send]", message);
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
         chrome.runtime.sendMessage(message, response => {
             console.log("[sendMessage][received]", response);
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError.message);
+            }
             resolve(response);
         });
     });

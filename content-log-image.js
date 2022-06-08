@@ -10,7 +10,7 @@
 
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.text !== "log-screenshot") {
+        if (message.text !== "log-screenshot") { // todo "-exchange" prefix
             return;
         }
         logPicture(message.url);

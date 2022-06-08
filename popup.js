@@ -1,34 +1,53 @@
 import {logPicture} from "./util.js";
-import {sendMessage, inIncognitoContext} from "./util-ext.js";
+import {inIncognitoContext, exchangeMessage} from "./util-ext.js";
 
 console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);
 
 
-const btn1 = document.querySelector("#btn-change-icon");
-btn1.addEventListener("click", () => {
+const saveButton = document.querySelector("#btn-save-screen");
+const changeIconButton = document.querySelector("#btn-change-icon");
+const logScreenButton = document.querySelector("#btn-log-screen");
+const visitedButton = document.querySelector("#btn-visited");
+const imageElem = document.querySelector("#image");
+
+changeIconButton.addEventListener("click", () => {
 	chrome.runtime.sendMessage("change-icon");
 });
 
-
-const btn2 = document.querySelector("#btn-log-screen");
-btn2.addEventListener("click", async () => {
-	const response = await sendMessage("take-screenshot");
+logScreenButton.addEventListener("click", async () => {
+	const response = await exchangeMessage("take-screenshot");
+	if (!response.screenshotUrl) {
+		return;
+	}
 	logPicture(response.screenshotUrl);
-	document.querySelector("#image").src = response.screenshotUrl;
+	imageElem.src = response.screenshotUrl;
+	imageElem.dataset.tabUrl = response.tabUrl;
+	saveButton.removeAttribute("disabled");
 });
 
-const btn3 = document.querySelector("#btn-visited");
-btn3.addEventListener("click", async () => {
-	const response = await sendMessage("add-visited");
-	btn3.classList.add("btn-outline-success");
-	btn3.title = response;
+saveButton.addEventListener("click", async () => {
+	const dataUrl = imageElem.src;
+	const tabUrl = imageElem.dataset.tabUrl;
+	const response = await exchangeMessage({
+		command: "save-screenshot",
+		dataUrl,
+		tabUrl,
+	});
+	console.log("save-screenshot", {response});
+	saveButton.classList.add("btn-outline-success");
 });
 
-;(async function () {
-	const response = await sendMessage("is-visited");
+visitedButton.addEventListener("click", async () => {
+	const response = await exchangeMessage("add-visited");
+	visitedButton.classList.add("btn-outline-success");
+	visitedButton.title = response;
+});
+
+;(async function() {
+	const response = await exchangeMessage("is-visited");
 	if (response) {
-		btn3.classList.add("btn-outline-success");
-		btn3.title = response;
+		visitedButton.classList.add("btn-outline-success");
+		visitedButton.title = response;
 	}
 })();

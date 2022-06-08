@@ -28,12 +28,22 @@ export const getTitle = async function(details) {
     return new Promise(resolve => chrome.browserAction.getTitle(details, resolve));
 }
 
-// Requires to use `sendResponse` (or `return true;`, with calling `sendResponse();` async way)
-// in content script listener (`chrome.runtime.onMessage.addListener`)
-// Since this function uses `responseCallback` in `chrome.tabs.sendMessage`
-// in `chrome.runtime.onMessage.addListener` callback.
-// To prevent `The message port closed before a response was received.` error.
-export function sendMessageToTab(tabId, message) {
+
+/**
+ * To prevent `The message port closed before a response was received.` error.
+ * The listener (in a content script) must use `sendResponse` (or `return true;`, with calling `sendResponse();` later (async)):
+ * ```
+ * chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+ * ```
+ * Since this function uses `responseCallback` in `chrome.tabs.sendMessage`
+ * in `chrome.runtime.onMessage.addListener` callback.
+ *
+ * @see {exchangeMessage}
+ * @param {number} tabId
+ * @param {any} message
+ * @return {Promise<any>}
+ */
+export function exchangeMessageWithTab(tabId, message) {
     return new Promise((resolve, reject) => {
         chrome.tabs.sendMessage(tabId, message, (response) => {
             if (chrome.runtime.lastError) {
@@ -93,14 +103,19 @@ export function createBackgroundTab(url) {
     });
 }
 
-export async function captureVisibleTab() {
+/**
+ * @param {chrome.tabs.CaptureVisibleTabOptions} options
+ * @return {Promise<string>} dataUrl
+ */
+export async function captureVisibleTab(options = {}) {
+    options = {...{format: "jpeg", quality: 92}, ...options};
     const activeTab = await getActiveTab();
     if (!activeTab) {
         console.log("[warning] No tab for capture.");
         return null;
     }
     return new Promise(resolve => {
-        chrome.tabs.captureVisibleTab(screenshotDataUrl => {
+        chrome.tabs.captureVisibleTab(options, screenshotDataUrl => {
             resolve(screenshotDataUrl);
         });
     });
