@@ -7,12 +7,12 @@ import {
 import {logPicture} from "../util.js";
 import {setToStoreLocal} from "../util-ext.js";
 
-export function logImageOnMessage(messageText) {
+export function logImageOnMessage() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message === messageText) {
+        if (message === "take-screenshot--message-exchange") {
             void asyncHandler(sendResponse);
         } else
-        if (message?.command === "save-screenshot"){
+        if (message?.command === "save-screenshot--message-exchange"){
             const {dataUrl, tabUrl} = message;
             console.log("setToStoreLocal [\"save-screenshot\"]", dataUrl);
             void setToStoreLocal("screenshot:" + tabUrl, atob(dataUrl.substring("data:image/jpeg;base64,".length))).then(() => {
@@ -44,7 +44,7 @@ async function asyncHandler(sendResponse) {
 
     // Log the image in the web page console (send the message to the injected content script)
     await exchangeMessageWithTab(tab.id, {
-        text: "log-screenshot",
-        url: screenshotUrl
+        command: "log-screenshot--message-exchange",
+        data: screenshotUrl
     });
 }

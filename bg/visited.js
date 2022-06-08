@@ -4,17 +4,15 @@ import {updateIcons} from "./tab-counter.js";
 import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
 import {ComputedProperty, ObservableProperty, ObservableStoreLocalProperty} from "./ObservableProperies.js";
 
-const messageTextAdd = "add-visited";
-const messageTextIs  = "is-visited";
 
 
 export function visitedBtnHandler() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message === messageTextAdd) {
+        if (message === "add-visited--message-exchange") {
             void asyncHandler(sendResponse);
             return true;
         } else
-        if (message === messageTextIs) {
+        if (message === "is-visited--message-exchange") {
             void takeVisited(sendResponse);
             return true;
         }

@@ -15,8 +15,8 @@ import {visitedBtnHandler} from "./bg/visited.js";
 console.log(`[${extensionName}] background.js loaded.`);
 console.log(`Incognito: ${inIncognitoContext}.`);
 
-changeIconOnMessage("change-icon");
-logImageOnMessage("take-screenshot");
+changeIconOnMessage();
+logImageOnMessage();
 
 void countTabs();
 enableBookmarksOpenerMode();

@@ -2,9 +2,9 @@ import {getActiveTabId}     from "../util-ext-bg.js";
 import {inIncognitoContext} from "../util-ext.js";
 import {emojiToImageData}   from "../util.js";
 
-export function changeIconOnMessage(onMessage) {
+export function changeIconOnMessage() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message !== onMessage) {
+        if (message !== "change-icon--message") {
             return;
         }
         console.log(sender);

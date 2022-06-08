@@ -10,10 +10,11 @@
 
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.text !== "log-screenshot") { // todo "-exchange" prefix
+        if (message.command !== "log-screenshot--message-exchange") {
             return;
         }
-        logPicture(message.url);
+        const dataUrl = message.data;
+        logPicture(dataUrl);
         sendResponse("[content script]: image logged"); // Required, since is sent from `sendMessageToTab` func
     });
 
