@@ -16,7 +16,7 @@
         "page": "background.html",
         "persistent": true
     },
-    "permissions": ["<all_urls>", "activeTab", "tabs", "contextMenus", "storage", "downloads.shelf", "downloads", "unlimitedStorage", "bookmarks"],
+    "permissions": ["<all_urls>", "activeTab", "tabs", "contextMenus", "storage", "downloads.shelf", "downloads", "unlimitedStorage", "bookmarks", "chrome://favicon/"],
     "browser_action": {
         "default_title": "__MSG_browser_action_title__",
         "default_popup": "popup.html",
