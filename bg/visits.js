@@ -81,7 +81,7 @@ async function migration(write = false) {
     await getFromStoreLocal();
 
     /** @type {[]} */
-    const visited = (await getFromStoreLocal("visited")) || [];
+    const visited = await getFromStoreLocal("visited") || [];
     const visits = [];
     for (const [url, dates] of Object.entries(visited)) {
         let date = dates.map(date => Number(new Date(date.replaceAll(".", "-")/* FF fix */)));
@@ -157,3 +157,56 @@ async function migration(write = false) {
     }
 }
 // await migration();
+
+async function importVitis(json) {
+    const visits = JSON.parse(json);
+    await setToStoreLocal("visits", visits);
+    function setToStoreLocal(key, value) {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({[key]: value}, () => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError.message);
+                }
+                resolve();
+            });
+        });
+    }
+}
+// await importVitis(``);
+
+async function exportVisits() {
+    const visits = await getFromStoreLocal("visits") || "";
+    const dateStr = dateToDayDateString(new Date());
+    download(new Blob([JSON.stringify(visits, null, " ")]), `[ihbh][${dateStr}] visits.json`);
+    function getFromStoreLocal(key) {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get(key ? [key] : null, object => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError.message);
+                }
+                resolve(key ? object[key] : object);
+            });
+        });
+    }
+    function dateToDayDateString(dateValue, utc = true) {
+        const _date = new Date(dateValue);
+        function pad(str) {
+            return str.toString().padStart(2, "0");
+        }
+        const _utc = utc ? "UTC" : "";
+        const year  = _date[`get${_utc}FullYear`]();
+        const month = _date[`get${_utc}Month`]() + 1;
+        const date  = _date[`get${_utc}Date`]();
+
+        return year + "." + pad(month) + "." + pad(date);
+    }
+    function download(blob, name, url) {
+        const anchor = document.createElement("a");
+        anchor.setAttribute("download", name || "");
+        const blobUrl = URL.createObjectURL(blob);
+        anchor.href = blobUrl + (url ? ("#" + url) : "");
+        anchor.click();
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+    }
+}
+// await exportVisits();
