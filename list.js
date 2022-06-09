@@ -1,6 +1,6 @@
 import {getFromStoreLocal, removeFromStoreLocal} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
-import {getVisits} from "./bg/visits.js";
+import {exportVisits, getVisits} from "./bg/visits.js";
 
 console.log(location);
 
@@ -8,6 +8,10 @@ void main();
 async function main() {
     const app = document.querySelector("#app");
     const list = document.querySelector("#list");
+    const exportVisitsButton = document.querySelector("#export-visits");
+    exportVisitsButton.addEventListener("click", () => {
+        void exportVisits();
+    });
 
     /** @return {Object[]} */
     const visits = await getVisits();

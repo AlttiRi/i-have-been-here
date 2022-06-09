@@ -9,11 +9,16 @@
         a:visited {
             color: #0a53be;
         }
+        body {
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
-<div id="app">
-    <div id="list" class="container"></div>
+<div id="app" class="container mt-3">
+    <button class="btn btn-outline-primary m-2" id="export-visits">Export visits</button>
+    <hr>
+    <div id="list"></div>
 </div>
 <script src="./list.js" type="module"></script>
 </body>

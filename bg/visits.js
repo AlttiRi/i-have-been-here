@@ -1,6 +1,7 @@
 import {getActiveTab} from "../util-ext-bg.js";
 import {updateIcons} from "./tab-counter.js";
 import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
+import {dateToDayDateString, downloadBlob} from "../util.js";
 
 
 export async function visitedIconDataIfRequired(tabUrl) {
@@ -70,6 +71,11 @@ async function addVisitHandler(sendResponse) {
     sendResponse(visit);
 }
 
+export async function exportVisits() {
+    const visits = await getFromStoreLocal("visits") || "";
+    const dateStr = dateToDayDateString(new Date());
+    downloadBlob(new Blob([JSON.stringify(visits, null, " ")]), `[ihbh][${dateStr}] visits.json`);
+}
 
 
 // -------------------
@@ -174,39 +180,3 @@ async function importVitis(json) {
 }
 // await importVitis(``);
 
-async function exportVisits() {
-    const visits = await getFromStoreLocal("visits") || "";
-    const dateStr = dateToDayDateString(new Date());
-    download(new Blob([JSON.stringify(visits, null, " ")]), `[ihbh][${dateStr}] visits.json`);
-    function getFromStoreLocal(key) {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.get(key ? [key] : null, object => {
-                if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError.message);
-                }
-                resolve(key ? object[key] : object);
-            });
-        });
-    }
-    function dateToDayDateString(dateValue, utc = true) {
-        const _date = new Date(dateValue);
-        function pad(str) {
-            return str.toString().padStart(2, "0");
-        }
-        const _utc = utc ? "UTC" : "";
-        const year  = _date[`get${_utc}FullYear`]();
-        const month = _date[`get${_utc}Month`]() + 1;
-        const date  = _date[`get${_utc}Date`]();
-
-        return year + "." + pad(month) + "." + pad(date);
-    }
-    function download(blob, name, url) {
-        const anchor = document.createElement("a");
-        anchor.setAttribute("download", name || "");
-        const blobUrl = URL.createObjectURL(blob);
-        anchor.href = blobUrl + (url ? ("#" + url) : "");
-        anchor.click();
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
-    }
-}
-// await exportVisits();

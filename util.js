@@ -2,6 +2,15 @@ export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export function downloadBlob(blob, name, url) {
+    const anchor = document.createElement("a");
+    anchor.setAttribute("download", name || "");
+    const blobUrl = URL.createObjectURL(blob);
+    anchor.href = blobUrl + (url ? ("#" + url) : "");
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+}
+
 export const isFirefox = navigator.userAgent.includes("Firefox");
 export const isOpera   = navigator.userAgent.includes("OPR") || typeof window.opr !== "undefined";
 
