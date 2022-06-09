@@ -81,7 +81,7 @@ async function addVisitHandler(sendResponse) {
         await setToStoreLocal("visits", visits);
         await updateIcons([tab]);
     } else {
-        visit.date = [visit.date, date];
+        visit.date = [visit.date, date].flat();
         await setToStoreLocal("visits", visits);
     }
 
