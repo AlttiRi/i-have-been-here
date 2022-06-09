@@ -8,7 +8,7 @@ console.log(`Incognito: ${inIncognitoContext}.`);
 const saveButton = document.querySelector("#btn-save-screen");
 const changeIconButton = document.querySelector("#btn-change-icon");
 const logScreenButton = document.querySelector("#btn-log-screen");
-const visitedButton = document.querySelector("#btn-visited");
+const visitButton = document.querySelector("#btn-visited");
 const imageElem = document.querySelector("#image");
 
 changeIconButton.addEventListener("click", () => {
@@ -40,16 +40,20 @@ saveButton.addEventListener("click", async () => {
 	saveButton.classList.add("btn-outline-success");
 });
 
-visitedButton.addEventListener("click", async () => {
-	const response = await exchangeMessage("add-visited--message-exchange");
-	visitedButton.classList.add("btn-outline-success");
-	visitedButton.title = response;
+visitButton.addEventListener("click", async () => {
+	const visit = await exchangeMessage("add-visit--message-exchange");
+	visitButton.classList.add("btn-outline-success");
+	visitButton.title = visitToButtonTitle(visit)	;
 });
 
 ;(async function() {
-	const response = await exchangeMessage("is-visited--message-exchange");
-	if (response) {
-		visitedButton.classList.add("btn-outline-success");
-		visitedButton.title = response;
+	const visit = await exchangeMessage("get-visit--message-exchange");
+	if (visit) {
+		visitButton.classList.add("btn-outline-success");
+		visitButton.title = visitToButtonTitle(visit);
 	}
 })();
+
+function visitToButtonTitle(visit) {
+	return [visit.date].flat().map(ms => new Date(ms)).join("\n");
+}

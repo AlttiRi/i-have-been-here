@@ -1,5 +1,6 @@
 import {getFromStoreLocal, removeFromStoreLocal} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
+import {getVisits} from "./bg/visits.js";
 
 console.log(location);
 
@@ -8,14 +9,14 @@ async function main() {
     const app = document.querySelector("#app");
     const list = document.querySelector("#list");
 
-    /** @type {Object} */
-    const visited = await getFromStoreLocal("visited");
-    for (const entry of Object.entries(visited)) {
-        const item = createListItem(entry);
+    /** @return {Object[]} */
+    const visits = await getVisits();
+    for (const visit of visits) {
+        const item = createListItem(visit);
         list.append(item);
     }
 
-    console.log("Store:", await getFromStoreLocal());
+    // console.log("Store:", await getFromStoreLocal());
 
     // await removeImages();
 
@@ -39,11 +40,11 @@ async function main() {
 }
 
 
-function createListItem([key, value]) {
+function createListItem(visit) {
     const elem = document.createElement("div");
     elem.innerHTML = `
-        <h3><a href="${key}" rel="noreferrer noopener">${key}</a></h3>        
-        <div>${value.map(dateFormatter).join("")}</div>
+        <h3><a href="${visit.url}" rel="noreferrer noopener">${visit.url}</a></h3>        
+        <div>${[visit.date].flat().map(dateFormatter).join("")}</div>
     `;
     elem.querySelector("h3").addEventListener("click", event => {
         event.preventDefault();
@@ -52,7 +53,7 @@ function createListItem([key, value]) {
     return elem;
 }
 function dateFormatter(date) {
-    return `<div>${date}</div>`
+    return `<div>${new Date(date)}</div>`;
 }
 
 async function getImageEntries() {

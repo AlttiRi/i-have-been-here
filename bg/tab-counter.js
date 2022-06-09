@@ -2,7 +2,7 @@
 // + changes icon
 
 import {queryTabs} from "../util-ext-bg.js";
-import {visitedIconDataIfRequired} from "./visited.js";
+import {visitedIconDataIfRequired} from "./visits.js";
 import {Store} from "./store.js";
 
 

@@ -10,7 +10,7 @@ import {logImageOnMessage} from "./bg/log-image.js"
 import {registerContextMenu} from "./bg/context-menu.js"
 import {enableBookmarksOpenerMode} from "./bg/opera-bookmark-opener.js";
 
-import {visitedBtnHandler} from "./bg/visited.js";
+import {initVisitBackgroundHandler} from "./bg/visits.js";
 
 console.log(`[${extensionName}] background.js loaded.`);
 console.log(`Incognito: ${inIncognitoContext}.`);
@@ -20,11 +20,11 @@ logImageOnMessage();
 
 void countTabs();
 enableBookmarksOpenerMode();
-visitedBtnHandler();
+initVisitBackgroundHandler();
 registerContextMenu(["reload", "yandex_images", "download_shelf", "open_list"]);
 
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender) => {
     console.log("[BG incoming message]", message, sender); // Logs any income messages
 });
 
