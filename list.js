@@ -1,4 +1,4 @@
-import {getFromStoreLocal, removeFromStoreLocal} from "./util-ext.js";
+import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {exportVisits, getVisits} from "./bg/visits.js";
 import {dateToDayDateString} from "./util.js";
@@ -12,6 +12,14 @@ async function main() {
     const exportVisitsButton = document.querySelector("#export-visits");
     exportVisitsButton.addEventListener("click", () => {
         void exportVisits();
+    });
+
+    const importVisitsButton = document.querySelector("input[type=file]");
+    importVisitsButton.addEventListener("change", async () => {
+        const file = importVisitsButton.files[0];
+        console.log(file);
+        const array = JSON.parse(await file.text());
+        await setToStoreLocal("visits", array);
     });
 
     /** @return {Object[]} */
