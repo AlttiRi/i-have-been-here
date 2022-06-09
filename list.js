@@ -16,7 +16,7 @@ async function main() {
         list.append(item);
     }
 
-    // console.log("Store:", await getFromStoreLocal());
+    console.log("Visits:", await getFromStoreLocal("visits"));
 
     // await removeImages();
 
@@ -43,7 +43,7 @@ async function main() {
 function createListItem(visit) {
     const elem = document.createElement("div");
     elem.innerHTML = `
-        <h3><a href="${visit.url}" rel="noreferrer noopener">${visit.url}</a></h3>        
+        <h3><a href="${visit.url}" rel="noreferrer noopener" title="${visit.title || ""}">${visit.url}</a></h3>        
         <div>${[visit.date].flat().map(dateFormatter).join("")}</div>
     `;
     elem.querySelector("h3").addEventListener("click", event => {

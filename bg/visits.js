@@ -56,6 +56,7 @@ async function addVisitHandler(sendResponse) {
     if (!visit) {
         visit = {
             url: tab.url,
+            title: tab.title,
             date,
         };
         visits.push(visit);
