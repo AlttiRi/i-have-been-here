@@ -1,5 +1,6 @@
 import {logPicture} from "./util.js";
 import {inIncognitoContext, exchangeMessage} from "./util-ext.js";
+import {createBackgroundTab} from "./util-ext-bg.js";
 
 console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);
@@ -8,7 +9,8 @@ console.log(`Incognito: ${inIncognitoContext}.`);
 const saveButton = document.querySelector("#btn-save-screen");
 const changeIconButton = document.querySelector("#btn-change-icon");
 const logScreenButton = document.querySelector("#btn-log-screen");
-const visitButton = document.querySelector("#btn-visited");
+const visitButton = document.querySelector("#btn-visit");
+const openVisitsButton = document.querySelector("#btn-open-visits");
 const imageElem = document.querySelector("#image");
 
 changeIconButton.addEventListener("click", () => {
@@ -44,6 +46,10 @@ visitButton.addEventListener("click", async () => {
 	const visit = await exchangeMessage("add-visit--message-exchange");
 	visitButton.classList.add("btn-outline-success");
 	visitButton.title = visitToButtonTitle(visit)	;
+});
+
+openVisitsButton.addEventListener("click", async () => {
+	createBackgroundTab(chrome.runtime.getURL("./list.html"));
 });
 
 ;(async function() {

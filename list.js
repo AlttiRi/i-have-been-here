@@ -1,6 +1,7 @@
 import {getFromStoreLocal, removeFromStoreLocal} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {exportVisits, getVisits} from "./bg/visits.js";
+import {dateToDayDateString} from "./util.js";
 
 console.log(location);
 
@@ -46,18 +47,22 @@ async function main() {
 
 function createListItem(visit) {
     const elem = document.createElement("div");
+    elem.classList.add("visit");
+    elem.classList.add("mb-3");
     elem.innerHTML = `
-        <h3><a href="${visit.url}" rel="noreferrer noopener" title="${visit.title || ""}">${visit.url}</a></h3>        
+        <h4 class="title">${visit.title || ""}</h4> 
+        <h5><a href="${visit.url}" rel="noreferrer noopener" title="${visit.title || ""}">${visit.url}</a></h5>      
+         
         <div>${[visit.date].flat().map(dateFormatter).join("")}</div>
     `;
-    elem.querySelector("h3").addEventListener("click", event => {
+    elem.querySelector("a").addEventListener("click", event => {
         event.preventDefault();
         createBackgroundTab(event.target.href);
     })
     return elem;
 }
 function dateFormatter(date) {
-    return `<div>${new Date(date)}</div>`;
+    return `<div>${dateToDayDateString(new Date(date))}</div>`;
 }
 
 async function getImageEntries() {

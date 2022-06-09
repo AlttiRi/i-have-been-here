@@ -79,7 +79,7 @@ export function updateIcons(tabs) {
             let tabCounterIconData = {path: imgPath};
             let other = null;
             if (!bom) {
-                other = await visitedIconDataIfRequired(tab.url);
+                other = await visitedIconDataIfRequired(tab);
             }
             chrome.browserAction.setIcon({
                 ...(other || tabCounterIconData),

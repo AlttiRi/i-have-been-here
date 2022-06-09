@@ -1,12 +1,29 @@
-import {getActiveTab} from "../util-ext-bg.js";
+import {getActiveTab, queryTabs} from "../util-ext-bg.js";
 import {updateIcons} from "./tab-counter.js";
 import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
-import {dateToDayDateString, downloadBlob} from "../util.js";
+import {dateToDayDateString, downloadBlob, sleep} from "../util.js";
 
 
-export async function visitedIconDataIfRequired(tabUrl) {
+export async function visitedIconDataIfRequired(tab) {
     const visits = await getVisits();
-    if (visits.some(visit => visit.url === tabUrl)) {
+
+    const visit = visits.find(visit => visit.url === tab.url);
+
+    // todo: delete later;
+    //  added since the old created visits have no title
+    if (visit && (!visit.title || visit.url === visit.title || visit.url.slice(0, -1 /*remove slash*/) === visit.title)) {
+        const tabId = tab.id;
+        sleep(2000).then(async () => {
+            const tab = (await queryTabs()).find(tab => tab.id === tabId);
+            if (!tab) {
+                return;
+            }
+            visit.title = tab.title;
+            return setToStoreLocal("visits", visits);
+        });
+    }
+
+    if (visit) {
         return {
             // imageData: emojiToImageData("✅"),
             path: chrome.runtime.getURL("images/mark.png")
