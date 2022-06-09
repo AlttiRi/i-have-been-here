@@ -4,16 +4,18 @@
 
 import {Store} from "./store.js";
 import {createBackgroundTab} from "../util-ext-bg.js";
+import {isFirefox} from "../util.js";
 
 /**
  * @param {ContextMenuFeature[]} features
  */
 export function registerContextMenu(features = ["reload"]) {
-    if (features.includes("reload")) {
-        if (!chrome.runtime.getManifest().permissions.includes("contextMenus")) {
-            console.error(`No "contextMenus" permission!`);
-            return;
-        }
+    if (!chrome.runtime.getManifest().permissions.includes("contextMenus")) {
+        console.log(`[warning] No "contextMenus" permission!`);
+        return;
+    }
+
+    function registerReload() {
         const id = "reload_extension";
         chrome.contextMenus.create({
             id,
@@ -27,8 +29,11 @@ export function registerContextMenu(features = ["reload"]) {
             }
         });
     }
+    if (features.includes("reload")) {
+        registerReload();
+    }
 
-    if (features.includes("yandex_images")) {
+    function registerYandexImages() {
         const id = "yandex_images";
         chrome.contextMenus.create({
             id: "yandex_images",
@@ -42,10 +47,16 @@ export function registerContextMenu(features = ["reload"]) {
             }
         });
     }
+    if (features.includes("yandex_images")) {
+        registerYandexImages();
+    }
 
-    if (features.includes("download_shelf")) {
+    function registerDownloadShelf() {
+        if (isFirefox) {
+            return;
+        } else
         if (!chrome.downloads?.setShelfEnabled) {
-            console.error(`No "downloads", "downloads.shelf" permissions!`);
+            console.log(`[warning] No "downloads", "downloads.shelf" permissions!`);
             return;
         }
         const id = "download_shelf";
@@ -71,8 +82,11 @@ export function registerContextMenu(features = ["reload"]) {
             }
         });
     }
+    if (features.includes("download_shelf")) {
+        registerDownloadShelf();
+    }
 
-    if (features.includes("open_list")) {
+    function registerOpenList() {
         const id = "open_list";
         chrome.contextMenus.create({
             id,
@@ -85,5 +99,8 @@ export function registerContextMenu(features = ["reload"]) {
                 createBackgroundTab(chrome.runtime.getURL("./list.html"));
             }
         });
+    }
+    if (features.includes("open_list")) {
+        registerOpenList();
     }
 }

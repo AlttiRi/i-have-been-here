@@ -2,6 +2,10 @@ export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export const isFirefox = navigator.userAgent.includes("Firefox");
+export const isOpera   = navigator.userAgent.includes("OPR") || typeof window.opr !== "undefined";
+
+
 export function logPicture(url, scale) {
     void logPictureAsync(url, scale);
 }

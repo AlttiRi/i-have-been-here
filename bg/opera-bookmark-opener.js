@@ -1,5 +1,6 @@
 import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
 import {Store} from "./store.js";
+import {isOpera} from "../util.js";
 
 async function openBookmarks() {
     const url = "chrome://startpage/bookmarks";
@@ -40,6 +41,10 @@ async function toggle(enabled) {
 }
 
 export function enableBookmarksOpenerMode() {
+    if (!isOpera) {
+        console.log("[info] Not Opera");
+        return;
+    }
     Store.bookmarkOpenerMode.onValueOnce(async (checked) => {
         chrome.contextMenus.create({
             id: "bookmark_opener",
