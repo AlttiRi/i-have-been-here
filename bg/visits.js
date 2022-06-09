@@ -32,6 +32,14 @@ export async function visitedIconDataIfRequired(tab) {
     return null;
 }
 
+export async function updateVisit(updatedVisit) {
+    const visits = await getVisits();
+    const visit = visits.find(visit => visit.url === updatedVisit.url);
+    Object.keys(visit).forEach(key => delete visit[key]);
+    Object.assign(visit, updatedVisit);
+    await setToStoreLocal("visits", visits);
+}
+
 /** @return {Promise<Object[]>} */
 export async function getVisits() {
     return await getFromStoreLocal("visits") || [];

@@ -1,6 +1,6 @@
 import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
-import {exportVisits, getVisits} from "./bg/visits.js";
+import {exportVisits, getVisits, updateVisit} from "./bg/visits.js";
 import {dateToDayDateString} from "./util.js";
 
 console.log(location);
@@ -66,7 +66,15 @@ function createListItem(visit) {
     elem.querySelector("a").addEventListener("click", event => {
         event.preventDefault();
         createBackgroundTab(event.target.href);
-    })
+    });
+    const titleElem = elem.querySelector(".title");
+    titleElem.addEventListener("dblclick", async (event) => {
+        event.preventDefault();
+        console.log("dblclick");
+        delete visit.title;
+        await updateVisit(visit);
+        titleElem.textContent = "";
+    });
     return elem;
 }
 function dateFormatter(date) {
