@@ -57,6 +57,7 @@ function createListItem(visit) {
     const elem = document.createElement("div");
     elem.classList.add("visit");
     elem.classList.add("mb-3");
+    elem.id = visit.url;
     elem.innerHTML = `
         <h4 class="title">${visit.title || ""}</h4> 
         <h5><a href="${visit.url}" rel="noreferrer noopener" title="${visit.title || ""}">${visit.url}</a></h5>      
@@ -74,6 +75,12 @@ function createListItem(visit) {
         delete visit.title;
         await updateVisit(visit);
         titleElem.textContent = "";
+    });
+    titleElem.addEventListener("click", event => {
+        event.preventDefault();
+        if (event.ctrlKey) {
+            location.hash = elem.id;
+        }
     });
     return elem;
 }
