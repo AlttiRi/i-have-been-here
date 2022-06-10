@@ -5,6 +5,10 @@ import {dateToDayDateString} from "./util.js";
 
 console.log(location);
 
+// todo reverse order
+//  merge
+//  export images
+
 void main();
 async function main() {
     const app = document.querySelector("#app");
