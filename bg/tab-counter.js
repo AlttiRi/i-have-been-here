@@ -68,27 +68,32 @@ function setDefaultIcon(path) {
     });
 }
 
-/**
- * @param {chrome.tabs.Tab[]} tabs
- */
+import {bookmarkOpenerMode, isBOMReady, onBOMReady} from "./store/bom.js";
+import {watch} from "../libs/vue-reactivity.js";
+watch(bookmarkOpenerMode, async () => {
+    updateIcons(await queryTabs());
+});
+
+/** @param {chrome.tabs.Tab[]} tabs */
 export function updateIcons(tabs) {
     console.log("setIcons", tabs);
     tabs.forEach(async tab => {
-        // todo? a separate file with registration of icon changers
-        Store.bookmarkOpenerMode.onValue(async (bom) => {
-            let tabCounterIconData = {path: imgPath};
-            let other = null;
-            if (!bom) {
-                other = await visitedIconDataIfRequired(tab);
+        if (!isBOMReady.value) {
+            await onBOMReady;
+        }
+        let tabCounterIconData = {path: imgPath};
+        let other = null;
+
+        if (!bookmarkOpenerMode.value) {
+            other = await visitedIconDataIfRequired(tab);
+        }
+        chrome.browserAction.setIcon({
+            ...(other || tabCounterIconData),
+            tabId: tab.id
+        }, () => {
+            if (chrome.runtime.lastError) {
+                console.log("[error] updateIcons", chrome.runtime.lastError.message);
             }
-            chrome.browserAction.setIcon({
-                ...(other || tabCounterIconData),
-                tabId: tab.id
-            }, () => {
-                if (chrome.runtime.lastError) {
-                    console.log("[error] updateIcons", chrome.runtime.lastError.message);
-                }
-            });
         });
     });
 }

@@ -11,9 +11,6 @@ console.log("Store");
 class Store {
 
     /** @type {ObservableStoreLocalProperty} */
-    static bookmarkOpenerMode = new ObservableStoreLocalProperty("bookmarkOpenerMode", false);
-
-    /** @type {ObservableStoreLocalProperty} */
     static download_shelf = new ObservableStoreLocalProperty("download_shelf", true);
 
 

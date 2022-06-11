@@ -1,5 +1,4 @@
 import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
-import {Store} from "./store.js";
 import {isOpera} from "../util.js";
 
 async function openBookmarks() {
@@ -40,30 +39,36 @@ async function toggle(enabled) {
     }
 }
 
-export function enableBookmarksOpenerMode() {
+import {bookmarkOpenerMode, isBOMReady, onBOMReady, setBookmarkOpenerMode} from "./store/bom.js";
+import {watch} from "../libs/vue-reactivity.js";
+export async function enableBookmarksOpenerMode() {
     if (!isOpera) {
         console.log("[info] Not Opera");
         return;
     }
-    Store.bookmarkOpenerMode.onValueOnce(async (checked) => {
-        chrome.contextMenus.create({
-            id: "bookmark_opener",
-            title: "Bookmark opener mode",
-            contexts: ["browser_action"],
-            type: "checkbox",
-            checked
-        });
-        if (checked) {
-            await enable();
-        }
-        Store.bookmarkOpenerMode.onChanged(value => {
-            void toggle(value);
-        });
+
+    if (!isBOMReady.value) {
+        await onBOMReady;
+    }
+    const checked = bookmarkOpenerMode.value;
+    chrome.contextMenus.create({
+        id: "bookmark_opener",
+        title: "Bookmark 🔖 opener mode",
+        contexts: ["browser_action"],
+        type: "checkbox",
+        checked
     });
-    chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+    chrome.contextMenus.onClicked.addListener((info, tab) => {
         if (info.menuItemId === "bookmark_opener") {
-            Store.bookmarkOpenerMode.value = info.checked;
+            void setBookmarkOpenerMode(info.checked);
         }
+    });
+
+    if (checked) {
+        await enable();
+    }
+    watch(bookmarkOpenerMode, () => {
+        void toggle(bookmarkOpenerMode.value);
     });
 }
 
