@@ -3,6 +3,11 @@ export const extensionId = chrome.runtime.id;
 export const extensionUUID = chrome.i18n.getMessage("@@extension_id");
 export const inIncognitoContext = chrome.extension.inIncognitoContext;
 
+export const manifest     = chrome.runtime.getManifest();
+export const defaultIcon  = manifest.browser_action.default_icon;
+export const defaultTitle = manifest.browser_action.default_title;
+export const defaultPopup = manifest.browser_action.default_popup;
+
 /**
  * Send message to bg, or ony extension's page (popup, options, a custom page)
  * Also possible (not implemented in this wrapper) sending to another extension.
