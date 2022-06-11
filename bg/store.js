@@ -10,10 +10,6 @@ console.log("Store");
 
 class Store {
 
-    /** @type {ObservableStoreLocalProperty} */
-    static download_shelf = new ObservableStoreLocalProperty("download_shelf", true);
-
-
     /** @type {ObservableProperty} */
     static popup = new ObservableProperty(defaultIcon);
     /** @type {ObservableProperty} */

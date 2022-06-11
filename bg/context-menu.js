@@ -1,10 +1,11 @@
+import {createBackgroundTab} from "../util-ext-bg.js";
+import {isFirefox} from "../util.js";
+import {downloadShelf, isDlShelfReady, onDlShelfReady, setDownloadShelf} from "./store/dl-shelf.js";
+import {watchEffect} from "../libs/vue-reactivity.js";
+
 /**
  * @typedef {"reload", "yandex_images", "download_shelf", "open_list"} ContextMenuFeature
  */
-
-import {Store} from "./store.js";
-import {createBackgroundTab} from "../util-ext-bg.js";
-import {isFirefox} from "../util.js";
 
 /**
  * @param {ContextMenuFeature[]} features
@@ -36,7 +37,7 @@ export function registerContextMenu(features = ["reload"]) {
     function registerYandexImages() {
         const id = "yandex_images";
         chrome.contextMenus.create({
-            id: "yandex_images",
+            id,
             title: "🟥 " + chrome.i18n.getMessage("context_menu_yandex_images"),
             contexts: ["browser_action"],
             type: "normal"
@@ -51,7 +52,7 @@ export function registerContextMenu(features = ["reload"]) {
         registerYandexImages();
     }
 
-    function registerDownloadShelf() {
+    async function registerDownloadShelf() {
         if (isFirefox) {
             return;
         } else
@@ -60,30 +61,32 @@ export function registerContextMenu(features = ["reload"]) {
             return;
         }
         const id = "download_shelf";
-        Store.download_shelf.onValueOnce(checked => {
-            chrome.contextMenus.create({
-                id: "download_shelf",
-                title: "Enable download shelf",
-                contexts: ["browser_action"],
-                type: "checkbox",
-                checked
-            });
+        if (!isDlShelfReady.value) {
+            await onDlShelfReady;
+        }
+        const checked = downloadShelf.value;
+        chrome.contextMenus.create({
+            id,
+            title: "Enable download shelf 💾",
+            contexts: ["browser_action"],
+            type: "checkbox",
+            checked
         });
-        Store.download_shelf.onValue(value => {
-            console.log("Store.download_shelf changed", value);
-            chrome.downloads.setShelfEnabled(value);
+        watchEffect(() => {
+            console.log("downloadShelf watchEffect", downloadShelf.value);
+            chrome.downloads.setShelfEnabled(downloadShelf.value);
         });
-        chrome.contextMenus.onClicked.addListener((info, tab) => {
+
+        chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+            console.log("menuItemId", info.menuItemId);
             if (info.menuItemId === id) {
-                Store.download_shelf.onValueOnce(checked => {
-                    info.checked = checked;
-                });
-                Store.download_shelf.value = !info.checked;
+                await setDownloadShelf(info.checked);
+                info.checked = downloadShelf.value;
             }
         });
     }
     if (features.includes("download_shelf")) {
-        registerDownloadShelf();
+        void registerDownloadShelf();
     }
 
     function registerOpenList() {
