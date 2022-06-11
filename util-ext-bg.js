@@ -3,7 +3,7 @@
  * @param {chrome.tabs.QueryInfo?} queryInfo
  * @return {Promise<chrome.tabs.Tab[]>}
  */
-export const queryTabs = (queryInfo= {}) => {
+export function queryTabs(queryInfo = {}) {
     return new Promise(resolve => chrome.tabs.query(queryInfo, resolve));
 }
 
