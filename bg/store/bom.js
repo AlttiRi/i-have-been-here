@@ -1,12 +1,12 @@
 import {ref, readonly} from "../../libs/vue-reactivity.js";
 import {getFromStoreLocal, setToStoreLocal} from "../../util-ext.js";
 
-/** @type {RefImpl<boolean>} */
+/** @type {import("@vue/reactivity").Ref<boolean>} */
 export const isBOMReady = ref(false);
 let resolve;
 /** @type {Promise} */
 export const onBOMReady = new Promise(_resolve => resolve = _resolve);
-/** @type {RefImpl<boolean|null>} */
+/** @type {import("@vue/reactivity").Ref<boolean|null>} */
 const bookmarkOpenerMode = ref(null);
 
 async function init() {

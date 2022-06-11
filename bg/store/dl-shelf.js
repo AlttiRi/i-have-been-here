@@ -1,12 +1,12 @@
 import {ref, readonly} from "../../libs/vue-reactivity.js";
 import {getFromStoreLocal, setToStoreLocal} from "../../util-ext.js";
 
-/** @type {RefImpl<boolean>} */
+/** @type {import("@vue/reactivity").Ref<boolean>} */
 export const isDlShelfReady = ref(false);
 let resolve;
 /** @type {Promise} */
 export const onDlShelfReady = new Promise(_resolve => resolve = _resolve);
-/** @type {RefImpl<boolean|null>} */
+/** @type {import("@vue/reactivity").Ref<boolean|null>} */
 const downloadShelf = ref(null);
 
 async function init() {
@@ -22,7 +22,6 @@ async function init() {
 }
 void init();
 
-/** @type {RefImpl<boolean|null>} */
 const bom = readonly(downloadShelf);
 export {bom as downloadShelf};
 
