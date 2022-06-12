@@ -173,7 +173,8 @@ export function fullUrlToFilename(url) {
     seconds = seconds.map(o => decodeURIComponent(o));
     let header;
     if (u.protocol.startsWith("http")) {
-        header = `[${u.hostname}]`;
+        const hostname = u.hostname.startsWith("www.") ? u.hostname.slice(4) : u.hostname;
+        header = `[${hostname}]`;
         seconds = seconds.slice(1);
     } else {
         const part1 = u.protocol.slice(0, -1);

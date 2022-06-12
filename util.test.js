@@ -24,8 +24,9 @@ eq("cr3", fullUrlToFilename("chrome-error://chromewebdata/"), "[chrome-error~chr
 
 eq("ftp", fullUrlToFilename("ftp://192.168.1.1"),   "[ftp~192.168.1.1]");
 
-eq("s1", fullUrlToFilename("https://example.com"),  "[example.com]");
-eq("s2", fullUrlToFilename("https://example.com/"), "[example.com]");
+eq("s1", fullUrlToFilename("https://example.com"),      "[example.com]");
+eq("s2", fullUrlToFilename("https://example.com/"),     "[example.com]");
+eq("s2", fullUrlToFilename("https://www.example.com/"), "[example.com]");
 
 eq("lt1", fullUrlToFilename("https://example.com/привет"), "[example.com] привет");
 eq("lt2", fullUrlToFilename("https://example.com/%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82"), "[example.com] привет");
