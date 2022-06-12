@@ -48,9 +48,9 @@ eq("13", fullUrlToFilename("https://example.com/?xxx=https://example.com"), "[ex
 eq("14", fullUrlToFilename("https://example.com/?xxx=https%3A%2F%2Fexample.com%2F%23123%3F%3F454"), "[example.com]  xxx=https%3A%2F%2Fexample.com%2F%23123%3F%3F454");
 eq("14", fullUrlToFilename("https://example.com/?xxx=https%3A%2F%2Fexample.com%2F#123%3F%3F454"),   "[example.com]  xxx=https%3A%2F%2Fexample.com%2F#123%3F%3F454");
 eq("15", fullUrlToFilename("https://example.com/?xxx=https://example.com/#123??454"),               "[example.com]  xxx=https%3A%2F%2Fexample.com%2F#123%3F%3F454");
-eq("16", fullUrlToFilename("https://example.com/?search=red+hat+sun"),      "[example.com]  search=red+hat+sun");
-eq("17", fullUrlToFilename("https://example.com/?search=red+hat%20sun"),    "[example.com]  search=red+hat+sun");
-eq("18", fullUrlToFilename("https://example.com/?search=red%20hat%20sun"),  "[example.com]  search=red+hat+sun");
-
+eq("16", fullUrlToFilename("https://example.com/?search=red+hat+sun"),       "[example.com]  search=red+hat+sun");
+eq("17", fullUrlToFilename("https://example.com/?search=red+hat%20sun"),     "[example.com]  search=red+hat+sun");
+eq("18", fullUrlToFilename("https://example.com/?search=red%20hat%20sun"),   "[example.com]  search=red+hat+sun");
+eq("19", fullUrlToFilename("https://example.com/?search=red+~hat+~cap+sun"), "[example.com]  search=red+~hat+~cap+sun");
 
 report();
