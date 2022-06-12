@@ -164,7 +164,7 @@ const encodeMap = new Map([
     [ "|", "%7C"],
 ]);
 function encodeName(name) {
-    return name.replaceAll(/[ "+/*:<>?\\|]/g, ch => encodeMap.get(ch) || ch);
+    return name.replaceAll(/["/*:<>?\\|]/g, ch => encodeMap.get(ch));
 }
 export function fullUrlToFilename(url) {
     console.log(url);
