@@ -11,8 +11,8 @@ export function downloadBlob(blob, name, url) {
     setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
 }
 
-export const isFirefox = navigator.userAgent.includes("Firefox");
-export const isOpera   = navigator.userAgent.includes("OPR") || typeof window.opr !== "undefined";
+export const isFirefox = typeof navigator === "object" && navigator.userAgent.includes("Firefox");
+export const isOpera   = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
 
 
 export function logPicture(url, scale) {
