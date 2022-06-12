@@ -1,7 +1,13 @@
 import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {exportVisits, getVisits, updateVisit} from "./bg/visits.js";
-import {dateToDayDateString} from "./util.js";
+import {
+    binaryStringToArrayBuffer,
+    dateToDayDateString,
+    downloadBlob,
+    fullUrlToFilename,
+    sleep
+} from "./util.js";
 
 console.log(location);
 
@@ -48,12 +54,35 @@ async function main() {
         imgElem.src = "data:image/jpeg;base64," + decoded;
         document.body.append(imgElem);
 
-        const div = document.createElement("h2");
+        const h2 = document.createElement("h2");
+        h2.setAttribute("style", `align-self: start; margin: 12px`);
+        h2.textContent = url;
+        imgElem.before(h2);
+
+        const div = document.createElement("div");
         div.setAttribute("style", `align-self: start; margin: 12px`);
-        div.textContent = url;
+        div.textContent = (fullUrlToFilename(url));
         imgElem.before(div);
+
     }
     console.log("screenshots:", imageEntries);
+
+
+
+    const exportImagesButton = document.querySelector("#export-images");
+    exportImagesButton.addEventListener("click", async () => {
+        for (const [key, /** @type {string}*/ data] of imageEntries) {
+            const ab = binaryStringToArrayBuffer(data);
+            const blob = new Blob([ab], {type: "image/jpeg"});
+            const url = key.slice("screenshot:".length);
+            const urlFilename = fullUrlToFilename(url);
+            const name = `[ihbh]${urlFilename}.jpg`;
+            downloadBlob(blob, name, url);
+            await sleep(125);
+            console.log(name, url);
+        }
+    });
+
 }
 
 
