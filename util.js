@@ -148,3 +148,46 @@ export class LS {
         }
     }
 }
+
+
+const encodeMap = new Map([
+    // [ " ",    "+"], // "%20"
+    ["\"",  "%22"],
+    // [ "+",  "%2B"],
+    [ "/",  "%2F"],
+    [ "*",  "%30"],
+    [ ":",  "%3A"],
+    [ "<",  "%3C"],
+    [ ">",  "%3E"],
+    [ "?",  "%3F"],
+    ["\\",  "%5C"],
+    [ "|",  "%7C"],
+]);
+function encodeName(name) {
+    return name.replaceAll(/[ "+/*:<>?\\|]/g, ch => encodeMap.get(ch) || ch);
+}
+export function fullUrlToFilename(url) {
+    console.log(url);
+
+    const u = new URL(url);
+    // console.log(u);
+
+    const pt = u.pathname.startsWith("/") ? u.pathname.slice(1) : u.pathname;
+    let seconds = [u.hostname, ...pt.split("/")].filter(o => o)
+    seconds = seconds.map(o => decodeURIComponent(o));
+    let header;
+    if (u.protocol.startsWith("http")) {
+        header = `[${u.hostname}]`;
+        seconds = seconds.slice(1);
+    } else {
+        header = `[${u.protocol.slice(0, -1)}~]`
+    }
+    let search = u.search ? "  " + encodeName(u.search.slice(1)) : "";
+    search = search.replaceAll("%20", "+");
+    let hash = encodeName(u.hash);
+    if (hash && !search && !seconds.length) {
+        hash = " " + hash;
+    }
+    let last = search + hash;
+    return [header, ...seconds,].filter(o => o).join(" ") + last;
+}
