@@ -169,7 +169,7 @@ const encodeMap = new Map([
     [ "?", "%3F"],
     ["\\", "%5C"],
     [ "|", "%7C"],
- // [ "~", "%7E"], // Since Chrome replaces `~` with `_` on file downloading
+ // [ "~", "%7E"], // Since Chrome replaces `~` with `_` on file downloading // todo: option
 ]);
 function encodeName(name) {
     return name.replaceAll(/["/*:<>?\\|]/g, ch => encodeMap.get(ch));
