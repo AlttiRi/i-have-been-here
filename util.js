@@ -167,11 +167,7 @@ function encodeName(name) {
     return name.replaceAll(/["/*:<>?\\|]/g, ch => encodeMap.get(ch));
 }
 export function fullUrlToFilename(url) {
-    console.log(url);
-
     const u = new URL(url);
-    // console.log(u);
-
     const pt = u.pathname.startsWith("/") ? u.pathname.slice(1) : u.pathname;
     let seconds = [u.hostname, ...pt.split("/")].filter(o => o)
     seconds = seconds.map(o => decodeURIComponent(o));
@@ -180,7 +176,9 @@ export function fullUrlToFilename(url) {
         header = `[${u.hostname}]`;
         seconds = seconds.slice(1);
     } else {
-        header = `[${u.protocol.slice(0, -1)}~]`
+        const part1 = u.protocol.slice(0, -1);
+        const part2 = seconds.shift();
+        header = `[${part1}~${part2}]`;
     }
     let search = u.search ? "  " + encodeName(u.search.slice(1)) : "";
     search = search.replaceAll("%20", "+");
@@ -188,6 +186,6 @@ export function fullUrlToFilename(url) {
     if (hash && !search && !seconds.length) {
         hash = " " + hash;
     }
-    let last = search + hash;
+    const last = search + hash;
     return [header, ...seconds,].filter(o => o).join(" ") + last;
 }
