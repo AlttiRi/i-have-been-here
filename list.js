@@ -13,7 +13,6 @@ console.log(location);
 
 // todo reverse order
 //  merge
-//  export images
 
 void main();
 async function main() {
@@ -83,6 +82,16 @@ async function main() {
         }
     });
 
+    const deleteImagesButton = document.querySelector("#delete-images");
+    deleteImagesButton.addEventListener("click", async () => {
+        deleteImagesButton.setAttribute("disabled", "");
+        const promises = []
+        for (const [key, /** @type {string}*/ data] of imageEntries) {
+            promises.push(removeFromStoreLocal(key));
+        }
+        await Promise.all(promises);
+        deleteImagesButton.removeAttribute("disabled");
+    });
 }
 
 
