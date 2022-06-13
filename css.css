@@ -1,3 +1,10 @@
-.grid {
-    display: grid;
+.img-thumbnail {
+    padding: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+}
+
+.card {
+    border-radius: 0;
 }
