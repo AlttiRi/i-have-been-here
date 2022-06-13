@@ -1,6 +1,7 @@
-import {logPicture} from "./util.js";
+import {isOpera, logPicture} from "./util.js";
 import {inIncognitoContext, exchangeMessage} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
+import {openBookmarks} from "./bg/opera-bookmark-opener.js";
 
 console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);
@@ -45,7 +46,7 @@ saveButton.addEventListener("click", async () => {
 visitButton.addEventListener("click", async () => {
 	const visit = await exchangeMessage("add-visit--message-exchange");
 	visitButton.classList.add("btn-outline-success");
-	visitButton.title = visitToButtonTitle(visit)	;
+	visitButton.title = visitToButtonTitle(visit);
 });
 
 openVisitsButton.addEventListener("click", async () => {
@@ -62,4 +63,12 @@ openVisitsButton.addEventListener("click", async () => {
 
 function visitToButtonTitle(visit) {
 	return [visit.date].flat().map(ms => new Date(ms)).join("\n");
+}
+
+if (isOpera) {
+	const openOperaBookmarks = document.querySelector("#open-opera-bookmarks");
+	openOperaBookmarks.removeAttribute("hidden");
+	openOperaBookmarks.addEventListener("click", () => {
+		void openBookmarks();
+	});
 }

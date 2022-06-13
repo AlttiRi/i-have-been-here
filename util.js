@@ -1,3 +1,7 @@
+export const isFirefox = typeof navigator === "object" && navigator.userAgent.includes("Firefox");
+export const isOpera   = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
+
+
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -10,10 +14,6 @@ export function downloadBlob(blob, name, url) {
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
 }
-
-export const isFirefox = typeof navigator === "object" && navigator.userAgent.includes("Firefox");
-export const isOpera   = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
-
 
 export function logPicture(url, scale) {
     void logPictureAsync(url, scale);

@@ -1,9 +1,9 @@
 import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
 import {isOpera} from "../util.js";
 
-async function openBookmarks() {
+export function openBookmarks() {
     const url = "chrome://startpage/bookmarks";
-    focusOrCreateNewTab(url).then();
+    return focusOrCreateNewTab(url);
 }
 
 /** @type {{title, popup}} */
