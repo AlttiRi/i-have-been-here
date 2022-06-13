@@ -158,8 +158,10 @@ export function binaryStringToArrayBuffer(binaryString) {
 }
 
 const encodeMap = new Map([
- // [ " ",   "+"], // "%20"
+ // [ " ",   "+"],
+    [ " ", "%20"],
     ["\"", "%22"],
+ // [ "#", "%23"],
  // [ "+", "%2B"],
     [ "/", "%2F"],
     [ "*", "%30"],
@@ -170,31 +172,51 @@ const encodeMap = new Map([
     ["\\", "%5C"],
     [ "|", "%7C"],
  // [ "~", "%7E"], // Since Chrome replaces `~` with `_` on file downloading // todo: option
+ // [ "·", "%C2%B7"],
 ]);
+const regexp = new RegExp("[" + [...encodeMap.keys()].join() + "]", "g");
 function encodeName(name) {
-    return name.replaceAll(/["/*:<>?\\|]/g, ch => encodeMap.get(ch));
+    return name.replaceAll(regexp, ch => encodeMap.get(ch));
+}
+const searchEncodeMap = new Map(encodeMap);
+searchEncodeMap.set("#", "%23");
+searchEncodeMap.set("·", "%C2%B7");
+const regexpSearch = new RegExp("[" + [...searchEncodeMap.keys()].join() + "]", "g");
+function encodeSearch(name) {
+    return name.replaceAll(regexpSearch, ch => searchEncodeMap.get(ch));
 }
 export function fullUrlToFilename(url) {
     const u = new URL(url);
-    const pt = u.pathname.startsWith("/") ? u.pathname.slice(1) : u.pathname;
-    let seconds = [u.hostname, ...pt.split("/")].filter(o => o)
-    seconds = seconds.map(o => decodeURIComponent(o));
+    const pathnameNorm = u.pathname.replaceAll(/\/+/g, "/");
+    const pt = pathnameNorm.startsWith("/") ? pathnameNorm.slice(1) : pathnameNorm;
+    let main = [u.hostname, ...pt.split("/")].filter(o => o);
+    main = main.map(o => decodeURIComponent(o));
     let header;
     if (u.protocol.startsWith("http")) {
         const hostname = u.hostname.startsWith("www.") ? u.hostname.slice(4) : u.hostname;
         header = `[${hostname}]`;
-        seconds = seconds.slice(1);
+        main = main.slice(1);
     } else {
         const part1 = u.protocol.slice(0, -1);
-        const part2 = seconds.shift();
+        const part2 = main.shift();
         header = `[${part1}·${part2}]`;
     }
-    let search = u.search ? "  " + encodeName(u.search.slice(1)) : "";
+    let searchPad = pathnameNorm.endsWith("/") ? "  " : " ";
+    if (pathnameNorm.endsWith("/") && pathnameNorm.length > 1) {
+        searchPad = "· ";
+    }
+    let search = u.search ? searchPad + encodeSearch(decodeURIComponent(u.search.slice(1))) : "";
+
     search = search.replaceAll("%20", "+");
+    search = search.replaceAll("%2F", "·");
+    if (search.endsWith("·") && !u.hash) {
+        search = search.slice(0, -1);
+    }
+
     let hash = encodeName(u.hash);
-    if (hash && !search && !seconds.length) {
+    if (hash && !search && !main.length) {
         hash = " " + hash;
     }
     const last = search + hash;
-    return [header, ...seconds,].filter(o => o).join(" ") + last;
+    return [header, main.join("·")].filter(o => o).join(" ") + last;
 }
