@@ -2,27 +2,27 @@ import {Tester} from "@alttiri/util-node-js";
 import {fullUrlToFilename} from "./util.js";
 
 const {eq, report} = new Tester().destructible();
+// todo? ¿¿¿¿
+eq("ab0", fullUrlToFilename("  about:addons  "),          "[about·addons]");
+eq("ab1", fullUrlToFilename("about:addons"),              "[about·addons]");
+eq("ab2", fullUrlToFilename("about:addons/"),             "[about·addons]");
+eq("ab3", fullUrlToFilename("about:addons/?"),            "[about·addons]");
+eq("ab4", fullUrlToFilename("about:addons/?#"),           "[about·addons]");
+eq("ab5", fullUrlToFilename("about:addons/xxx/yyy"),      "[about·addons] xxx yyy");
+eq("ab6", fullUrlToFilename("about:addons/xxx/yyy/"),     "[about·addons] xxx yyy");
+eq("ab7", fullUrlToFilename("about:addons/xxx/yyy//"),    "[about·addons] xxx yyy");
+eq("ab8", fullUrlToFilename("about:addons/xxx/yyy//?"),   "[about·addons] xxx yyy");
+eq("ab9", fullUrlToFilename("about:addons/xxx/yyy//?#"),  "[about·addons] xxx yyy");
 
-eq("ab0", fullUrlToFilename("  about:addons  "),          "[about~addons]");
-eq("ab1", fullUrlToFilename("about:addons"),              "[about~addons]");
-eq("ab2", fullUrlToFilename("about:addons/"),             "[about~addons]");
-eq("ab3", fullUrlToFilename("about:addons/?"),            "[about~addons]");
-eq("ab4", fullUrlToFilename("about:addons/?#"),           "[about~addons]");
-eq("ab5", fullUrlToFilename("about:addons/xxx/yyy"),      "[about~addons] xxx yyy");
-eq("ab6", fullUrlToFilename("about:addons/xxx/yyy/"),     "[about~addons] xxx yyy");
-eq("ab7", fullUrlToFilename("about:addons/xxx/yyy//"),    "[about~addons] xxx yyy");
-eq("ab8", fullUrlToFilename("about:addons/xxx/yyy//?"),   "[about~addons] xxx yyy");
-eq("ab9", fullUrlToFilename("about:addons/xxx/yyy//?#"),  "[about~addons] xxx yyy");
+eq("mz1", fullUrlToFilename("moz-extension://6c7afaa1-191c-4c41-b65c-8cfd2880104c/"),              "[moz-extension·6c7afaa1-191c-4c41-b65c-8cfd2880104c]");
+eq("mz1", fullUrlToFilename("moz-extension://6c7afaa1-191c-4c41-b65c-8cfd2880104c/manifest.json"), "[moz-extension·6c7afaa1-191c-4c41-b65c-8cfd2880104c] manifest.json");
+eq("cr1", fullUrlToFilename("chrome-extension://cjpalhdlnbpafiamejdnhcphjbkeiagm/dashboard.html#about.html"), "[chrome-extension·cjpalhdlnbpafiamejdnhcphjbkeiagm] dashboard.html#about.html");
 
-eq("mz1", fullUrlToFilename("moz-extension://6c7afaa1-191c-4c41-b65c-8cfd2880104c/"),              "[moz-extension~6c7afaa1-191c-4c41-b65c-8cfd2880104c]");
-eq("mz1", fullUrlToFilename("moz-extension://6c7afaa1-191c-4c41-b65c-8cfd2880104c/manifest.json"), "[moz-extension~6c7afaa1-191c-4c41-b65c-8cfd2880104c] manifest.json");
-eq("cr1", fullUrlToFilename("chrome-extension://cjpalhdlnbpafiamejdnhcphjbkeiagm/dashboard.html#about.html"), "[chrome-extension~cjpalhdlnbpafiamejdnhcphjbkeiagm] dashboard.html#about.html");
+eq("cr2", fullUrlToFilename("chrome://flags/"),               "[chrome·flags]");
+eq("cr2", fullUrlToFilename("chrome://extensions/"),          "[chrome·extensions]");
+eq("cr3", fullUrlToFilename("chrome-error://chromewebdata/"), "[chrome-error·chromewebdata]");
 
-eq("cr2", fullUrlToFilename("chrome://flags/"),               "[chrome~flags]");
-eq("cr2", fullUrlToFilename("chrome://extensions/"),          "[chrome~extensions]");
-eq("cr3", fullUrlToFilename("chrome-error://chromewebdata/"), "[chrome-error~chromewebdata]");
-
-eq("ftp", fullUrlToFilename("ftp://192.168.1.1"),   "[ftp~192.168.1.1]");
+eq("ftp", fullUrlToFilename("ftp://192.168.1.1"),   "[ftp·192.168.1.1]");
 
 eq("s1", fullUrlToFilename("https://example.com"),      "[example.com]");
 eq("s2", fullUrlToFilename("https://example.com/"),     "[example.com]");
@@ -52,5 +52,8 @@ eq("16", fullUrlToFilename("https://example.com/?search=red+hat+sun"),       "[e
 eq("17", fullUrlToFilename("https://example.com/?search=red+hat%20sun"),     "[example.com]  search=red+hat+sun");
 eq("18", fullUrlToFilename("https://example.com/?search=red%20hat%20sun"),   "[example.com]  search=red+hat+sun");
 eq("19", fullUrlToFilename("https://example.com/?search=red+~hat+~cap+sun"), "[example.com]  search=red+~hat+~cap+sun");
+
+// eq("20", fullUrlToFilename("https://example.com/forum/index.php?media/users/user.12345/"), "[example.com] forum index.php  media users user.12345"); // todo?
+// eq("21", fullUrlToFilename("https://example.com/forum/index.php?media/albums/album-name.123/"), "[example.com] forum index.php  media albums album-name.123"); // todo?
 
 report();

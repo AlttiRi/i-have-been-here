@@ -187,7 +187,7 @@ export function fullUrlToFilename(url) {
     } else {
         const part1 = u.protocol.slice(0, -1);
         const part2 = seconds.shift();
-        header = `[${part1}~${part2}]`; // ;
+        header = `[${part1}·${part2}]`;
     }
     let search = u.search ? "  " + encodeName(u.search.slice(1)) : "";
     search = search.replaceAll("%20", "+");
