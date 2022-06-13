@@ -58,10 +58,12 @@ eq("19", fullUrlToFilename("https://example.com/?search=red+~hat+~cap+sun"), "[e
 
 eq("x1", fullUrlToFilename("https://example.com/?search=·"), "[example.com]  search=%C2%B7");
 
-// todo?
+// todo: escape only required in `hash`
 // eq("x2", fullUrlToFilename("https://example.com/#·"), "[example.com] #%C2%B7");
 // eq("x3", fullUrlToFilename("https://example.com/#~"), "[example.com] #~");
 // eq("x3", fullUrlToFilename("https://example.com/#—"), "[example.com] #—");
+
+// todo: replace (optionally) "~" with "%7E" since Chrome replaces `~` with `_` on auto file downloading
 
 eq("20", fullUrlToFilename("https://example.com/forum/index.php?media/users/user.12345/"),      "[example.com] forum·index.php media·users·user.12345");
 eq("21", fullUrlToFilename("https://example.com/forum/index.php?media/albums/album-name.123/"), "[example.com] forum·index.php media·albums·album-name.123");
