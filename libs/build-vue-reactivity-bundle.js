@@ -4,7 +4,7 @@ import {rollup} from "rollup";
 
 
 const bundle = await rollup({
-    input: "./libs/build-entry-vue-reactivity-entire.js",
+    input: "./libs/build-entry-vue-reactivity-bundle.js",
     plugins: [
         resolve({
             browser: true,
