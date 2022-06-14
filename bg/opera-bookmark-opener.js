@@ -51,12 +51,18 @@ export async function enableBookmarksOpenerMode() {
         await onBOMReady;
     }
     const checked = bookmarkOpenerMode.value;
+    const id = "bookmark_opener";
     chrome.contextMenus.create({
-        id: "bookmark_opener",
+        id,
         title: "Bookmark 🔖 opener mode",
         contexts: ["browser_action"],
         type: "checkbox",
         checked
+    });
+    watch(bookmarkOpenerMode, () => {
+        const checked = bookmarkOpenerMode.value;
+        console.log("bookmarkOpenerMode watch", checked);
+        chrome.contextMenus.update(id, {checked});
     });
     chrome.contextMenus.onClicked.addListener((info, tab) => {
         if (info.menuItemId === "bookmark_opener") {

@@ -25,9 +25,24 @@ void init();
 const bom = readonly(bookmarkOpenerMode);
 export {bom as bookmarkOpenerMode};
 
-export async function setBookmarkOpenerMode(newValue) {
-    if (newValue !== bookmarkOpenerMode.value) {
-        await setToStoreLocal("bookmarkOpenerMode", newValue);
+export async function setBookmarkOpenerMode(newValue, isSync = false) {
+    if (newValue === bookmarkOpenerMode.value) {
+        return;
     }
+    if (isSync) {
+        bookmarkOpenerMode.value = newValue;
+        return;
+    }
+    await setToStoreLocal("bookmarkOpenerMode", newValue);
     bookmarkOpenerMode.value = newValue;
+    chrome.runtime.sendMessage({
+        command: "set-bookmark-opener-mode--message",
+        data: newValue
+    });
 }
+
+chrome.runtime.onMessage.addListener(message => {
+    if (message.command === "set-bookmark-opener-mode--message") {
+        void setBookmarkOpenerMode(message.data, true);
+    }
+});
