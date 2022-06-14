@@ -16,13 +16,20 @@ console.log(location);
 
 void main();
 async function main() {
-    const app = document.querySelector("#app");
+    const controls = document.querySelector("#controls");
     const list = document.querySelector("#list");
+
+    controls.addEventListener("click", event => {
+        event.preventDefault();
+        if (event.ctrlKey) {
+            location.hash = "";
+        }
+    });
+
     const exportVisitsButton = document.querySelector("#export-visits");
     exportVisitsButton.addEventListener("click", () => {
         void exportVisits();
     });
-
     const importVisitsButton = document.querySelector("input[type=file]");
     importVisitsButton.addEventListener("change", async () => {
         const file = importVisitsButton.files[0];
@@ -39,8 +46,6 @@ async function main() {
     }
 
     console.log("Visits:", await getFromStoreLocal("visits"));
-
-    // await removeImages();
 
     const imageEntries = await getImageEntries();
     for (const [key, /** @type {string}*/ data] of imageEntries) {
@@ -92,6 +97,16 @@ async function main() {
         await Promise.all(promises);
         deleteImagesButton.removeAttribute("disabled");
     });
+
+    function scrollToHash() {
+        const hash = location.hash;
+        if (!hash) {
+            return;
+        }
+        location.hash = "";
+        location.hash = hash;
+    }
+    scrollToHash();
 }
 
 
