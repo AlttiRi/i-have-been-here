@@ -73,15 +73,16 @@ export function registerContextMenu(features = ["reload"]) {
             checked
         });
         watchEffect(() => {
-            console.log("downloadShelf watchEffect", downloadShelf.value);
-            chrome.downloads.setShelfEnabled(downloadShelf.value);
+            const checked = downloadShelf.value;
+            console.log("downloadShelf watchEffect", checked);
+            chrome.downloads.setShelfEnabled(checked);
+            chrome.contextMenus.update(id, {checked});
         });
 
         chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-            console.log("menuItemId", info.menuItemId);
+            console.log("menuItemId", info.menuItemId, info);
             if (info.menuItemId === id) {
                 await setDownloadShelf(info.checked);
-                info.checked = downloadShelf.value;
             }
         });
     }
