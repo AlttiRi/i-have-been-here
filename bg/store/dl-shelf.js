@@ -25,11 +25,24 @@ void init();
 const bom = readonly(downloadShelf);
 export {bom as downloadShelf};
 
-export async function setDownloadShelf(newValue) {
-    if (newValue !== downloadShelf.value) {
-        await setToStoreLocal("downloadShelf", newValue);
-        downloadShelf.value = newValue;
+export async function setDownloadShelf(newValue, isSync = false) {
+    if (newValue === downloadShelf.value) {
+        return;
     }
+    if (isSync) {
+        downloadShelf.value = newValue;
+        return;
+    }
+    await setToStoreLocal("downloadShelf", newValue);
+    downloadShelf.value = newValue;
+    chrome.runtime.sendMessage({
+        command: "set-download-shelf--message",
+        data: newValue
+    });
 }
 
-
+chrome.runtime.onMessage.addListener(message => {
+    if (message.command === "set-download-shelf--message") {
+        void setDownloadShelf(message.data, true);
+    }
+});
