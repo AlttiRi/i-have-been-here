@@ -2,12 +2,12 @@ import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "./util-e
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {exportVisits, getVisits, updateVisit} from "./bg/visits.js";
 import {
-    binaryStringToArrayBuffer,
     dateToDayDateString,
     downloadBlob,
     fullUrlToFilename,
     sleep
 } from "./util.js";
+import {toArrayBuffer, toBase64} from "./bg/image-data.js";
 
 console.log(location);
 
@@ -54,8 +54,7 @@ async function main() {
         console.log("data.length", url, data.length);
 
         const imgElem = document.createElement("img");
-        const decoded = btoa(data);
-        imgElem.src = "data:image/jpeg;base64," + decoded;
+        imgElem.src = toBase64(data);
         document.body.append(imgElem);
 
         const h2 = document.createElement("h2");
@@ -76,7 +75,7 @@ async function main() {
     const exportImagesButton = document.querySelector("#export-images");
     exportImagesButton.addEventListener("click", async () => {
         for (const [key, /** @type {string}*/ data] of imageEntries) {
-            const ab = binaryStringToArrayBuffer(data);
+            const ab = toArrayBuffer(data);
             const blob = new Blob([ab], {type: "image/jpeg"});
             const url = key.slice("screenshot:".length);
             const urlFilename = fullUrlToFilename(url);

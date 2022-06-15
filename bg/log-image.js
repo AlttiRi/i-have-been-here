@@ -6,6 +6,7 @@ import {
 } from "../util-ext-bg.js";
 import {logPicture} from "../util.js";
 import {setToStoreLocal} from "../util-ext.js";
+import {toData} from "./image-data.js";
 
 export function logImageOnMessage() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -15,7 +16,7 @@ export function logImageOnMessage() {
         if (message?.command === "save-screenshot--message-exchange"){
             const {dataUrl, tabUrl} = message;
             console.log("setToStoreLocal [\"save-screenshot\"]", dataUrl);
-            void setToStoreLocal("screenshot:" + tabUrl, atob(dataUrl.substring("data:image/jpeg;base64,".length))).then(() => {
+            void setToStoreLocal("screenshot:" + tabUrl, toData(dataUrl)).then(() => {
                 console.log("stored");
                 sendResponse(true);
             });
