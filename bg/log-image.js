@@ -24,21 +24,26 @@ export function logImageOnMessage() {
     });
 }
 
-async function asyncHandler(sendResponse) {
+export async function getActiveTabData() {
+    const date = Date.now();
     const tab = await getActiveTab();
-
     if (!tab) {
         console.log("[warning] no active tab available");
-        sendResponse({screenshotUrl: null});
+        return {};
+    }
+    console.log("Active tab:", tab);
+    const {url, title, favIconUrl, id, incognito, height, width} = tab;
+    const screenshotUrl = await captureVisibleTab({quality: 92});
+    return {id, url, title, favIconUrl, screenshotUrl, date, incognito, height, width};
+}
+
+async function asyncHandler(sendResponse) {
+    const {date, screenshotUrl, url: tabUrl, title: tabTitle, id: tabId} = await getActiveTabData();
+
+    sendResponse({tabUrl, tabTitle, screenshotUrl, date});
+    if (!screenshotUrl) {
         return;
     }
-
-    const tabUrl = tab.url;
-    const tabTitle = tab.title;
-    const date = Date.now();
-
-    const screenshotUrl = await captureVisibleTab({quality: 92});
-    sendResponse({screenshotUrl, tabUrl, tabTitle, date});
     logPicture(screenshotUrl);
 
     const injected = await executeScript({
@@ -49,7 +54,7 @@ async function asyncHandler(sendResponse) {
     }
 
     // Log the image in the web page console (send the message to the injected content script)
-    await exchangeMessageWithTab(tab.id, {
+    await exchangeMessageWithTab(tabId, {
         command: "log-screenshot--message-exchange",
         data: screenshotUrl
     });
