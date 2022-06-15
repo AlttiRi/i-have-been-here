@@ -2,7 +2,7 @@ import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-e
 import {isOpera} from "../util.js";
 
 export function openBookmarks() {
-    const url = "chrome://startpage/bookmarks";
+    const url = "chrome://bookmarks"; // "chrome://startpage/bookmarks";
     return focusOrCreateNewTab(url);
 }
 
