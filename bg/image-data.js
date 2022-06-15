@@ -3,7 +3,7 @@ import {binaryStringToArrayBuffer} from "../util.js";
 // In Chrome binary takes more space than base64, however.
 const binary = false;
 
-export function toBase64(data) {
+export function toUrl(data) {
     if (binary) {
         data = btoa(data);
     }
