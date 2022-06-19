@@ -7,7 +7,7 @@ import {
     fullUrlToFilename,
     sleep
 } from "./util.js";
-import {toArrayBuffer, toUrl} from "./bg/image-data.js";
+import {toArrayBuffer, toDataUrl} from "./bg/image-data.js";
 
 console.log(location);
 
@@ -54,7 +54,7 @@ async function main() {
         console.log("data.length", url, data.length);
 
         const imgElem = document.createElement("img");
-        imgElem.src = toUrl(data);
+        imgElem.src = toDataUrl(data);
         document.body.append(imgElem);
 
         const h2 = document.createElement("h2");
