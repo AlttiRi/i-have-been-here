@@ -19,7 +19,7 @@ changeIconOnMessage();
 logImageOnMessage();
 
 void countTabs();
-enableBookmarksOpenerMode();
+void enableBookmarksOpenerMode();
 initVisitBackgroundHandler();
 registerContextMenu(["reload", "yandex_images", "download_shelf", "open_list"]);
 
