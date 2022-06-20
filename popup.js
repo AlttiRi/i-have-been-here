@@ -22,13 +22,11 @@ changeIconButton.addEventListener("click", () => {
 	chrome.runtime.sendMessage("change-icon--message");
 });
 
-let screenShotData = null;
-logScreenButton.addEventListener("click", async () => {
-	await exchangeMessage("take-screenshot--message-exchange"); // just to log the image in bg
+let screenShotData;
+async function initPreview() {
 	screenShotData = await getActiveTabData();
-
 	const {
-		id, url, title, favIconUrl, screenshotUrl, date, incognito, height, width
+		url, title, favIconUrl, screenshotUrl, date, /*id, incognito, height, width*/
 	} = screenShotData;
 
 	if (!screenshotUrl) {
@@ -53,6 +51,12 @@ logScreenButton.addEventListener("click", async () => {
 	imageElem.dataset.tabUrl = url;
 	imageElem.dataset.date   = date;
 	saveButton.removeAttribute("disabled");
+}
+void initPreview();
+
+logScreenButton.addEventListener("click", async () => {
+	await exchangeMessage("take-screenshot--message-exchange"); // just to log the image in bg
+	return initPreview();
 });
 
 saveButton.addEventListener("click", async () => {
