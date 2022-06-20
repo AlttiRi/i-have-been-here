@@ -1,7 +1,8 @@
 import {isOpera, logPicture} from "./util.js";
-import {inIncognitoContext, exchangeMessage} from "./util-ext.js";
+import {exchangeMessage, inIncognitoContext} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {openBookmarks} from "./bg/opera-bookmark-opener.js";
+import {getActiveTabData} from "./bg/log-image.js";
 
 console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);
@@ -13,20 +14,43 @@ const logScreenButton = document.querySelector("#btn-log-screen");
 const visitButton = document.querySelector("#btn-visit");
 const openVisitsButton = document.querySelector("#btn-open-visits");
 const imageElem = document.querySelector("#image");
+const faviconElem = document.querySelector("#favicon");
+const titleElem = document.querySelector("#title");
+const urlElem = document.querySelector("#url");
 
 changeIconButton.addEventListener("click", () => {
 	chrome.runtime.sendMessage("change-icon--message");
 });
 
+let screenShotData = null;
 logScreenButton.addEventListener("click", async () => {
-	const {screenshotUrl, tabUrl, tabTitle, date} = await exchangeMessage("take-screenshot--message-exchange");
+	await exchangeMessage("take-screenshot--message-exchange"); // just to log the image in bg
+	screenShotData = await getActiveTabData();
+
+	const {
+		id, url, title, favIconUrl, screenshotUrl, date, incognito, height, width
+	} = screenShotData;
+
 	if (!screenshotUrl) {
 		return;
 	}
+
+	faviconElem.src = "chrome://favicon/size/16@2x/" + url;
+	faviconElem.alt = favIconUrl;
+	titleElem.textContent = title;
+	const u = new URL(url);
+	if (u.protocol.startsWith("http")) {
+		urlElem.textContent = u.host.replace(/^www./, "");
+	} else {
+		urlElem.textContent = u.href;
+	}
+
+	urlElem.dataset.url = url;
+
 	logPicture(screenshotUrl);
 	imageElem.src = screenshotUrl;
-	imageElem.alt = tabTitle;
-	imageElem.dataset.tabUrl = tabUrl;
+	imageElem.alt = title;
+	imageElem.dataset.tabUrl = url;
 	imageElem.dataset.date   = date;
 	saveButton.removeAttribute("disabled");
 });

@@ -39,9 +39,9 @@ export async function getActiveTabData() {
 }
 
 async function asyncHandler(sendResponse) {
-    const {date, screenshotUrl, url: tabUrl, title: tabTitle, id: tabId} = await getActiveTabData();
+    const {/*date,*/ screenshotUrl, /*url: tabUrl, title: tabTitle,*/ id: tabId} = await getActiveTabData();
 
-    sendResponse({tabUrl, tabTitle, screenshotUrl, date});
+    sendResponse(/*{tabUrl, tabTitle, screenshotUrl, date}*/);
     if (!screenshotUrl) {
         return;
     }

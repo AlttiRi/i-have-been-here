@@ -9,6 +9,40 @@
 	<link href="css.css" rel="stylesheet">
 
 	<script src="popup.js" type="module"></script>
+	<style>
+	#favicon {
+		height: 22px;
+		width: 22px
+	}
+	.favicon-wrap {
+		display: flex;
+		margin: 0;
+	}
+	.info {
+		padding:  1rem;
+		max-width: 300px;
+	}
+	#title {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.bar {
+		display: flex;
+		align-items: center;
+		margin-bottom: 4px;
+		padding-top:  0.5rem;
+	}
+	#url {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		padding-left:  0.5rem;
+	}
+	img[src="#"] {
+		display: none;
+	}
+	</style>
 </head>
 <body>
 <div class="">
@@ -26,6 +60,16 @@
 		<div style="width: 320px">
 			<img id="image" alt="" src="" class="img-thumbnail">
 		</div>
+		<div class="info">
+			<div id="title" class=""></div>
+			<div class="bar">
+				<div class="favicon-wrap">
+					<img id="favicon" src="#" alt=""/>
+				</div>
+				<div id="url" class="text-secondary" data-url=""></div>
+			</div>
+		</div>
+
 	</div>
 	<div class="card">
 		<div class="card-body">
