@@ -10,7 +10,6 @@ console.log(`Incognito: ${inIncognitoContext}.`);
 
 const saveButton = document.querySelector("#btn-save-screen");
 const changeIconButton = document.querySelector("#btn-change-icon");
-const logScreenButton = document.querySelector("#btn-log-screen");
 const visitButton = document.querySelector("#btn-visit");
 const openVisitsButton = document.querySelector("#btn-open-visits");
 const imageElem = document.querySelector("#image");
@@ -54,7 +53,7 @@ async function initPreview() {
 }
 void initPreview();
 
-logScreenButton.addEventListener("click", async () => {
+imageElem.addEventListener("mousedown", async () => {
 	await exchangeMessage("take-screenshot--message-exchange"); // just to log the image in bg
 	return initPreview();
 });
