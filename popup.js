@@ -1,4 +1,4 @@
-import {isOpera, logPicture} from "./util.js";
+import {downloadBlob, fullUrlToFilename, isOpera, logPicture} from "./util.js";
 import {exchangeMessage, inIncognitoContext} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {openBookmarks} from "./bg/opera-bookmark-opener.js";
@@ -12,6 +12,7 @@ const saveButton = document.querySelector("#btn-save-screen");
 const changeIconButton = document.querySelector("#btn-change-icon");
 const visitButton = document.querySelector("#btn-visit");
 const openVisitsButton = document.querySelector("#btn-open-visits");
+const downloadButton = document.querySelector("#btn-download-screenshot");
 const imageElem = document.querySelector("#image");
 const faviconElem = document.querySelector("#favicon");
 const titleElem = document.querySelector("#title");
@@ -78,6 +79,17 @@ visitButton.addEventListener("click", async () => {
 
 openVisitsButton.addEventListener("click", async () => {
 	createBackgroundTab(chrome.runtime.getURL("./list.html"));
+});
+
+downloadButton.addEventListener("click", async () => {
+	const {
+		url, screenshotUrl
+	} = screenShotData;
+	const resp = await fetch(screenshotUrl);
+	const blob = await resp.blob();
+	const urlFilename = fullUrlToFilename(url);
+	const name = `[ihbh]${urlFilename}.jpg`;
+	downloadBlob(blob, name, url);
 });
 
 ;(async function() {

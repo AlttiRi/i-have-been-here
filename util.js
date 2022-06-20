@@ -157,6 +157,9 @@ export function binaryStringToArrayBuffer(binaryString) {
     return u8Array;
 }
 
+
+// todo? escape ~ in chrome
+//  do not unescape `%0A`, for example
 const encodeMap = new Map([
  // [ " ",   "+"],
     [ " ", "%20"],
