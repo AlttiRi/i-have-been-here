@@ -181,6 +181,7 @@ const regexp = new RegExp("[" + [...encodeMap.keys()].join() + "]", "g");
 function encodeName(name) {
     return name.replaceAll(regexp, ch => encodeMap.get(ch));
 }
+
 const searchEncodeMap = new Map(encodeMap);
 searchEncodeMap.set("#", "%23");
 searchEncodeMap.set("·", "%C2%B7");
@@ -188,6 +189,15 @@ const regexpSearch = new RegExp("[" + [...searchEncodeMap.keys()].join() + "]", 
 function encodeSearch(name) {
     return name.replaceAll(regexpSearch, ch => searchEncodeMap.get(ch));
 }
+
+const hashEncodeMap = new Map(encodeMap);
+hashEncodeMap.set("/", "·");
+hashEncodeMap.set("·", "%C2%B7");
+const regexpHash = new RegExp("[" + [...hashEncodeMap.keys()].join() + "]", "g");
+function encodeHash(name) {
+    return name.replaceAll(regexpHash, ch => hashEncodeMap.get(ch));
+}
+
 export function fullUrlToFilename(url) {
     const u = new URL(url);
     const pathnameNorm = u.pathname.replaceAll(/\/+/g, "/");
@@ -216,10 +226,14 @@ export function fullUrlToFilename(url) {
         search = search.slice(0, -1);
     }
 
-    let hash = encodeName(u.hash);
+    let hash = u.hash ? "#" + encodeHash(decodeURIComponent(u.hash.slice(1))) : "";
     if (hash && !search && !main.length) {
         hash = " " + hash;
     }
+    if (hash.endsWith("·")) {
+        hash = hash.slice(0, -1);
+    }
+
     const last = search + hash;
     return [header, main.join("·")].filter(o => o).join(" ") + last;
 }

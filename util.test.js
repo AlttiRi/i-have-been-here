@@ -58,15 +58,26 @@ eq("19", fullUrlToFilename("https://example.com/?search=red+~hat+~cap+sun"), "[e
 
 eq("x1", fullUrlToFilename("https://example.com/?search=·"), "[example.com]  search=%C2%B7");
 
-// todo: escape only required in `hash`
-// eq("x2", fullUrlToFilename("https://example.com/#·"), "[example.com] #%C2%B7");
-// eq("x3", fullUrlToFilename("https://example.com/#~"), "[example.com] #~");
-// eq("x3", fullUrlToFilename("https://example.com/#—"), "[example.com] #—");
+eq("20", fullUrlToFilename("https://example.com/forum/index.php?media/users/user.12345/"),      "[example.com] forum·index.php media·users·user.12345");
+eq("21", fullUrlToFilename("https://example.com/forum/index.php?media/albums/album-name.123/"), "[example.com] forum·index.php media·albums·album-name.123");
+
+eq("22", fullUrlToFilename("https://example.com/index.php?page=post&s=list&tags=example"), "[example.com] index.php page=post&s=list&tags=example");
 
 // todo: replace (optionally) "~" with "%7E" since Chrome replaces `~` with `_` on auto file downloading
 
-eq("20", fullUrlToFilename("https://example.com/forum/index.php?media/users/user.12345/"),      "[example.com] forum·index.php media·users·user.12345");
-eq("21", fullUrlToFilename("https://example.com/forum/index.php?media/albums/album-name.123/"), "[example.com] forum·index.php media·albums·album-name.123");
+eq("#1", fullUrlToFilename("https://example.com/#~"),   "[example.com] #~");
+eq("#2", fullUrlToFilename("https://example.com/#—"),   "[example.com] #—");
+eq("#3", fullUrlToFilename("https://example.com/##"),   "[example.com] ##");
+eq("#4", fullUrlToFilename("https://example.com/###"),  "[example.com] ###");
+eq("#5", fullUrlToFilename("https://example.com/#·"),   "[example.com] #%C2%B7");
+eq("#6", fullUrlToFilename("https://example.com/#/a"),  "[example.com] #·a");
+eq("#7", fullUrlToFilename("https://example.com/#/a/"), "[example.com] #·a");
+eq("#8", fullUrlToFilename("https://mega.nz/folder/abSRE#abSREabSRE/folder/abSRE/"), "[mega.nz] folder·abSRE#abSREabSRE·folder·abSRE");
+
+// todo
+eq(".1", fullUrlToFilename("https://example.com/·"),    "[example.com] %C2%B7");
+eq(".2", fullUrlToFilename("https://example.com/·/"),   "[example.com] %C2%B7");
+eq(".3", fullUrlToFilename("https://example.com/·/%C2%B7"),   "[example.com] %C2%B7%·C2%B7");
 
 
 report();
