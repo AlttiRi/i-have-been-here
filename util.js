@@ -160,7 +160,7 @@ export function binaryStringToArrayBuffer(binaryString) {
 
 // todo? escape ~ in chrome
 //  do not unescape `%0A`, for example
-const encodeMap = new Map([
+const defaultEncodeMap = new Map([
  // [ " ",   "+"],
     [ " ", "%20"],
     ["\"", "%22"],
@@ -177,26 +177,20 @@ const encodeMap = new Map([
  // [ "~", "%7E"], // Since Chrome replaces `~` with `_` on file downloading // todo: option
  // [ "·", "%C2%B7"],
 ]);
-const regexp = new RegExp("[" + [...encodeMap.keys()].join() + "]", "g");
-function encodeName(name) {
-    return name.replaceAll(regexp, ch => encodeMap.get(ch));
+function getEncoder(replacingArray) {
+    const map = new Map(defaultEncodeMap);
+    for (const [a, b] of replacingArray) {
+        map.set(a, b);
+    }
+    const regexp = new RegExp("[" + [...map.keys()].join() + "]", "g");
+    return function(name) {
+        return name.replaceAll(regexp, ch => map.get(ch));
+    }
 }
 
-const searchEncodeMap = new Map(encodeMap);
-searchEncodeMap.set("#", "%23");
-searchEncodeMap.set("·", "%C2%B7");
-const regexpSearch = new RegExp("[" + [...searchEncodeMap.keys()].join() + "]", "g");
-function encodeSearch(name) {
-    return name.replaceAll(regexpSearch, ch => searchEncodeMap.get(ch));
-}
+const encodeSearch = getEncoder([["#", "%23"], ["·", "%C2%B7"]]);
+const encodeHash   = getEncoder([["/",   "·"], ["·", "%C2%B7"]]);
 
-const hashEncodeMap = new Map(encodeMap);
-hashEncodeMap.set("/", "·");
-hashEncodeMap.set("·", "%C2%B7");
-const regexpHash = new RegExp("[" + [...hashEncodeMap.keys()].join() + "]", "g");
-function encodeHash(name) {
-    return name.replaceAll(regexpHash, ch => hashEncodeMap.get(ch));
-}
 
 export function fullUrlToFilename(url) {
     const u = new URL(url);
