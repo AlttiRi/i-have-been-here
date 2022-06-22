@@ -78,12 +78,12 @@ eq("#8", fullUrlToFilename("https://mega.nz/folder/abSRE#abSREabSRE/folder/abSRE
 eq(".1", fullUrlToFilename("https://example.com/·"),        "[example.com] %C2%B7");
 eq(".2", fullUrlToFilename("https://example.com/·/"),       "[example.com] %C2%B7");
 eq(".3", fullUrlToFilename("https://example.com/·/%C2%B7"), "[example.com] %C2%B7·%C2%B7");
-eq(".4", fullUrlToFilename("https://example.com/%C2%B7/"),    "[example.com] %C2%B7");
-eq(".5", fullUrlToFilename("https://example.com/%C2%B7·/"),    "[example.com] %C2%B7%C2%B7");
+eq(".4", fullUrlToFilename("https://example.com/%C2%B7/"),  "[example.com] %C2%B7");
+eq(".5", fullUrlToFilename("https://example.com/%C2%B7·/"), "[example.com] %C2%B7%C2%B7");
 
 
-eq("/1", fullUrlToFilename("https://example.com/%2F"),        "[example.com] %2F");
-eq("/2", fullUrlToFilename("https://example.com/%2F/"),       "[example.com] %2F");
+eq("/1", fullUrlToFilename("https://example.com/%2F"),      "[example.com] %2F");
+eq("/2", fullUrlToFilename("https://example.com/%2F/"),     "[example.com] %2F");
 
 
 
