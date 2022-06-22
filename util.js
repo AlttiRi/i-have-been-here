@@ -190,14 +190,14 @@ function getEncoder(replacingArray) {
 
 const encodeSearch = getEncoder([["#", "%23"], ["·", "%C2%B7"]]);
 const encodeHash   = getEncoder([["/",   "·"], ["·", "%C2%B7"]]);
-
+const encodePath   = getEncoder([["#", "%23"], ["·", "%C2%B7"]]);
 
 export function fullUrlToFilename(url) {
     const u = new URL(url);
     const pathnameNorm = u.pathname.replaceAll(/\/+/g, "/");
     const pt = pathnameNorm.startsWith("/") ? pathnameNorm.slice(1) : pathnameNorm;
     let main = [u.hostname, ...pt.split("/")].filter(o => o);
-    main = main.map(o => decodeURIComponent(o));
+    main = main.map(o => encodePath(decodeURIComponent(o)));
     let header;
     if (u.protocol.startsWith("http")) {
         const hostname = u.hostname.startsWith("www.") ? u.hostname.slice(4) : u.hostname;
