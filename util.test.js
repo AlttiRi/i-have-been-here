@@ -85,6 +85,6 @@ eq(".5", fullUrlToFilename("https://example.com/%C2%B7·/"), "[example.com] %C2%
 eq("/1", fullUrlToFilename("https://example.com/%2F"),      "[example.com] %2F");
 eq("/2", fullUrlToFilename("https://example.com/%2F/"),     "[example.com] %2F");
 
-
+// todo file:// URLs
 
 report();
