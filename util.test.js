@@ -85,6 +85,12 @@ eq(".5", fullUrlToFilename("https://example.com/%C2%B7·/"), "[example.com] %C2%
 eq("/1", fullUrlToFilename("https://example.com/%2F"),      "[example.com] %2F");
 eq("/2", fullUrlToFilename("https://example.com/%2F/"),     "[example.com] %2F");
 
-// todo file:// URLs
+
+// todo
+eq("f/", fullUrlToFilename("file:///Downloads/Telegram%20Desktop/messages.html"),
+                            "[file] Downloads·Telegram%20Desktop·messages.html");
+eq("f:", fullUrlToFilename("file:///C:/Downloads/Telegram%20Desktop/messages.html"),
+                            "[file·C] Downloads·Telegram%20Desktop·messages.html");
+
 
 report();
