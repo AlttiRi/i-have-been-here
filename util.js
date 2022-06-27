@@ -203,6 +203,15 @@ export function fullUrlToFilename(url) {
         const hostname = u.hostname.startsWith("www.") ? u.hostname.slice(4) : u.hostname;
         header = `[${hostname}]`;
         main = main.slice(1);
+    } else
+    if (u.protocol === "file:") {
+        const diskLetter = main.length && main[0].match(/^[a-z](?=%3A$)/i)?.[0];
+        if (diskLetter) {
+            main.shift();
+            header = `[file·${diskLetter}]`;
+        } else {
+            header = `[file]`;
+        }
     } else {
         const part1 = u.protocol.slice(0, -1);
         const part2 = main.shift();

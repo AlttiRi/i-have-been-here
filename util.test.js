@@ -86,11 +86,18 @@ eq("/1", fullUrlToFilename("https://example.com/%2F"),      "[example.com] %2F")
 eq("/2", fullUrlToFilename("https://example.com/%2F/"),     "[example.com] %2F");
 
 
-// todo
+eq("f:", fullUrlToFilename("file:///C:/Downloads/Telegram%20Desktop/messages.html"),
+    "[file·C] Downloads·Telegram%20Desktop·messages.html");
 eq("f/", fullUrlToFilename("file:///Downloads/Telegram%20Desktop/messages.html"),
                             "[file] Downloads·Telegram%20Desktop·messages.html");
-eq("f:", fullUrlToFilename("file:///C:/Downloads/Telegram%20Desktop/messages.html"),
-                            "[file·C] Downloads·Telegram%20Desktop·messages.html");
+
+eq("fl", fullUrlToFilename("file:///"),      "[file]");
+eq("fl", fullUrlToFilename("file:////"),     "[file]");
+eq("fl", fullUrlToFilename("file:///C/"),    "[file] C");
+eq("fw", fullUrlToFilename("file:///C:"),    "[file·C]");
+eq("fw", fullUrlToFilename("file:///C:/"),   "[file·C]");
+eq("fw", fullUrlToFilename("file:///C:/C"),  "[file·C] C");
+eq("fw", fullUrlToFilename("file:///C:/C:"), "[file·C] C%3A");
 
 
 report();
