@@ -34,7 +34,7 @@ async function initPreview() {
 	}
 
 	faviconElem.src = "chrome://favicon/size/16@2x/" + url;
-	faviconElem.alt = favIconUrl;
+	faviconElem.title = favIconUrl;
 	titleElem.textContent = title;
 	const u = new URL(url);
 	if (u.protocol.startsWith("http")) {
