@@ -1,4 +1,4 @@
-import {downloadBlob, fullUrlToFilename, isOpera, logPicture} from "./util.js";
+import {downloadBlob, fullUrlToFilename, isOpera, logPicture, sleep} from "./util.js";
 import {exchangeMessage, inIncognitoContext} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {openBookmarks} from "./bg/opera-bookmark-opener.js";
@@ -90,6 +90,9 @@ downloadButton.addEventListener("click", async () => {
 	const urlFilename = fullUrlToFilename(url);
 	const name = `[ihbh]${urlFilename}.jpg`;
 	downloadBlob(blob, name, url);
+	downloadButton.classList.add("btn-outline-success");
+	await sleep(500);
+	downloadButton.classList.remove("btn-outline-success");
 });
 
 ;(async function() {
