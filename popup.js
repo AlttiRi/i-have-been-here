@@ -22,11 +22,18 @@ changeIconButton.addEventListener("click", () => {
 	chrome.runtime.sendMessage("change-icon--message");
 });
 
+/**
+ * @type {{
+ *     url, title, favIconUrl, screenshotUrl, date,
+ *     id, incognito, height, width
+ * }}
+ */
 let screenShotData;
 async function initPreview() {
 	screenShotData = await getActiveTabData();
 	const {
-		url, title, favIconUrl, screenshotUrl, date, /*id, incognito, height, width*/
+		url, title, favIconUrl, screenshotUrl, date,
+	 /* id, incognito, height, width */
 	} = screenShotData;
 
 	if (!screenshotUrl) {
@@ -83,12 +90,14 @@ openVisitsButton.addEventListener("click", async () => {
 
 downloadButton.addEventListener("click", async () => {
 	const {
-		url, screenshotUrl
+		url, screenshotUrl, title
 	} = screenShotData;
 	const resp = await fetch(screenshotUrl);
 	const blob = await resp.blob();
 	const urlFilename = fullUrlToFilename(url);
-	const name = `[ihbh]${urlFilename}.jpg`;
+	const needTitle = title && !decodeURIComponent(url).includes(title) && !url.includes(title);
+	const titleLine = needTitle ? ` — ${title}` : "";
+	const name = `[ihbh]${urlFilename}${titleLine}.jpg`;
 	downloadBlob(blob, name, url);
 	downloadButton.classList.add("btn-outline-success");
 	await sleep(500);
