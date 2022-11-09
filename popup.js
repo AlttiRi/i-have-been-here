@@ -96,7 +96,11 @@ downloadButton.addEventListener("click", async () => {
 	const blob = await resp.blob();
 	const urlFilename = fullUrlToFilename(url);
 	const needTitle = title && !decodeURIComponent(url).includes(title) && !url.includes(title);
-	const titleLine = needTitle ? ` — ${title}` : "";
+	let titleLine = needTitle ? ` — ${title}` : "";
+	titleLine = titleLine
+		.replaceAll(/[<>:"\\|?*]+/g, "")
+		.replaceAll("/", " ")
+		.replaceAll(/\s+/g, " ");
 	const name = `[ihbh]${urlFilename}${titleLine}.jpg`;
 	downloadBlob(blob, name, url);
 	downloadButton.classList.add("btn-outline-success");
