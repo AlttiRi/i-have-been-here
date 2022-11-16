@@ -4,9 +4,11 @@ import {bookmarkOpenerMode, setBookmarkOpenerMode} from "./bg/store/bom.js";
 
 const listUrl = new URL("./list.html", location.href).toString();
 const optionsUrl = new URL("./options.html", location.href).toString();
+const titleCutterSettingsUrl = new URL("./title-settings.html", location.href).toString();
 document.body.insertAdjacentHTML("afterbegin", `
     <div>List: <a href="${listUrl}">${listUrl}</a></div>
     <div>Options: <a href="${optionsUrl}">${optionsUrl}</a></div>
+    <div>Title Cutter Settings: <a href="${titleCutterSettingsUrl}">${titleCutterSettingsUrl}</a></div>
     <button id="download-shelf" class="btn m-3">Download shelf</button>
     <button id="bom" class="btn m-3">Bookmarks opener mode</button>
 `);

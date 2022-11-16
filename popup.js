@@ -1,5 +1,10 @@
 import {downloadBlob, fullUrlToFilename, isOpera, logPicture, sleep} from "./util.js";
-import {exchangeMessage, inIncognitoContext} from "./util-ext.js";
+import {
+	exchangeMessage,
+	getTitlePartForFilename,
+	getTrimmedTitle,
+	inIncognitoContext
+} from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {openBookmarks} from "./bg/opera-bookmark-opener.js";
 import {getActiveTabData} from "./bg/log-image.js";
@@ -42,7 +47,9 @@ async function initPreview() {
 
 	faviconElem.src = "chrome://favicon/size/16@2x/" + url;
 	faviconElem.title = favIconUrl;
-	titleElem.textContent = title;
+	const trimmedTitle = await getTrimmedTitle(title, url);
+	titleElem.textContent = trimmedTitle.length > 3 ? trimmedTitle : title;
+	titleElem.title = titleElem.textContent;
 	const u = new URL(url);
 	if (u.protocol.startsWith("http")) {
 		urlElem.textContent = u.host.replace(/^www./, "");
@@ -95,13 +102,8 @@ downloadButton.addEventListener("click", async () => {
 	const resp = await fetch(screenshotUrl);
 	const blob = await resp.blob();
 	const urlFilename = fullUrlToFilename(url);
-	const needTitle = title && !decodeURIComponent(url).includes(title) && !url.includes(title);
-	let titleLine = needTitle ? ` — ${title}` : "";
-	titleLine = titleLine
-		.replaceAll(/[<>:"\\|?*]+/g, "")
-		.replaceAll("/", " ")
-		.replaceAll(/\s+/g, " ");
-	const name = `[ihbh]${urlFilename}${titleLine}.jpg`;
+	const titleLinePart = await getTitlePartForFilename(title, url);
+	const name = `[ihbh]${urlFilename}${titleLinePart}.jpg`;
 	downloadBlob(blob, name, url);
 	downloadButton.classList.add("btn-outline-success");
 	await sleep(500);
