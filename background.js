@@ -11,6 +11,8 @@ import {registerContextMenu} from "./bg/context-menu.js"
 import {enableBookmarksOpenerMode} from "./bg/opera-bookmark-opener.js";
 
 import {initVisitBackgroundHandler} from "./bg/visits.js";
+import {initGetTabsListener} from "./bg/get-tabs.js";
+
 
 console.log(`[${extensionName}] background.js loaded.`);
 console.log(`Incognito: ${inIncognitoContext}.`);
@@ -22,6 +24,8 @@ void countTabs();
 void enableBookmarksOpenerMode();
 initVisitBackgroundHandler();
 registerContextMenu(["reload", "yandex_images", "download_shelf", "open_list"]);
+
+initGetTabsListener();
 
 
 chrome.runtime.onMessage.addListener((message, sender) => {
@@ -41,8 +45,6 @@ chrome.bookmarks.getTree(console.log);
 // chrome.bookmarks.getTree(bookmarks => console.log(JSON.stringify(bookmarks)));
 
 // chrome.downloads.setShelfEnabled(false);
-
-
 
 
 
