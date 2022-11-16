@@ -1,13 +1,12 @@
 import {downloadBlob, fullUrlToFilename, isOpera, logPicture, sleep} from "./util.js";
 import {
 	exchangeMessage,
-	getTitlePartForFilename,
-	getTrimmedTitle,
 	inIncognitoContext
 } from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {openBookmarks} from "./bg/opera-bookmark-opener.js";
 import {getActiveTabData} from "./bg/log-image.js";
+import {getTitlePartForFilename, getTrimmedTitle} from "./trim-title.js";
 
 console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);
