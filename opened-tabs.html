@@ -10,17 +10,91 @@
             min-height: 100vh;
             margin: 0;
         }
-        /*body {*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    justify-content: center;*/
-        /*    align-items: center;*/
-        /*}*/
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
     <link href="css.css" rel="stylesheet">
     <link rel="stylesheet" href="./libs/bootstrap.css" integrity="sha256-o+AsfCHj7A1M5Xgm1kJmZiGEIvMQEzQqrXz2072Gkkg=" crossorigin="anonymous">
     <script src="opened-tabs.js" type="module"></script>
+    <style>
+        #list:not(:target) {
+            display: none;
+        }
+        #json:not(:target) {
+            display: none;
+        }
+        .json {
+            padding-left: 12px;
+        }
+
+        .list {
+            /*min-height: 100vh;*/
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+            align-items: start;
+            min-width: 720px;
+        }
+        .list-wrap {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body > div {
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .favicon {
+            height: 16px;
+            width: 16px;
+            user-select: none;
+        }
+
+        header {
+            user-select: none;
+        }
+
+        .url {
+            padding-left: 5px;
+        }
+
+        /*.list a:visited {*/
+        /*    color: darkorange;*/
+        /*}*/
+
+
+
+    </style>
 </head>
 <body>
+    <div id="list">
+        <header class="d-flex justify-content-center py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="#list" class="nav-link active">List</a></li>
+                <li class="nav-item"><a href="#json" class="nav-link">JSON</a></li>
+            </ul>
+        </header>
+        <div class="list-wrap">
+            <div class="list"></div>
+        </div>
+    </div>
+    <div id="json">
+        <header class="d-flex justify-content-center py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="#list" class="nav-link">List</a></li>
+                <li class="nav-item"><a href="#json" class="nav-link active">JSON</a></li>
+            </ul>
+        </header>
+        <div class="json">
+
+        </div>
+    </div>
 </body>
 </html>
