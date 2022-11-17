@@ -44,8 +44,17 @@ async function initPreview() {
 		return;
 	}
 
-	faviconElem.src = "chrome://favicon/size/16@2x/" + url;
 	faviconElem.title = favIconUrl;
+	if (favIconUrl === undefined) {
+		faviconElem.src = "./images/empty.png";
+	} else
+	if (favIconUrl.startsWith("data:")) {
+		faviconElem.src = favIconUrl;
+		faviconElem.title = favIconUrl.slice(0, 240) + (favIconUrl.length > 240 ? "…" : "");
+	} else {
+		faviconElem.src = "chrome://favicon/size/16@2x/" + url;
+	}
+
 	const trimmedTitle = await getTrimmedTitle(title, url);
 	titleElem.textContent = trimmedTitle.length > 3 ? trimmedTitle : title;
 	titleElem.title = titleElem.textContent;
@@ -60,10 +69,14 @@ async function initPreview() {
 
 	logPicture(screenshotUrl);
 	imageElem.src = screenshotUrl;
-	imageElem.alt = title;
+	imageElem.alt = "";
 	imageElem.dataset.tabUrl = url;
 	imageElem.dataset.date   = date;
 	saveButton.removeAttribute("disabled");
+
+	// Tor's popup's scroll fix
+	await sleep(20);
+	imageElem.alt = "";
 }
 void initPreview();
 
