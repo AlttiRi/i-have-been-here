@@ -1,11 +1,13 @@
 import {exchangeMessage} from "./util-ext.js";
 
-if (["#list", "#json"].every(hash => hash !== location.hash)) {
+if (["#list", "#json", "#input"].every(hash => hash !== location.hash)) {
     location.hash = "#list";
 }
 
 const jsonElem = document.querySelector(".json");
 const listElem = document.querySelector(".list");
+const btnClearElem  = document.querySelector("#clear");
+const textInputElem = document.querySelector("#text-input");
 
 
 
@@ -29,4 +31,9 @@ async function main() {
             </div>
     `.replaceAll(/\s{2,}/g, ""));
     }
+
+    btnClearElem.addEventListener("click", event => {
+        textInputElem.value = "";
+        textInputElem.focus();
+    });
 }

@@ -27,6 +27,9 @@
         #json:not(:target) {
             display: none;
         }
+        #input:not(:target) {
+            display: none;
+        }
         .json {
             padding-left: 12px;
         }
@@ -75,23 +78,53 @@
 </head>
 <body>
     <div id="list">
-        <header class="d-flex justify-content-center py-3">
+        <header class="d-flex justify-content-center py-3 pb-0">
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="#list" class="nav-link active">List</a></li>
+                <li class="nav-item"><a href="#input" class="nav-link">Input</a></li>
                 <li class="nav-item"><a href="#json" class="nav-link">JSON</a></li>
             </ul>
         </header>
+        <hr>
         <div class="list-wrap">
             <div class="list"></div>
         </div>
     </div>
-    <div id="json">
-        <header class="d-flex justify-content-center py-3">
+
+    <div id="input">
+        <header class="d-flex justify-content-center py-3 pb-0">
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="#list" class="nav-link">List</a></li>
+                <li class="nav-item"><a href="#input" class="nav-link active">Input</a></li>
+                <li class="nav-item"><a href="#json" class="nav-link">JSON</a></li>
+            </ul>
+        </header>
+        <hr>
+        <div class="input">
+            <div class="list-wrap">
+                <div class="list">
+                    <span class="btn-group">
+                        <label style="display: contents;">
+                            <input type="text" id="text-input" class="form-control" autocomplete="off">
+                        </label>
+                        <button class="btn btn-outline-primary" id="set">Set</button>
+                        <button class="btn btn-outline-primary" id="append">Append</button>
+                        <button class="btn btn-outline-primary" id="clear">Clear</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="json">
+        <header class="d-flex justify-content-center py-3 pb-0">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="#list" class="nav-link">List</a></li>
+                <li class="nav-item"><a href="#input" class="nav-link">Input</a></li>
                 <li class="nav-item"><a href="#json" class="nav-link active">JSON</a></li>
             </ul>
         </header>
+        <hr>
         <div class="json">
 
         </div>
