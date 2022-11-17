@@ -50,7 +50,7 @@ async function initPreview() {
 	} else
 	if (favIconUrl.startsWith("data:")) {
 		faviconElem.src = favIconUrl;
-		faviconElem.title = favIconUrl.slice(0, 240) + (favIconUrl.length > 240 ? "…" : "");
+		faviconElem.title = favIconUrl.slice(0, 60) + (favIconUrl.length > 60 ? "…" : "");
 	} else {
 		faviconElem.src = "chrome://favicon/size/16@2x/" + url;
 	}
