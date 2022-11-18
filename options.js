@@ -5,7 +5,7 @@ import {bookmarkOpenerMode, setBookmarkOpenerMode} from "./bg/store/bom.js";
 const listUrl = new URL("./list.html", location.href).toString();
 const optionsUrl = new URL("./options.html", location.href).toString();
 const titleCutterSettingsUrl = new URL("./title-settings.html", location.href).toString();
-const openedTabsUrl = new URL("./opened-tabs.html", location.href).toString();
+const openedTabsUrl = new URL("./pages/tabs/list.html", location.href).toString();
 document.body.insertAdjacentHTML("afterbegin", `
     <div>📃 Visit List: <a href="${listUrl}">${listUrl}</a></div> 
     <hr>   
