@@ -34,20 +34,20 @@
             padding-left: 12px;
         }
 
-        .list {
-            /*min-height: 100vh;*/
-            display: flex;
-            flex-direction: column;
-            justify-content: left;
-            align-items: start;
-            min-width: 720px;
-        }
-        .list-wrap {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+        /*.list {*/
+        /*    !*min-height: 100vh;*!*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    justify-content: left;*/
+        /*    align-items: start;*/
+        /*    min-width: 720px;*/
+        /*}*/
+        /*.list-wrap {*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    justify-content: center;*/
+        /*    align-items: center;*/
+        /*}*/
 
         body > div {
             min-height: 100vh;
@@ -65,7 +65,7 @@
         }
 
         .url {
-            padding-left: 5px;
+            padding-left: 8px;
         }
 
         /*.list a:visited {*/
@@ -76,7 +76,7 @@
 
     </style>
 </head>
-<body>
+<body class="container">
     <div id="list">
         <header class="d-flex justify-content-center py-3 pb-0">
             <ul class="nav nav-pills">
@@ -86,9 +86,11 @@
             </ul>
         </header>
         <hr>
-        <div class="list-wrap">
-            <div class="list"></div>
-        </div>
+        <table class="table table-borderless">
+            <tbody class="list">
+
+            </tbody>
+        </table>
     </div>
 
     <div id="input">

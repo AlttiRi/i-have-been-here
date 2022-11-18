@@ -7,6 +7,8 @@ if (["#list", "#json", "#input"].every(hash => hash !== location.hash)) {
 const jsonElem = document.querySelector(".json");
 const listElem = document.querySelector(".list");
 const btnClearElem  = document.querySelector("#clear");
+const btnAppendElem = document.querySelector("#append");
+const btnSetElem    = document.querySelector("#set");
 const textInputElem = document.querySelector("#text-input");
 
 
@@ -23,17 +25,62 @@ async function main() {
         </div>        
     `);
 
-    for (const tab of tabs) {
-        listElem.insertAdjacentHTML("beforeend", `
-            <div>
-                <img class="favicon" src="${tab.favIconUrl || "./images/empty.png"}" alt=""/>
-                <a class="url" href="${tab.url}" target="_blank" rel="noreferrer noopener">${tab.url}</a>
-            </div>
-    `.replaceAll(/\s{2,}/g, ""));
-    }
+    appendListByTabs(tabs);
 
     btnClearElem.addEventListener("click", event => {
         textInputElem.value = "";
         textInputElem.focus();
     });
+
+    btnSetElem.addEventListener("click", event => {
+        const urls = parseUrls(textInputElem.value);
+        listElem.innerHTML = "";
+        appendListByUrls(urls);
+    });
+
+    btnAppendElem.addEventListener("click", event => {
+        const urls = parseUrls(textInputElem.value);
+        appendListByUrls(urls);
+    });
 }
+
+function parseUrls(urlsText) {
+    const urls = urlsText.trim().split(/\s/);
+    return urls.filter(u => u).map(url => {
+        if (!url.includes("://")) {
+            return "https://" + url;
+        }
+        if (url.startsWith("ttp")) {
+            url = "h" + url;
+        }
+        return url;
+    });
+}
+
+/** @param {chrome.tabs.Tab[]} tabs */
+function appendListByTabs(tabs) {
+    for (const tab of tabs) {
+        listElem.insertAdjacentHTML("beforeend", `
+            <tr>
+                <td>
+                    <img class="favicon" src="${tab.favIconUrl || "./images/empty.png"}" alt=""/>
+                    <a class="url link-primary" href="${tab.url}" target="_blank" rel="noreferrer noopener">${tab.url}</a>
+                </td>                
+            </tr>
+    `.replaceAll(/\s{2,}/g, ""));
+    }
+}
+
+function appendListByUrls(urls) {
+    for (const url of urls) {
+        listElem.insertAdjacentHTML("beforeend", `
+            <tr>
+                <td>
+                    <img class="favicon" src="./images/empty.png" alt=""/>
+                    <a class="url link-primary" href="${url}" target="_blank" rel="noreferrer noopener">${url}</a>
+                </td>                
+            </tr>
+    `.replaceAll(/\s{2,}/g, ""));
+    }
+}
+
