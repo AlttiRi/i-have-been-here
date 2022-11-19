@@ -1,6 +1,6 @@
-import {downloadShelf, setDownloadShelf} from "./bg/store/dl-shelf.js";
-import {watchEffect} from "./libs/vue-reactivity.js";
-import {bookmarkOpenerMode, setBookmarkOpenerMode} from "./bg/store/bom.js";
+import {downloadShelf, setDownloadShelf} from "/bg/store/dl-shelf.js";
+import {watchEffect} from "/libs/vue-reactivity.js";
+import {bookmarkOpenerMode, setBookmarkOpenerMode} from "/bg/store/bom.js";
 
 const listUrl = new URL("./list.html", location.href).toString();
 const optionsUrl = new URL("./options.html", location.href).toString();

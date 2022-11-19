@@ -2,9 +2,9 @@ import {
     defaultValue,
     setTitleCutterSettings,
     titleCutterSettings
-} from "./bg/store/title-cutter-settings.js";
-import {watchEffect} from "./libs/vue-reactivity.js";
-import {sleep} from "./util.js";
+} from "/bg/store/title-cutter-settings.js";
+import {watchEffect} from "/libs/vue-reactivity.js";
+import {sleep} from "/util.js";
 
 document.body.insertAdjacentHTML("afterbegin", `
     <div class="">Title Cutter Settings</div>    

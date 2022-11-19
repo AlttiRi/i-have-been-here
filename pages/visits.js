@@ -1,13 +1,13 @@
-import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "./util-ext.js";
-import {createBackgroundTab} from "./util-ext-bg.js";
-import {exportVisits, getVisits, updateVisit} from "./bg/visits.js";
+import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "/util-ext.js";
+import {createBackgroundTab} from "/util-ext-bg.js";
+import {exportVisits, getVisits, updateVisit} from "/bg/visits.js";
 import {
     dateToDayDateString,
     downloadBlob,
     fullUrlToFilename,
     sleep
-} from "./util.js";
-import {toArrayBuffer, toDataUrl} from "./bg/image-data.js";
+} from "/util.js";
+import {toArrayBuffer, toDataUrl} from "/bg/image-data.js";
 
 console.log(location);
 
