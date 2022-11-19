@@ -13,7 +13,6 @@ console.log(`Incognito: ${inIncognitoContext}.`);
 
 
 const saveButton = document.querySelector("#btn-save-screen");
-const changeIconButton = document.querySelector("#btn-change-icon");
 const visitButton = document.querySelector("#btn-visit");
 const openVisitsButton = document.querySelector("#btn-open-visits");
 const downloadButton = document.querySelector("#btn-download-screenshot");
@@ -22,9 +21,6 @@ const faviconElem = document.querySelector("#favicon");
 const titleElem = document.querySelector("#title");
 const urlElem = document.querySelector("#url");
 
-changeIconButton.addEventListener("click", () => {
-	chrome.runtime.sendMessage("change-icon--message");
-});
 
 /**
  * @type {{
@@ -119,6 +115,7 @@ downloadButton.addEventListener("click", async () => {
 	const name = `[ihbh]${urlFilename}${titleLinePart}.jpg`;
 	downloadBlob(blob, name, url);
 	downloadButton.classList.add("btn-outline-success");
+	chrome.runtime.sendMessage("change-icon--message");
 	await sleep(500);
 	downloadButton.classList.remove("btn-outline-success");
 });
