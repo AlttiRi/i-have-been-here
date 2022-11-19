@@ -1,6 +1,6 @@
 import {createBackgroundTab} from "../util-ext-bg.js";
 import {isFirefox} from "../util.js";
-import {dlShelf} from "./store/dl-shelf.js";
+import {dlShelf} from "./store/store.js";
 import {watchEffect} from "../libs/vue-reactivity.js";
 
 /**

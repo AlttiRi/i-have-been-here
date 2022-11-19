@@ -1,4 +1,4 @@
-import {tcSettings} from "/bg/store/title-cutter-settings.js";
+import {tcSettings} from "/bg/store/store.js";
 import {watchEffect} from "/libs/vue-reactivity.js";
 import {sleep} from "/util.js";
 

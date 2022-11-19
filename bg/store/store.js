@@ -1,4 +1,11 @@
-import {ReactiveStoreLocalValue} from "./value.js";
+import {ReactiveStoreLocalValue} from "./reactive-store-local-value.js";
+
+/** @type {ReactiveStoreLocalValue<Boolean>} */
+export const bom = new ReactiveStoreLocalValue("bookmarkOpenerMode", false);
+
+/** @type {ReactiveStoreLocalValue<Boolean>} */
+export const dlShelf = new ReactiveStoreLocalValue("downloadShelf", true);
+
 
 /** @typedef {Object<String, {
  * trimEnd?: String[],

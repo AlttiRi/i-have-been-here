@@ -1,9 +1,10 @@
-import {tcSettings} from "./bg/store/title-cutter-settings.js";
+import {tcSettings} from "./bg/store/store.js";
 
 export async function getTrimmedTitle(title, url) {
     if (!tcSettings.isReady) {
         await tcSettings.onReady;
     }
+    /** @type {TCSettings} */
     const settings = tcSettings.value;
     const _url = new URL(url);
     let _title = title;
@@ -33,9 +34,9 @@ export async function getTitlePartForFilename(title, url) {
         return "";
     }
 
-    const _title = await getTrimmedTitle(title, url);
+    const trimmedTitle = await getTrimmedTitle(title, url);
 
-    let titleLine = " — " + _title
+    let titleLine = " — " + trimmedTitle
         .replaceAll(/[<>:"\\|?*]+/g, "")
         .replaceAll("/", " ")
         .replaceAll(/\s+/g, " ");

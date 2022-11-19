@@ -42,7 +42,7 @@ async function toggle(enabled) {
     }
 }
 
-import {bom} from "./store/bom.js";
+import {bom} from "./store/store.js";
 import {watch} from "../libs/vue-reactivity.js";
 export async function enableBookmarksOpenerMode() {
     if (!isOpera) {

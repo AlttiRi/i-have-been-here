@@ -1,6 +1,5 @@
-import {dlShelf} from "/bg/store/dl-shelf.js";
+import {dlShelf, bom} from "/bg/store/store.js";
 import {watchEffect} from "/libs/vue-reactivity.js";
-import {bom} from "/bg/store/bom.js";
 
 
 document.body.insertAdjacentHTML("beforeend", `

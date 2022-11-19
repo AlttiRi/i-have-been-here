@@ -67,7 +67,7 @@ function setDefaultIcon(path) {
     });
 }
 
-import {bom} from "./store/bom.js";
+import {bom} from "./store/store.js";
 import {watch} from "/libs/vue-reactivity.js";
 watch(bom.ref, async () => {
     updateIcons(await queryTabs());
