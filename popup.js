@@ -65,7 +65,8 @@ async function initPreview() {
 		urlElem.textContent = u.href;
 	}
 
-	urlElem.dataset.url = url;
+	// urlElem.dataset.url = url;
+	urlElem.title = url;
 
 	logPicture(screenshotUrl);
 	imageElem.src = screenshotUrl;
