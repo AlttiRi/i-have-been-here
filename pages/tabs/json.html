@@ -10,6 +10,11 @@
             min-height: 100vh;
             margin: 0;
         }
+        /* scroll dependent content jump fix */
+        html, body {
+            width: 100vw;
+            overflow-x: hidden;
+        }
     </style>
 
     <link href="../../css.css" rel="stylesheet">
@@ -20,16 +25,15 @@
 <body class="container">
     <header class="d-flex justify-content-center py-3 pb-0">
         <ul class="nav nav-pills px-3">
-            <li class="nav-item"><a href="/pages/visits.html"     class="nav-link" id="visits-btn">Visits</a></li>
+            <li class="nav-item"><a href="/pages/visits.html"     class="nav-link" id="visits-btn">📃 Visits</a></li>
         </ul>
         <ul class="nav nav-pills px-3">
-            <li class="nav-item"><a href="/pages/tabs/list.html"  class="nav-link" id="list-btn">List</a></li>
-            <li class="nav-item"><a href="/pages/tabs/input.html" class="nav-link" id="input-btn">Input</a></li>
-            <li class="nav-item"><a href="/pages/tabs/json.html"  class="nav-link active" id="json-btn">JSON</a></li>
+            <li class="nav-item"><a href="/pages/options.html"    class="nav-link" id="opt-btn">⚙ Settings</a></li>
         </ul>
         <ul class="nav nav-pills px-3">
-            <li class="nav-item"><a href="/pages/options.html"    class="nav-link" id="opt-btn">Settings</a></li>
-            <li class="nav-item"><a href="/pages/title-settings.html" class="nav-link" id="titl-s-btn">Title Cutter</a></li>
+            <li class="nav-item"><a href="/pages/tabs/list.html"  class="nav-link" id="list-btn">Opened Tabs</a></li>
+            <li class="nav-item"><a href="/pages/tabs/json.html"  class="nav-link active" id="json-btn">Opened Tabs JSON</a></li>
+            <li class="nav-item"><a href="/pages/tabs/input.html" class="nav-link" id="input-btn">Input URLs</a></li>
         </ul>
     </header>
 

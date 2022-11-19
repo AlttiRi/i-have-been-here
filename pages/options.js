@@ -2,20 +2,12 @@ import {downloadShelf, setDownloadShelf} from "/bg/store/dl-shelf.js";
 import {watchEffect} from "/libs/vue-reactivity.js";
 import {bookmarkOpenerMode, setBookmarkOpenerMode} from "/bg/store/bom.js";
 
-const listUrl = new URL("./list.html", location.href).toString();
-const optionsUrl = new URL("./options.html", location.href).toString();
-const titleCutterSettingsUrl = new URL("./title-settings.html", location.href).toString();
-const openedTabsUrl = new URL("./pages/tabs/list.html", location.href).toString();
-document.body.insertAdjacentHTML("afterbegin", `
-    <div>📃 Visit List: <a href="${listUrl}">${listUrl}</a></div> 
-    <hr>   
-    <div>🔗 Opened Tabs: <a href="${openedTabsUrl}">${openedTabsUrl}</a></div>
-    <hr>
-    <div>⚙ Title Cutter Options: <a href="${titleCutterSettingsUrl}">${titleCutterSettingsUrl}</a></div>  
-    <div>⚙ Options: <a href="${optionsUrl}">${optionsUrl}</a></div>     
-    <hr> 
+
+document.body.insertAdjacentHTML("beforeend", `
+    <h4>Options</h4>
     <button id="download-shelf" class="btn m-3">Download shelf</button>
     <button id="bom" class="btn m-3">Bookmarks opener mode</button>
+    <hr>
 `);
 
 const downloadShelfBtn = document.querySelector("#download-shelf");

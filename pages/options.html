@@ -10,17 +10,51 @@
 			min-height: 100vh;
 			margin: 0;
 		}
-		body {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
+		/*body {*/
+		/*	display: flex;*/
+		/*	flex-direction: column;*/
+		/*	justify-content: center;*/
+		/*	align-items: center;*/
+		/*}*/
+		/* scroll dependent content jump fix */
+		html, body {
+			width: 100vw;
+			overflow-x: hidden;
+		}
+		header {
+			user-select: none;
 		}
 	</style>
+
 	<link rel="stylesheet" href="/css.css">
 	<link rel="stylesheet" href="/libs/bootstrap.css" integrity="sha256-o+AsfCHj7A1M5Xgm1kJmZiGEIvMQEzQqrXz2072Gkkg=" crossorigin="anonymous">
 	<script src="./options.js" type="module"></script>
+
+	<!--  <script src="/libs/ace/ace.js" integrity="sha256-5qxm9SGMgGU7Uok49Mg9Qrr9mVcNNkrUBkUZPAcKNXU=" crossorigin="anonymous"></script>-->
+	<style>
+		#editor {
+			width: 500px;
+			height: 400px;
+		}
+	</style>
+	<script src="./options-title-cut-settings.js" type="module"></script>
 </head>
 <body class="container">
+	<header class="d-flex justify-content-center py-3 pb-0">
+		<ul class="nav nav-pills px-3">
+			<li class="nav-item"><a href="/pages/visits.html"     class="nav-link" id="visits-btn">📃 Visits</a></li>
+		</ul>
+		<ul class="nav nav-pills px-3">
+			<li class="nav-item"><a href="/pages/options.html"    class="nav-link active" id="opt-btn">⚙ Settings</a></li>
+		</ul>
+		<ul class="nav nav-pills px-3">
+			<li class="nav-item"><a href="/pages/tabs/list.html"  class="nav-link" id="list-btn">Opened Tabs</a></li>
+			<li class="nav-item"><a href="/pages/tabs/json.html"  class="nav-link" id="json-btn">Opened Tabs JSON</a></li>
+			<li class="nav-item"><a href="/pages/tabs/input.html" class="nav-link" id="input-btn">Input URLs</a></li>
+		</ul>
+	</header>
+
+	<hr>
+
 </body>
 </html>

@@ -19,11 +19,7 @@ header {
 }
 
 
-/* scroll dependent content jump fix */
-html, body {
-    width: 100vw;
-    overflow-x: hidden;
-}
+
 
 
 body.input-page a.url:visited {

@@ -6,9 +6,10 @@ import {
 import {watchEffect} from "/libs/vue-reactivity.js";
 import {sleep} from "/util.js";
 
-document.body.insertAdjacentHTML("afterbegin", `
-    <div class="">Title Cutter Settings</div>    
+document.body.insertAdjacentHTML("beforeend", `
+    <h4 class="">Title Cutter Settings</h4>    
     <textarea spellcheck="false" id="editor"></textarea>
+    <br>
     <button id="save" class="btn btn-outline-primary">Save</button>
 `);
 

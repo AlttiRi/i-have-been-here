@@ -6,7 +6,7 @@
     "description": "__MSG_extension_description__",
     "version": "1.5.3",
     "content_scripts": [
-		{
+		    {
             "matches": ["<all_urls>"],
             "js": ["content-runner.js"],
             "run_at": "document_start"
@@ -23,7 +23,7 @@
         "default_icon": "images/hash.png"
     },
     "options_ui": {
-        "page": "options.html",
+        "page": "pages/options.html",
         "open_in_tab": true
     },
     "web_accessible_resources": [
