@@ -104,7 +104,7 @@ visitButton.addEventListener("click", async () => {
 });
 
 openVisitsButton.addEventListener("click", async () => {
-	createBackgroundTab(chrome.runtime.getURL("./list.html"));
+	createBackgroundTab(chrome.runtime.getURL("/pages/visits.html"));
 });
 
 downloadButton.addEventListener("click", async () => {
