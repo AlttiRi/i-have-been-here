@@ -67,9 +67,9 @@ function setDefaultIcon(path) {
     });
 }
 
-import {bookmarkOpenerMode, isBOMReady, onBOMReady} from "./store/bom.js";
-import {watch} from "../libs/vue-reactivity.js";
-watch(bookmarkOpenerMode, async () => {
+import {bom} from "./store/bom.js";
+import {watch} from "/libs/vue-reactivity.js";
+watch(bom.ref, async () => {
     updateIcons(await queryTabs());
 });
 
@@ -77,13 +77,13 @@ watch(bookmarkOpenerMode, async () => {
 export function updateIcons(tabs) {
     console.log("setIcons", tabs);
     tabs.forEach(async tab => {
-        if (!isBOMReady.value) {
-            await onBOMReady;
+        if (!bom.isReady) {
+            await bom.onReady;
         }
         let tabCounterIconData = {path: imgPath};
         let other = null;
 
-        if (!bookmarkOpenerMode.value) {
+        if (!bom.value) {
             other = await visitedIconDataIfRequired(tab);
         }
         chrome.browserAction.setIcon({

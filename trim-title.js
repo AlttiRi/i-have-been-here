@@ -1,10 +1,10 @@
-import {isTCSReady, onTCSRReady, titleCutterSettings} from "./bg/store/title-cutter-settings.js";
+import {tcSettings} from "./bg/store/title-cutter-settings.js";
 
 export async function getTrimmedTitle(title, url) {
-    if (!isTCSReady.value) {
-        await onTCSRReady;
+    if (!tcSettings.isReady) {
+        await tcSettings.onReady;
     }
-    const settings = titleCutterSettings.value;
+    const settings = tcSettings.value;
     const _url = new URL(url);
     let _title = title;
     if (settings[_url.hostname]) {

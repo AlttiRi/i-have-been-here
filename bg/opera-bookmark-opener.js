@@ -2,7 +2,10 @@ import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-e
 import {isOpera} from "../util.js";
 
 export function openBookmarks() {
-    const url = "chrome://bookmarks"; // "chrome://startpage/bookmarks";
+    let url = "chrome://bookmarks";
+    if (isOpera) {
+        url = "chrome://startpage/bookmarks"
+    }
     return focusOrCreateNewTab(url);
 }
 
@@ -39,7 +42,7 @@ async function toggle(enabled) {
     }
 }
 
-import {bookmarkOpenerMode, isBOMReady, onBOMReady, setBookmarkOpenerMode} from "./store/bom.js";
+import {bom} from "./store/bom.js";
 import {watch} from "../libs/vue-reactivity.js";
 export async function enableBookmarksOpenerMode() {
     if (!isOpera) {
@@ -47,10 +50,10 @@ export async function enableBookmarksOpenerMode() {
         return;
     }
 
-    if (!isBOMReady.value) {
-        await onBOMReady;
+    if (!bom.isReady) {
+        await bom.onReady;
     }
-    const checked = bookmarkOpenerMode.value;
+    const checked = bom.value;
     const id = "bookmark_opener";
     chrome.contextMenus.create({
         id,
@@ -59,22 +62,22 @@ export async function enableBookmarksOpenerMode() {
         type: "checkbox",
         checked
     });
-    watch(bookmarkOpenerMode, () => {
-        const checked = bookmarkOpenerMode.value;
+    watch(bom.ref, () => {
+        const checked = bom.value;
         console.log("bookmarkOpenerMode watch", checked);
         chrome.contextMenus.update(id, {checked});
     });
     chrome.contextMenus.onClicked.addListener((info, tab) => {
         if (info.menuItemId === "bookmark_opener") {
-            void setBookmarkOpenerMode(info.checked);
+            void bom.setValue(info.checked);
         }
     });
 
     if (checked) {
         await enable();
     }
-    watch(bookmarkOpenerMode, () => {
-        void toggle(bookmarkOpenerMode.value);
+    watch(bom.ref, () => {
+        void toggle(bom.value);
     });
 }
 

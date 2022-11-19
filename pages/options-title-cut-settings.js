@@ -1,8 +1,4 @@
-import {
-    defaultValue,
-    setTitleCutterSettings,
-    titleCutterSettings
-} from "/bg/store/title-cutter-settings.js";
+import {tcSettings} from "/bg/store/title-cutter-settings.js";
 import {watchEffect} from "/libs/vue-reactivity.js";
 import {sleep} from "/util.js";
 
@@ -24,9 +20,9 @@ saveBtnElem.addEventListener("click", async (event) => {
     try {
         let json = JSON.parse(editorElem.value);
         if (!json) {
-            json = defaultValue;
+            json = tcSettings.defaultValue;
         }
-        await setTitleCutterSettings(json);
+        await tcSettings.setValue(json);
         saveBtnElem.classList.add("btn-outline-success");
     } catch {
         saveBtnElem.classList.add("btn-warning");
@@ -40,7 +36,7 @@ saveBtnElem.addEventListener("click", async (event) => {
 });
 
 watchEffect(() => {
-    editorElem.value = JSON.stringify(titleCutterSettings.value, null, "    ");
+    editorElem.value = JSON.stringify(tcSettings.value, null, "    ");
 });
 
 

@@ -1,6 +1,6 @@
-import {downloadShelf, setDownloadShelf} from "/bg/store/dl-shelf.js";
+import {dlShelf} from "/bg/store/dl-shelf.js";
 import {watchEffect} from "/libs/vue-reactivity.js";
-import {bookmarkOpenerMode, setBookmarkOpenerMode} from "/bg/store/bom.js";
+import {bom} from "/bg/store/bom.js";
 
 
 document.body.insertAdjacentHTML("beforeend", `
@@ -12,19 +12,19 @@ document.body.insertAdjacentHTML("beforeend", `
 
 const downloadShelfBtn = document.querySelector("#download-shelf");
 downloadShelfBtn.addEventListener("click", async (event) => {
-    await setDownloadShelf(!downloadShelf.value);
+    await dlShelf.setValue(!dlShelf.value);
 });
 
 watchEffect(() => {
-    downloadShelfBtn.textContent = "Download shelf " + (downloadShelf.value ? "✅" : "⬜");
+    downloadShelfBtn.textContent = "Download shelf " + (dlShelf.value ? "✅" : "⬜");
 });
 
 
 const bomBtn = document.querySelector("#bom");
 bomBtn.addEventListener("click", async (event) => {
-    await setBookmarkOpenerMode(!bookmarkOpenerMode.value);
+    await bom.setValue(!bom.value);
 });
 
 watchEffect(() => {
-    bomBtn.textContent = "Bookmarks opener mode " + (bookmarkOpenerMode.value ? "✅" : "⬜");
+    bomBtn.textContent = "Bookmarks opener mode " + (bom.value ? "✅" : "⬜");
 });

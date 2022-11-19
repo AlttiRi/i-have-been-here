@@ -1,6 +1,6 @@
 import {createBackgroundTab} from "../util-ext-bg.js";
 import {isFirefox} from "../util.js";
-import {downloadShelf, isDlShelfReady, onDlShelfReady, setDownloadShelf} from "./store/dl-shelf.js";
+import {dlShelf} from "./store/dl-shelf.js";
 import {watchEffect} from "../libs/vue-reactivity.js";
 
 /**
@@ -61,10 +61,10 @@ export function registerContextMenu(features = ["reload"]) {
             return;
         }
         const id = "download_shelf";
-        if (!isDlShelfReady.value) {
-            await onDlShelfReady;
+        if (!dlShelf.isReady) {
+            await dlShelf.onReady;
         }
-        const checked = downloadShelf.value;
+        const checked = dlShelf.value;
         chrome.contextMenus.create({
             id,
             title: "Enable download shelf 💾",
@@ -73,7 +73,7 @@ export function registerContextMenu(features = ["reload"]) {
             checked
         });
         watchEffect(() => {
-            const checked = downloadShelf.value;
+            const checked = dlShelf.value;
             console.log("downloadShelf watchEffect", checked);
             chrome.downloads.setShelfEnabled(checked);
             chrome.contextMenus.update(id, {checked});
@@ -82,7 +82,7 @@ export function registerContextMenu(features = ["reload"]) {
         chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             console.log("menuItemId", info.menuItemId, info);
             if (info.menuItemId === id) {
-                await setDownloadShelf(info.checked);
+                await dlShelf.setValue(info.checked);
             }
         });
     }

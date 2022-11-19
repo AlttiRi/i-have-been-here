@@ -198,6 +198,7 @@ class LastActiveTabsQueue {
 }
 
 export async function focusOrCreateNewTab(url, reload = false) {
+    console.log("focusOrCreateNewTab");
     const lastSelectedTab = await LastActiveTabsQueue.getLastActiveTabByUrl(url);
     if (lastSelectedTab) {
         chrome.tabs.update(lastSelectedTab.id, {
