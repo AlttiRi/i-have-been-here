@@ -1,12 +1,11 @@
 import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
-import {isOpera} from "../util.js";
+import {watch} from "../libs/vue-reactivity.js";
+import {bom, quickAccessUrl} from "./store/store.js";
 
-export function openBookmarks() {
-    let url = "chrome://bookmarks";
-    if (isOpera) {
-        url = "chrome://startpage/bookmarks"
-    }
-    return focusOrCreateNewTab(url);
+
+export async function openQuickAccessUrl() {
+    console.log("openQuickAccessUrl");
+    return focusOrCreateNewTab(await quickAccessUrl.getValue());
 }
 
 /** @type {{title, popup}} */
@@ -25,12 +24,12 @@ function restoreState() {
 async function enable() {
     await saveState();
     chrome.browserAction.setPopup({popup: ""});
-    chrome.browserAction.setTitle({title: "Open Bookmarks"});
-    chrome.browserAction.onClicked.addListener(openBookmarks);
+    chrome.browserAction.setTitle({title: "Open " + quickAccessUrl.value});
+    chrome.browserAction.onClicked.addListener(openQuickAccessUrl);
 }
 function disable() {
     restoreState();
-    chrome.browserAction.onClicked.removeListener(openBookmarks);
+    chrome.browserAction.onClicked.removeListener(openQuickAccessUrl);
 }
 
 
@@ -42,18 +41,8 @@ async function toggle(enabled) {
     }
 }
 
-import {bom} from "./store/store.js";
-import {watch} from "../libs/vue-reactivity.js";
 export async function enableBookmarksOpenerMode() {
-    if (!isOpera) {
-        console.log("[info] Not Opera");
-        return;
-    }
-
-    if (!bom.isReady) {
-        await bom.onReady;
-    }
-    const checked = bom.value;
+    const checked = await bom.getValue();
     const id = "bookmark_opener";
     chrome.contextMenus.create({
         id,

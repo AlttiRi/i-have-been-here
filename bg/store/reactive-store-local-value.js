@@ -42,6 +42,13 @@ export class ReactiveStoreLocalValue {
     get isReady() {
         return this.isReadyRef.value;
     }
+    /** @return {Promise<T>} */
+    async getValue() {
+        if (!this.isReady) {
+            await this.onReady;
+        }
+        return this.value;
+    }
 
     /** @private */
     async _init() {

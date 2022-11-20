@@ -1,11 +1,8 @@
 import {tcSettings} from "./bg/store/store.js";
 
 export async function getTrimmedTitle(title, url) {
-    if (!tcSettings.isReady) {
-        await tcSettings.onReady;
-    }
     /** @type {TCSettings} */
-    const settings = tcSettings.value;
+    const settings = await tcSettings.getValue();
     const _url = new URL(url);
     let _title = title;
     if (settings[_url.hostname]) {
