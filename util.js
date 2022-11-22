@@ -15,6 +15,19 @@ export function downloadBlob(blob, name, url) {
     setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
 }
 
+export function debounce(runnable, ms = 50) {
+    let timerId;
+    return function() {
+        if (timerId) {
+            clearTimeout(timerId);
+        }
+        timerId = setTimeout(() => {
+            runnable.apply(this, arguments);
+            timerId = null;
+        }, ms);
+    }
+}
+
 export function logPicture(url, scale) {
     void logPictureAsync(url, scale);
 }

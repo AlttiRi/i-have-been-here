@@ -1,17 +1,80 @@
 import {exchangeMessage} from "/util-ext.js";
+import {debounce} from "../../util.js";
 
-
-if (location.pathname.endsWith("list.html")) {
+const isListPage  = location.pathname.endsWith("list.html");
+const isJsonPage  = location.pathname.endsWith("json.html");
+const isInputPage = location.pathname.endsWith("input.html");
+if (isListPage) {
     void renderTabList();
 } else
-if (location.pathname.endsWith("json.html")) {
+if (isJsonPage) {
     void renderJson();
 } else
-if (location.pathname.endsWith("input.html")) {
+if (isInputPage) {
     handleInputControls();
 }
 
+if (document.querySelector("#filters")) {
+    let handler;
+    if (isListPage) {
+        handler = debounce(renderTabList, 500);
+    } else {
+        //  ...
+    }
+    const onlyFilterElem = document.querySelector("#only-filter");
+    const ignoreFilterElem = document.querySelector("#ignore-filter");
+    const state = new URLSearchParams(location.hash.slice(1));
+    onlyFilterElem.value   = state.get("only");
+    ignoreFilterElem.value = state.get("ignore");
+    const pageBtn = document.querySelector(".nav-link.active");
+    pageBtn.href = location.href;
 
+    function saveState(key, value) {
+        state.set(key, value);
+        location.hash = state.toString();
+        pageBtn.href = location.href;
+    }
+
+    onlyFilterElem.addEventListener("input", () => {
+        handler();
+        saveState("only", onlyFilterElem.value);
+    });
+    ignoreFilterElem.addEventListener("input", () => {
+        handler();
+        saveState("ignore", ignoreFilterElem.value);
+    });
+
+    document.querySelector("#copy-btn").addEventListener("click", () => {
+        const urls = [...document.querySelectorAll("#list-content a.url")].map(el => el.href);
+        const text = urls.join("\n");
+        console.log(text);
+        void navigator.clipboard.writeText(text);
+    });
+
+    document.querySelector("#only-filter-text").addEventListener("contextmenu", event => {
+        event.preventDefault();
+        onlyFilterElem.value = "";
+        saveState("only", "");
+        handler();
+    });
+    document.querySelector("#ignore-filter-text").addEventListener("contextmenu", event => {
+        event.preventDefault();
+        ignoreFilterElem.value = "";
+        saveState("ignore", "");
+        handler();
+    });
+    pageBtn.addEventListener("contextmenu", event => {
+        event.preventDefault();
+        ignoreFilterElem.value = "";
+        onlyFilterElem.value = ""
+        saveState("ignore", "");
+        saveState("only", "");
+        handler();
+    });
+    pageBtn.addEventListener("click", () => {
+        location.reload();
+    });
+}
 
 
 function handleInputControls() {
@@ -39,6 +102,22 @@ function handleInputControls() {
     });
 }
 
+function filterUrls(urls) {
+    /** @type {String[]} */
+    const only = document.querySelector("#only-filter").value.split(/\s+/).filter(o => o);
+    /** @type {String[]} */
+    const ignore = document.querySelector("#ignore-filter").value.split(/\s+/).filter(o => o);
+
+    return urls.filter(url => {
+        if (ignore.length && ignore.some(i => url.includes(i))) {
+            return false;
+        }
+        if (only.length) {
+            return only.some(o => url.includes(o));
+        }
+        return true;
+    });
+}
 
 async function renderTabList() {
     /** @type {chrome.tabs.Tab[]} */
@@ -46,6 +125,8 @@ async function renderTabList() {
     console.log(globalThis.tabs = tabs);
 
     const listElem = document.querySelector("#list-content");
+    listElem.innerHTML = "";
+
     appendListByTabs(tabs, listElem);
 }
 async function renderJson() {
@@ -66,6 +147,9 @@ async function renderJson() {
  *  @param {Element} targetNode */
 function appendListByTabs(tabs, targetNode) {
     for (const tab of tabs) {
+        if (!filterUrls([tab.url]).length) {
+            continue;
+        }
         targetNode.insertAdjacentHTML("beforeend", `
             <tr>
                 <td>
