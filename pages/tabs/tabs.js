@@ -4,6 +4,9 @@ import {debounce} from "../../util.js";
 const isListPage  = location.pathname.endsWith("list.html");
 const isJsonPage  = location.pathname.endsWith("json.html");
 const isInputPage = location.pathname.endsWith("input.html");
+
+let urls = [];
+
 if (isListPage) {
     void renderTabList();
 } else
@@ -11,7 +14,7 @@ if (isJsonPage) {
     void renderJson();
 } else
 if (isInputPage) {
-    handleInputControls();
+    void renderUrlList();
 }
 
 if (document.querySelector("#filters")) {
@@ -19,7 +22,7 @@ if (document.querySelector("#filters")) {
     if (isListPage) {
         handler = debounce(renderTabList, 500);
     } else {
-        //  ...
+        handler = debounce(renderUrlList, 500);
     }
     const onlyFilterElem = document.querySelector("#only-filter");
     const ignoreFilterElem = document.querySelector("#ignore-filter");
@@ -77,31 +80,6 @@ if (document.querySelector("#filters")) {
 }
 
 
-function handleInputControls() {
-    const textInputElem = document.querySelector("#text-input");
-
-    const btnClearElem  = document.querySelector("#clear-btn");
-    const btnAppendElem = document.querySelector("#append-btn");
-    const btnSetElem    = document.querySelector("#set-btn");
-
-    const listElem = document.querySelector("#list-content");
-
-    btnClearElem.addEventListener("click", event => {
-        textInputElem.value = "";
-        listElem.innerHTML = "";
-        textInputElem.focus();
-    });
-    btnSetElem.addEventListener("click", event => {
-        const urls = parseUrls(textInputElem.value);
-        listElem.innerHTML = "";
-        appendListByUrls(urls, listElem);
-    });
-    btnAppendElem.addEventListener("click", event => {
-        const urls = parseUrls(textInputElem.value);
-        appendListByUrls(urls, listElem);
-    });
-}
-
 function filterUrls(urls) {
     /** @type {String[]} */
     const only = document.querySelector("#only-filter").value.split(/\s+/).filter(o => o);
@@ -119,6 +97,39 @@ function filterUrls(urls) {
     });
 }
 
+
+if (document.querySelector("#input-block")) {
+    const textInputElem = document.querySelector("#text-input");
+
+    const btnAppendElem = document.querySelector("#append-btn");
+    const btnSetElem    = document.querySelector("#set-btn");
+    const btnClearElem  = document.querySelector("#clear-btn");
+
+    btnSetElem.addEventListener("click", event => {
+        urls = parseUrls(textInputElem.value);
+        void renderUrlList();
+    });
+    btnAppendElem.addEventListener("click", event => {
+        urls = [...urls, ...parseUrls(textInputElem.value)];
+        void renderUrlList();
+    });
+    btnClearElem.addEventListener("click", event => {
+        textInputElem.value = "";
+        textInputElem.focus();
+        urls = [];
+        void renderUrlList();
+    });
+}
+
+async function renderUrlList() {
+    const listElem = document.querySelector("#list-content");
+    listElem.innerHTML = "";
+
+    const _urls = filterUrls(urls);
+
+    appendListByUrls(_urls, listElem);
+}
+
 async function renderTabList() {
     /** @type {chrome.tabs.Tab[]} */
     const tabs = await exchangeMessage("get-tabs--message-exchange");
@@ -127,7 +138,11 @@ async function renderTabList() {
     const listElem = document.querySelector("#list-content");
     listElem.innerHTML = "";
 
-    appendListByTabs(tabs, listElem);
+    const _tabs = tabs.filter(tab => {
+        return filterUrls([tab.url]).length;
+    });
+
+    appendListByTabs(_tabs, listElem);
 }
 async function renderJson() {
     /** @type {chrome.tabs.Tab[]} */
@@ -147,9 +162,6 @@ async function renderJson() {
  *  @param {Element} targetNode */
 function appendListByTabs(tabs, targetNode) {
     for (const tab of tabs) {
-        if (!filterUrls([tab.url]).length) {
-            continue;
-        }
         targetNode.insertAdjacentHTML("beforeend", `
             <tr>
                 <td>
