@@ -18,10 +18,14 @@ header {
     user-select: none;
 }
 
-
-
-
+a {
+    text-decoration: none;
+}
 
 body.input-page a.url:visited {
     color: darkorange;
+}
+
+.clicked {
+    background-color: #0000000f;
 }

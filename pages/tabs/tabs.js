@@ -199,3 +199,21 @@ function parseUrls(urlsText) {
         return url;
     });
 }
+
+const listBlockElem = document.querySelector("#list-block");
+listBlockElem.addEventListener("click", event => {
+    if (event.target.classList.contains("link-primary")) {
+        event.target.closest("tr").classList.add("clicked");
+    }
+});
+listBlockElem.addEventListener("mousedown", event => {
+    const LEFT_BUTTON = 0;
+    const MIDDLE_BUTTON = 1;
+    const RIGHT_BUTTON = 2;
+    if (event.button !== MIDDLE_BUTTON) {
+        return;
+    }
+    if (event.target.classList.contains("favicon")) {
+        event.target.closest("tr").classList.remove("clicked");
+    }
+});
