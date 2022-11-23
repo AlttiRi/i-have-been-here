@@ -4,7 +4,7 @@ import {
 	inIncognitoContext
 } from "./util-ext.js";
 import {createBackgroundTab} from "./util-ext-bg.js";
-import {openQuickAccessUrl} from "./bg/opera-bookmark-opener.js";
+import {openQuickAccessUrl} from "./bg/quick-access-url-opener.js";
 import {getActiveTabData} from "./bg/log-image.js";
 import {getTitlePartForFilename, getTrimmedTitle} from "./trim-title.js";
 import {quickAccessUrl} from "./bg/store/store.js";
@@ -138,10 +138,10 @@ function visitToButtonTitle(visit) {
 	if (!quickAccessUrlValue) {
 		return;
 	}
-	const openOperaBookmarks = document.querySelector("#open-quick-access-url");
-	openOperaBookmarks.title = quickAccessUrlValue;
-	openOperaBookmarks.removeAttribute("hidden");
-	openOperaBookmarks.addEventListener("click", () => {
+	const openQuickAccessUrlElem = document.querySelector("#open-quick-access-url");
+	openQuickAccessUrlElem.title = quickAccessUrlValue;
+	openQuickAccessUrlElem.removeAttribute("hidden");
+	openQuickAccessUrlElem.addEventListener("click", () => {
 		void openQuickAccessUrl();
 	});
 })();

@@ -8,7 +8,7 @@ import {countTabs} from "./bg/tab-counter.js"
 import {changeIconOnMessage} from "./bg/change-icon-on-message.js"
 import {logImageOnMessage} from "./bg/log-image.js"
 import {registerContextMenu} from "./bg/context-menu.js"
-import {enableBookmarksOpenerMode} from "./bg/opera-bookmark-opener.js";
+import {enableQuickAccessUrlOpenerMode} from "./bg/quick-access-url-opener.js";
 
 import {initVisitBackgroundHandler} from "./bg/visits.js";
 import {initGetTabsListener} from "./bg/get-tabs.js";
@@ -21,7 +21,7 @@ changeIconOnMessage();
 logImageOnMessage();
 
 void countTabs();
-void enableBookmarksOpenerMode();
+void enableQuickAccessUrlOpenerMode();
 initVisitBackgroundHandler();
 registerContextMenu(["reload", "yandex_images", "download_shelf", "open_list"]);
 

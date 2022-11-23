@@ -2,7 +2,7 @@ import {ReactiveStoreLocalValue} from "./reactive-store-local-value.js";
 import {isFirefox, isOpera} from "../../util.js";
 
 /** @type {ReactiveStoreLocalValue<Boolean>} */
-export const bom = new ReactiveStoreLocalValue("bookmarkOpenerMode", false);
+export const urlOpenerMode = new ReactiveStoreLocalValue("quickAccessUrlOpenerMode", false);
 
 /** @type {ReactiveStoreLocalValue<Boolean>} */
 export const dlShelf = new ReactiveStoreLocalValue("downloadShelf", true);

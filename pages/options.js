@@ -1,11 +1,11 @@
-import {dlShelf, bom, quickAccessUrl} from "/bg/store/store.js";
+import {dlShelf, urlOpenerMode, quickAccessUrl} from "/bg/store/store.js";
 import {watchEffect} from "/libs/vue-reactivity.js";
 
 
 document.body.insertAdjacentHTML("beforeend", `
     <h4>Options</h4>
     <button id="download-shelf" class="btn m-3">Download shelf</button>
-    <button id="bom" class="btn m-3">Bookmarks opener mode</button>
+    <button id="url-opener-mode" class="btn m-3">Quick Access URL opener mode</button>
     <hr>
     <label style="display: contents">
         <h4>Quick access URL</h4>
@@ -24,13 +24,13 @@ watchEffect(() => {
 });
 
 
-const bomBtn = document.querySelector("#bom");
-bomBtn.addEventListener("click", async (event) => {
-    await bom.setValue(!bom.value);
+const urlOpenerModeBtn = document.querySelector("#url-opener-mode");
+urlOpenerModeBtn.addEventListener("click", async (event) => {
+    await urlOpenerMode.setValue(!urlOpenerMode.value);
 });
 
 watchEffect(() => {
-    bomBtn.textContent = "Bookmarks opener mode " + (bom.value ? "✅" : "⬜");
+    urlOpenerModeBtn.textContent = "Quick URL opener mode " + (urlOpenerMode.value ? "✅" : "⬜");
 });
 
 

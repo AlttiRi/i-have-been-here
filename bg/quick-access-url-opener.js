@@ -1,6 +1,6 @@
 import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
 import {watch} from "/libs/vue-reactivity.js";
-import {bom, quickAccessUrl} from "./store/store.js";
+import {urlOpenerMode, quickAccessUrl} from "./store/store.js";
 
 
 export async function openQuickAccessUrl() {
@@ -22,29 +22,29 @@ function restoreState() {
     state.saved = false;
 }
 
-export async function enableBookmarksOpenerMode() {
-    const checked = await bom.getValue();
-    const id = "bookmark_opener";
+export async function enableQuickAccessUrlOpenerMode() {
+    const checked = await urlOpenerMode.getValue();
+    const id = "quick_access_url_opener";
     chrome.contextMenus.create({
         id,
-        title: "Bookmark 🔖 opener mode",
+        title: "🔖 URL opener mode",
         contexts: ["browser_action"],
         type: "checkbox",
         checked
     });
     chrome.contextMenus.onClicked.addListener((info, tab) => {
         if (info.menuItemId === id) {
-            void bom.setValue(info.checked);
+            void urlOpenerMode.setValue(info.checked);
         }
     });
 
-    watch([bom.ref, quickAccessUrl.ref], async () => {
-        if (bom.value) {
+    watch([urlOpenerMode.ref, quickAccessUrl.ref], async () => {
+        if (urlOpenerMode.value) {
             if (!state.saved) {
                 await saveState();
                 chrome.browserAction.setPopup({popup: ""});
                 chrome.browserAction.onClicked.addListener(openQuickAccessUrl);
-                chrome.contextMenus.update(id, {checked: bom.value});
+                chrome.contextMenus.update(id, {checked: urlOpenerMode.value});
                 state.saved = true;
             }
             chrome.browserAction.setTitle({title: "Open " + quickAccessUrl.value});

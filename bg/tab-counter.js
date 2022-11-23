@@ -67,9 +67,9 @@ function setDefaultIcon(path) {
     });
 }
 
-import {bom} from "./store/store.js";
+import {urlOpenerMode} from "./store/store.js";
 import {watch} from "/libs/vue-reactivity.js";
-watch(bom.ref, async () => {
+watch(urlOpenerMode.ref, async () => {
     updateIcons(await queryTabs());
 });
 
@@ -77,13 +77,13 @@ watch(bom.ref, async () => {
 export function updateIcons(tabs) {
     console.log("setIcons", tabs);
     tabs.forEach(async tab => {
-        if (!bom.isReady) {
-            await bom.onReady;
+        if (!urlOpenerMode.isReady) {
+            await urlOpenerMode.onReady;
         }
         let tabCounterIconData = {path: imgPath};
         let other = null;
 
-        if (!bom.value) {
+        if (!urlOpenerMode.value) {
             other = await visitedIconDataIfRequired(tab);
         }
         chrome.browserAction.setIcon({

@@ -67,7 +67,7 @@ export function registerContextMenu(features = ["reload"]) {
         const checked = dlShelf.value;
         chrome.contextMenus.create({
             id,
-            title: "Enable download shelf 💾",
+            title: "💾 Enable download shelf",
             contexts: ["browser_action"],
             type: "checkbox",
             checked
