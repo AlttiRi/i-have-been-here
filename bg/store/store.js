@@ -41,6 +41,6 @@ if (isOpera) {
 /** @type {ReactiveStoreLocalValue<String>} */
 export const quickAccessUrl = new ReactiveStoreLocalValue("quickAccessUrl", quickAccessUrlDefaultValue);
 
-/** @type {ReactiveStoreLocalValue<String>} */
+/** @type {ReactiveStoreLocalValue<Number>} */
 export const filenameLengthLimit = new ReactiveStoreLocalValue("filenameLengthLimit", 220);
 

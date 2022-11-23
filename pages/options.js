@@ -1,4 +1,4 @@
-import {dlShelf, urlOpenerMode, quickAccessUrl} from "/bg/store/store.js";
+import {dlShelf, urlOpenerMode, quickAccessUrl, filenameLengthLimit} from "/bg/store/store.js";
 import {watchEffect} from "/libs/vue-reactivity.js";
 
 
@@ -8,8 +8,13 @@ document.body.insertAdjacentHTML("beforeend", `
     <button id="url-opener-mode" class="btn m-3">Quick Access URL opener mode</button>
     <hr>
     <label style="display: contents">
+        <h4>Filename length limit</h4>
+        <input  id="filename-length-limit" class="form-control"  type="number">
+    </label>
+    <hr>
+    <label style="display: contents">
         <h4>Quick access URL</h4>
-        <input  id="quick-url" type="text"  class="form-control">
+        <input id="quick-url" type="text" class="form-control">
     </label>
     <hr>
 `);
@@ -45,4 +50,15 @@ quickUrlInput.addEventListener("input", event => {
         inputText = quickAccessUrl.defaultValue;
     }
     void quickAccessUrl.setValue(inputText);
+});
+
+
+
+const filenameLengthLimitInput = document.querySelector("#filename-length-limit");
+filenameLengthLimitInput.addEventListener("input", async (event) => {
+    await filenameLengthLimit.setValue(Number(filenameLengthLimitInput.value));
+});
+
+watchEffect(() => {
+    filenameLengthLimitInput.value = filenameLengthLimit.value;
 });

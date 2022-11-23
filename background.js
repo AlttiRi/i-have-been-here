@@ -38,9 +38,10 @@ emojiToBlobURL("🔲").then(url => {
 });
 logPicture(emojiToDataURL("🔲"));
 
-
-chrome.storage.local.get(console.log);
-chrome.bookmarks.getTree(console.log);
+console.log("chrome.storage.local.get(console.log)");
+console.log("chrome.bookmarks.getTree(console.log)");
+chrome.storage.local.get(store => console.log("[===][storage.local]", store));
+chrome.bookmarks.getTree(tree => console.log("[===][bookmarks]", tree));
 // chrome.storage.local.get(store => console.log(JSON.stringify(store, null, " ")));
 // chrome.bookmarks.getTree(bookmarks => console.log(JSON.stringify(bookmarks)));
 
