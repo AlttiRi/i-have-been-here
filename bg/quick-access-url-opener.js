@@ -39,12 +39,12 @@ export async function enableQuickAccessUrlOpenerMode() {
     });
 
     watch([urlOpenerMode.ref, quickAccessUrl.ref], async () => {
+        chrome.contextMenus.update(id, {checked: urlOpenerMode.value});
         if (urlOpenerMode.value) {
             if (!state.saved) {
                 await saveState();
                 chrome.browserAction.setPopup({popup: ""});
                 chrome.browserAction.onClicked.addListener(openQuickAccessUrl);
-                chrome.contextMenus.update(id, {checked: urlOpenerMode.value});
                 state.saved = true;
             }
             chrome.browserAction.setTitle({title: "Open " + quickAccessUrl.value});
