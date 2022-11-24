@@ -190,7 +190,7 @@ function appendListByUrls(urls, targetNode) {
 function parseUrls(urlsText) {
     const urls = urlsText.trim().split(/\s/);
     return urls.filter(u => u).map(url => {
-        if (!url.includes("://")) {
+        if (!url.includes(":")) {
             return "https://" + url;
         }
         if (url.startsWith("ttp")) {
