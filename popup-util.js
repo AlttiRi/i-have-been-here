@@ -1,4 +1,5 @@
-import {tcSettings} from "./bg/store/store.js";
+import {filenameLengthLimit, tcSettings} from "./bg/store/store.js";
+import {fullUrlToFilename} from "./util.js";
 
 export async function getTrimmedTitle(title, url) {
     /** @type {TCSettings} */
@@ -33,7 +34,7 @@ export async function getTitlePartForFilename(title, url) {
 
     const trimmedTitle = await getTrimmedTitle(title, url);
 
-    let titleLine = " — " + trimmedTitle
+    let titleLine = trimmedTitle
         .replaceAll(/[<>:"\\|?*]+/g, "")
         .replaceAll("/", " ")
         .replaceAll(/\s+/g, " ");
@@ -41,4 +42,31 @@ export async function getTitlePartForFilename(title, url) {
     console.log(titleLine);
 
     return titleLine;
+}
+
+export async function getScreenshotFilename(url, title) {
+    let urlFilename = fullUrlToFilename(url);
+
+    const lengthLimit = await filenameLengthLimit.getValue();
+    const minTitleLength       = 5;
+    const extraLengthWithTitle = `[ihbh] — .jpg`.length;
+    const extraLength          = `[ihbh].jpg`.length;
+
+    if (urlFilename.length > lengthLimit - extraLength) {
+        urlFilename = urlFilename.slice(0, lengthLimit - extraLength - 1) + "…";
+        return `[ihbh]${urlFilename}.jpg`;
+    }
+
+    if (urlFilename.length > lengthLimit - extraLengthWithTitle - minTitleLength) {
+        return `[ihbh]${urlFilename}.jpg`;
+    }
+
+    let titleLinePart = await getTitlePartForFilename(title, url);
+
+    if (urlFilename.length + titleLinePart.length > lengthLimit - extraLengthWithTitle) {
+        titleLinePart = titleLinePart.slice(0, lengthLimit - urlFilename.length - extraLengthWithTitle - 1) + "…";
+        return `[ihbh]${urlFilename} — ${titleLinePart}.jpg`;
+    }
+
+    return `[ihbh]${urlFilename} — ${titleLinePart}.jpg`;
 }

@@ -1,4 +1,4 @@
-import {downloadBlob, fullUrlToFilename, isOpera, logPicture, sleep} from "./util.js";
+import {downloadBlob, logPicture, sleep} from "./util.js";
 import {
 	exchangeMessage,
 	inIncognitoContext
@@ -6,7 +6,7 @@ import {
 import {createBackgroundTab} from "./util-ext-bg.js";
 import {openQuickAccessUrl} from "./bg/quick-access-url-opener.js";
 import {getActiveTabData} from "./bg/log-image.js";
-import {getTitlePartForFilename, getTrimmedTitle} from "./trim-title.js";
+import {getScreenshotFilename, getTrimmedTitle} from "./popup-util.js";
 import {quickAccessUrl} from "./bg/store/store.js";
 
 console.log("Popup...");
@@ -111,10 +111,10 @@ downloadButton.addEventListener("click", async () => {
 	} = screenShotData;
 	const resp = await fetch(screenshotUrl);
 	const blob = await resp.blob();
-	const urlFilename = fullUrlToFilename(url);
-	const titleLinePart = await getTitlePartForFilename(title, url);
-	const name = `[ihbh]${urlFilename}${titleLinePart}.jpg`;
+
+	const name = await getScreenshotFilename(url, title);
 	downloadBlob(blob, name, url);
+
 	downloadButton.classList.add("btn-outline-success");
 	chrome.runtime.sendMessage("change-icon--message");
 	await sleep(500);
