@@ -174,7 +174,7 @@ function appendListByTabs(tabs, targetNode) {
             <tr>
                 <td>
                     <img class="favicon" src="${tab.favIconUrl || "/images/empty.png"}" alt=""/>
-                    <a class="url link-primary" href="${tab.url}" target="_blank" rel="noreferrer noopener">${tab.url}</a>
+                    <a class="url link-primary" title="${tab.title.replaceAll(`"`, "&quot;")}" href="${tab.url}" target="_blank" rel="noreferrer noopener">${tab.url}</a>
                 </td>                
             </tr>
     `.replaceAll(/\s{2,}/g, ""));
