@@ -28,7 +28,7 @@ if (document.querySelector("#filters")) {
     const ignoreFilterElem = document.querySelector("#ignore-filter");
     const state = new URLSearchParams(location.hash.slice(1));
     onlyFilterElem.value   = state.get("only");
-    ignoreFilterElem.value = state.get("ignore");
+    ignoreFilterElem.value = state.get("ignore") || "chrome-extension:// ";
     const pageBtn = document.querySelector(".nav-link.active");
     pageBtn.href = location.href;
 
@@ -126,14 +126,20 @@ async function renderUrlList() {
     listElem.innerHTML = "";
 
     const _urls = filterUrls(urls);
+    console.log(globalThis.urls = _urls);
 
     appendListByUrls(_urls, listElem);
+}
+
+/** @param {chrome.tabs.Tab[]} tabs */
+function logTabs(tabs) {
+    console.log(globalThis.tabs = tabs);
+    globalThis.urls = tabs.map(tab => tab.url);
 }
 
 async function renderTabList() {
     /** @type {chrome.tabs.Tab[]} */
     const tabs = await exchangeMessage("get-tabs--message-exchange");
-    console.log(globalThis.tabs = tabs);
 
     const listElem = document.querySelector("#list-content");
     listElem.innerHTML = "";
@@ -142,12 +148,14 @@ async function renderTabList() {
         return filterUrls([tab.url]).length;
     });
 
+    logTabs(_tabs);
+
     appendListByTabs(_tabs, listElem);
 }
 async function renderJson() {
     /** @type {chrome.tabs.Tab[]} */
     const tabs = await exchangeMessage("get-tabs--message-exchange");
-    console.log(globalThis.tabs = tabs);
+    logTabs(tabs);
 
     const jsonElem = document.querySelector("#json-block");
     jsonElem.insertAdjacentHTML("afterbegin", `
