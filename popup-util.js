@@ -63,6 +63,10 @@ export async function getScreenshotFilename(url, title) {
 
     let titleLinePart = await getTitlePartForFilename(title, url);
 
+    if (!titleLinePart) {
+        return `[ihbh]${urlFilename}.jpg`;
+    }
+
     if (urlFilename.length + titleLinePart.length > lengthLimit - extraLengthWithTitle) {
         titleLinePart = titleLinePart.slice(0, lengthLimit - urlFilename.length - extraLengthWithTitle - 1) + "…";
         return `[ihbh]${urlFilename} — ${titleLinePart}.jpg`;
