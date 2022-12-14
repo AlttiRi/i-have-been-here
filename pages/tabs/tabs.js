@@ -48,8 +48,7 @@ if (document.querySelector("#filters")) {
     });
 
     document.querySelector("#copy-btn").addEventListener("click", () => {
-        const urls = [...document.querySelectorAll("#list-content a.url")].map(el => el.href);
-        const text = urls.join("\n");
+        const text = globalThis.urls.join(" ");
         console.log(text);
         void navigator.clipboard.writeText(text);
     });
