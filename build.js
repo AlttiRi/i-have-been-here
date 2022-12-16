@@ -6,7 +6,17 @@ const {version} = packageJson;
 
 import {sleep} from "./util.js";
 
-const ff = true;
+
+let ff = false;
+let suffix = "cr";
+
+process.argv.forEach(function (value, index, array) {
+    if (value === "--firefox") {
+        ff = true;
+        suffix = "ff"
+    }
+});
+
 
 try {
     const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "extn-build-"));
@@ -36,7 +46,7 @@ try {
         );
     }
 
-    await fs.promises.cp(tmpDir, `./dist/demo-ext-${version}-${ff ? "ff-" : ""}${Math.trunc(Date.now()/1000)}`, {
+    await fs.promises.cp(tmpDir, `./dist/demo-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}`, {
         recursive: true
     });
 
