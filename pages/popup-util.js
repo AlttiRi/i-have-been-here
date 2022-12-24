@@ -1,5 +1,5 @@
-import {filenameLengthLimit, tcSettings} from "./bg/store/store.js";
-import {fullUrlToFilename} from "./util.js";
+import {filenameLengthLimit, tcSettings} from "/bg/store/store.js";
+import {fullUrlToFilename} from "/util.js";
 
 export async function getTrimmedTitle(title, url) {
     /** @type {TCSettings} */

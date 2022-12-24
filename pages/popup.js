@@ -1,13 +1,10 @@
-import {downloadBlob, logPicture, sleep} from "./util.js";
-import {
-	exchangeMessage,
-	inIncognitoContext
-} from "./util-ext.js";
-import {createBackgroundTab} from "./util-ext-bg.js";
-import {openQuickAccessUrl} from "./bg/quick-access-url-opener.js";
-import {getActiveTabData} from "./bg/log-image.js";
+import {downloadBlob, logPicture, sleep} from "/util.js";
+import {exchangeMessage,inIncognitoContext} from "/util-ext.js";
+import {createBackgroundTab} from "/util-ext-bg.js";
+import {openQuickAccessUrl} from "/bg/quick-access-url-opener.js";
+import {getActiveTabData} from "/bg/log-image.js";
+import {quickAccessUrl} from "/bg/store/store.js";
 import {getScreenshotFilename, getTrimmedTitle} from "./popup-util.js";
-import {quickAccessUrl} from "./bg/store/store.js";
 
 console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);
@@ -43,7 +40,7 @@ async function initPreview() {
 
 	faviconElem.title = favIconUrl;
 	if (favIconUrl === undefined) {
-		faviconElem.src = "./images/empty.png";
+		faviconElem.src = "/images/empty.png";
 	} else
 	if (favIconUrl.startsWith("data:")) {
 		faviconElem.src = favIconUrl;
