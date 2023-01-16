@@ -74,6 +74,7 @@ export function emojiToImageData(emoji, size = 64, multiplier = 1) {
     return context.getImageData(0, 0, size, size);
 }
 
+/** @return {Promise<Blob>} */
 export function emojiToBlob(emoji, size, multiplier) {
     const {canvas} = emojiTo(emoji, size, multiplier);
     return new Promise(resolve => canvas.toBlob(resolve));
@@ -90,7 +91,7 @@ export async function emojiToBlobURL(emoji, size, multiplier, revokeDelay = 1000
     const blob = await emojiToBlob(emoji, size, multiplier);
     const url = URL.createObjectURL(blob);
     // console.log(url, blob, await blob.arrayBuffer());
-    setTimeout(_ => URL.revokeObjectURL(url), revokeDelay);
+    setTimeout(() => URL.revokeObjectURL(url), revokeDelay);
     return url;
 }
 
