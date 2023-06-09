@@ -99,5 +99,8 @@ eq("fw", fullUrlToFilename("file:///C:/"),   "[file·C]");
 eq("fw", fullUrlToFilename("file:///C:/C"),  "[file·C] C");
 eq("fw", fullUrlToFilename("file:///C:/C:"), "[file·C] C%3A");
 
+eq("fw", fullUrlToFilename("https://www.windy.com/?44.444,22.222,5"), "[windy.com]  44.444,22.222,5");
+eq("fw", fullUrlToFilename("https://www.windy.com/#44.444,22.222,5"), "[windy.com] #44.444,22.222,5");
+
 
 report();

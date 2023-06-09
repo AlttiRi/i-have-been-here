@@ -196,7 +196,7 @@ function getEncoder(replacingArray) {
     for (const [a, b] of replacingArray) {
         map.set(a, b);
     }
-    const regexp = new RegExp("[" + [...map.keys()].join() + "]", "g");
+    const regexp = new RegExp("[" + [...map.keys()].join("") + "]", "g");
     return function(name) {
         return name.replaceAll(regexp, ch => map.get(ch));
     }
