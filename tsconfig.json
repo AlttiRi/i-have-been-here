@@ -16,5 +16,7 @@
     "alwaysStrict":     true,
     "noImplicitAny":    true,
     "noImplicitThis":   true,
+
+    "outDir": "generated",
   }
 }

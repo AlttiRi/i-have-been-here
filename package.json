@@ -1,6 +1,6 @@
 {
     "name": "demo-extension",
-    "version": "1.7.0-2024.4.9",
+    "version": "1.7.1-2024.4.9",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {
@@ -10,7 +10,8 @@
         "@types/chrome": "0.0.142",
         "@vue-reactivity/watch": "0.2.0",
         "@vue/reactivity": "3.4.21",
-        "rollup": "4.14.1"
+        "rollup": "4.14.1",
+        "@types/node": "20.12.6"
     },
     "scripts": {
         "build-vue-reactivity": "node ./libs/build-vue-reactivity-bundle.js",
