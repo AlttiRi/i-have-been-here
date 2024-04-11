@@ -3,7 +3,6 @@ import {debounce} from "/src/util.js";
 
 const isListPage  = location.pathname.endsWith("list.html");
 const isJsonPage  = location.pathname.endsWith("json.html");
-const isInputPage = location.pathname.endsWith("input.html");
 
 let urls = [];
 
@@ -12,9 +11,6 @@ if (isListPage) {
 } else
 if (isJsonPage) {
     void renderJson();
-} else
-if (isInputPage) {
-    void renderUrlList();
 }
 
 if (document.querySelector("#filters")) {
@@ -97,28 +93,6 @@ function filterUrls(urls) {
 }
 
 
-if (document.querySelector("#input-block")) {
-    const textInputElem = document.querySelector("#text-input");
-
-    const btnAppendElem = document.querySelector("#append-btn");
-    const btnSetElem    = document.querySelector("#set-btn");
-    const btnClearElem  = document.querySelector("#clear-btn");
-
-    btnSetElem.addEventListener("click", event => {
-        urls = parseUrls(textInputElem.value);
-        void renderUrlList();
-    });
-    btnAppendElem.addEventListener("click", event => {
-        urls = [...urls, ...parseUrls(textInputElem.value)];
-        void renderUrlList();
-    });
-    btnClearElem.addEventListener("click", event => {
-        textInputElem.value = "";
-        textInputElem.focus();
-        urls = [];
-        void renderUrlList();
-    });
-}
 
 async function renderUrlList() {
     const listElem = document.querySelector("#list-content");
@@ -194,33 +168,23 @@ function appendListByUrls(urls, targetNode) {
     }
 }
 
-function parseUrls(urlsText) {
-    const urls = urlsText.trim().split(/\s/);
-    return urls.filter(u => u).map(url => {
-        if (!url.includes(":")) {
-            return "https://" + url;
-        }
-        if (url.startsWith("ttp")) {
-            url = "h" + url;
-        }
-        return url;
-    });
-}
 
 const listBlockElem = document.querySelector("#list-block");
-listBlockElem?.addEventListener("click", event => {
-    if (event.target.classList.contains("link-primary")) {
-        event.target.closest("tr").classList.add("clicked");
-    }
-});
-listBlockElem?.addEventListener("mousedown", event => {
-    const LEFT_BUTTON = 0;
-    const MIDDLE_BUTTON = 1;
-    const RIGHT_BUTTON = 2;
-    if (event.button !== MIDDLE_BUTTON) {
-        return;
-    }
-    if (event.target.classList.contains("favicon")) {
-        event.target.closest("tr").classList.remove("clicked");
-    }
-});
+if (listBlockElem) {
+    listBlockElem.addEventListener("click", event => {
+        if (event.target.classList.contains("link-primary")) {
+            event.target.closest("tr").classList.add("clicked");
+        }
+    });
+    listBlockElem.addEventListener("mousedown", event => {
+        const LEFT_BUTTON = 0;
+        const MIDDLE_BUTTON = 1;
+        const RIGHT_BUTTON = 2;
+        if (event.button !== MIDDLE_BUTTON) {
+            return;
+        }
+        if (event.target.classList.contains("favicon")) {
+            event.target.closest("tr").classList.remove("clicked");
+        }
+    });
+}
