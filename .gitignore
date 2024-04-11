@@ -1,3 +1,8 @@
 .idea
 node_modules
 dist
+
+!/src/util-ext.ts
+/src/util-ext.*
+!/src/bg/store/reactive-store-local-value.ts
+/src/bg/store/reactive-store-local-value.*

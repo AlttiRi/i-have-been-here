@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Opened Tabs</title>
+
+    <style>
+        html, body {
+            min-height: 100vh;
+            margin: 0;
+        }
+    </style>
+
+    <link href="/src/css.css" rel="stylesheet">
+    <link rel="stylesheet" href="/libs/bootstrap.css" integrity="sha256-o+AsfCHj7A1M5Xgm1kJmZiGEIvMQEzQqrXz2072Gkkg=" crossorigin="anonymous">
+    <script src="./tabs.js" type="module"></script>
+    <link href="./tabs.css" rel="stylesheet">
+</head>
+<body class="container input-page">
+    <header class="d-flex justify-content-center py-3 pb-0">
+        <ul class="nav nav-pills px-3">
+            <li class="nav-item"><a href="/src/pages/visits.html" class="nav-link" id="visits-btn">📃 Visits</a></li>
+        </ul>
+        <ul class="nav nav-pills px-3">
+            <li class="nav-item"><a href="/src/pages/options.html" class="nav-link" id="opt-btn">⚙ Settings</a></li>
+        </ul>
+        <ul class="nav nav-pills px-3">
+            <li class="nav-item"><a href="/src/pages/tabs/list.html" class="nav-link" id="list-btn">Opened Tabs</a></li>
+            <li class="nav-item"><a href="/src/pages/tabs/input.html" class="nav-link active" id="input-btn">Input URLs</a></li>
+            <li class="nav-item"><a href="/src/pages/tabs/json.html" class="nav-link" id="json-btn">Opened Tabs JSON</a></li>
+        </ul>
+    </header>
+
+    <hr>
+
+    <div id="filters"  class="row row-cols-lg-3 g-3 align-items-center">
+        <div class="col-12">
+            <label style="display: contents;">
+                <span class="input-group">
+                    <span class="input-group-text" id="only-filter-text">Only</span>
+                    <input type="text" class="form-control" id="only-filter" placeholder="">
+                </span>
+            </label>
+        </div>
+        <div class="col-12">
+            <label style="display: contents;">
+                <span class="input-group">
+                    <span class="input-group-text" id="ignore-filter-text">Ignore</span>
+                    <input type="text" class="form-control" id="ignore-filter" placeholder="">
+                </span>
+            </label>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary" title="Copy URLs" id="copy-btn">Copy</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="input-block">
+        <div class="input">
+            <span class="btn-group">
+            <label style="display: contents;">
+                <input type="text" id="text-input" class="form-control" autocomplete="off">
+            </label>
+            <button class="btn btn-outline-primary" id="set-btn">Set</button>
+            <button class="btn btn-outline-primary" id="append-btn">Append</button>
+            <button class="btn btn-outline-primary" id="clear-btn">Clear</button>
+            </span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="list-block">
+        <table class="table table-borderless">
+            <tbody id="list-content">
+                <!-- ... -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

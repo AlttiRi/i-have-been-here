@@ -4,33 +4,33 @@
     "name": "__MSG_extension_name__",
     "short_name": "__MSG_extension_name__",
     "description": "__MSG_extension_description__",
-    "version": "1.6.10",
+    "version": "1.7.2.20240411",
     "content_scripts": [
 		    {
             "matches": ["<all_urls>"],
-            "js": ["content-runner.js"],
+            "js": ["src/content/__content-runner.js"],
             "run_at": "document_start"
         }
     ],
     "background": {
-        "page": "background.html",
+        "page": "src/background.html",
         "persistent": true
     },
-    "permissions": ["<all_urls>", "activeTab", "tabs", "contextMenus", "storage", "downloads.shelf", "downloads", "unlimitedStorage", "bookmarks", "chrome://favicon/"],
+    "permissions": ["<all_urls>", "activeTab", "tabs", "contextMenus", "storage", "unlimitedStorage", "bookmarks", "downloads", "downloads.shelf", "chrome://favicon/"],
     "browser_action": {
         "default_title": "__MSG_browser_action_title__",
-        "default_popup": "pages/popup.html",
+        "default_popup": "src/pages/popup.html",
         "default_icon": "images/hash.png"
     },
     "options_ui": {
-        "page": "pages/options.html",
+        "page": "src/pages/options.html",
         "open_in_tab": true
     },
     "web_accessible_resources": [
-        "web_accessible_resources/*",
-        "content.js",
-        "util-ext.js",
-        "util.js"
+        "src/web_accessible_resources/*",
+        "src/content/content-*",
+        "src/util-ext.js",
+        "src/util.js"
     ],
     "omnibox": {
         "keyword": "z"

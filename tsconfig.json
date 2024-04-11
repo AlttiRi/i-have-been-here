@@ -2,12 +2,15 @@
   "compilerOptions": {
     // It very notable slow-downs the object instancing for the "target" is less than "ES2022" if is set to `true`.
     "useDefineForClassFields": false,
-    "allowJs": true,
 
-    "target": "ES2020",
-    "module": "ES2020",
+    "target": "es2020",
+    "lib": ["ES2021", "DOM"],
+    "module": "ESNext",
     "moduleResolution": "bundler",
-    "esModuleInterop":  true,
+    "esModuleInterop":   true,
+    "isolatedModules":   true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
 
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
@@ -17,6 +20,13 @@
     "noImplicitAny":    true,
     "noImplicitThis":   true,
 
-    "outDir": "generated",
-  }
+    "allowJs": false,
+
+    "noEmit": false,
+//  "sourceMap": true,
+//  "declaration": true,
+  },
+  "include": [
+    "./src/**/*.ts"
+  ],
 }
