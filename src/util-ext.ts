@@ -19,8 +19,6 @@ export const defaultPopup = manifest.browser_action!.default_popup;
  * `chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {`
  * to prevent the `The message port closed before a response was received.` error.
  * @see {import("src/util-ext-bg.js").exchangeMessageWithTab}
- * @param {any} message
- * @return {Promise<any>}
  */
 export function exchangeMessage(message: any): Promise<any> {
     console.log("[sendMessage][send]", message);
@@ -69,4 +67,5 @@ export function removeFromStoreLocal(key: string): Promise<void> {
         });
     });
 }
+
 

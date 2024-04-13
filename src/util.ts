@@ -1,12 +1,19 @@
-export const isFirefox = typeof navigator === "object" && navigator.userAgent.includes("Firefox");
-export const isOpera   = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
+declare global {
+    interface Window {
+        opr: undefined | object;
+    }
+    function logPicture(url: string, scale: number): void
+}
+
+export const isFirefox: boolean = typeof navigator === "object" && navigator.userAgent.includes("Firefox");
+export const isOpera:   boolean = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
 
 
-export function sleep(ms) {
+export function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export function downloadBlob(blob, name, url) {
+export function downloadBlob(blob: Blob, name: string, url?: string): void {
     const anchor = document.createElement("a");
     anchor.setAttribute("download", name || "");
     const blobUrl = URL.createObjectURL(blob);
@@ -15,34 +22,34 @@ export function downloadBlob(blob, name, url) {
     setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
 }
 
-export function debounce(runnable, ms = 50) {
-    let timerId;
-    return function() {
+export function debounce(runnable: Function, ms = 50) {
+    let timerId: number;
+    return function(this: any): void {
         if (timerId) {
             clearTimeout(timerId);
         }
-        timerId = setTimeout(() => {
+        timerId = window.setTimeout(() => {
             runnable.apply(this, arguments);
-            timerId = null;
+            timerId = -1;
         }, ms);
     }
 }
 
-export function logPicture(url, scale) {
+export function logPicture(url: string, scale: number): void {
     void logPictureAsync(url, scale);
 }
 
-export async function logPictureAsync(url, scale = 0.5) {
-    let dataUrl;
+export async function logPictureAsync(url: string, scale: number = 0.5): Promise<void> {
+    let imgSrc: string;
     if (isBlobUrl(url)) {
-        dataUrl = await blobUrlToDataUrl(url);
+        imgSrc = await blobUrlToDataUrl(url);
     } else {
-        dataUrl = url;
+        imgSrc = url;
     }
 
-    const img = new Image();
-    const imageLoaded = new Promise(resolve => img.onload = resolve);
-    img.src = dataUrl;
+    const img: HTMLImageElement = new Image();
+    const imageLoaded: Promise<Event> = new Promise(resolve => img.onload = resolve);
+    img.src = imgSrc;
     await imageLoaded;
 
     console.log("%c ", `
@@ -52,58 +59,71 @@ export async function logPictureAsync(url, scale = 0.5) {
        font-size: 0;
     `);
 }
-console.image = logPicture;
+globalThis.logPicture = logPicture;
 
-async function blobUrlToDataUrl(blobUrl) {
+async function blobUrlToDataUrl(blobUrl: BlobURL): Promise<string> {
     const response = await fetch(blobUrl);
     const blob = await response.blob()
     return new Promise(resolve => {
         const reader = new FileReader();
-        reader.onload = event => resolve(event.target.result);
+        reader.onload = (_event: ProgressEvent<FileReader>) => resolve(reader.result as string);
         reader.readAsDataURL(blob);
     });
 }
 
-function isBlobUrl(url) {
+function isBlobUrl(url: string): url is BlobURL {
     return url.toString().startsWith("blob:");
 }
 
 
-export function emojiToImageData(emoji, size = 64, multiplier = 1) {
+export function emojiToImageData(emoji: string, size = 64, multiplier = 1): ImageData {
     const {context} = emojiTo(emoji, size, multiplier);
     return context.getImageData(0, 0, size, size);
 }
 
-/** @return {Promise<Blob>} */
-export function emojiToBlob(emoji, size, multiplier) {
+export function emojiToBlob(emoji: string, size: number, multiplier: number): Promise<Blob> {
     const {canvas} = emojiTo(emoji, size, multiplier);
-    return new Promise(resolve => canvas.toBlob(resolve));
+    return new Promise((resolve, reject) => {
+        canvas.toBlob((blob: (Blob | null)) => {
+            if (blob) {
+                resolve(blob);
+            } else {
+                reject();
+            }
+        });
+    });
 }
 
-export function emojiToDataURL(emoji, size, multiplier) {
-    const {canvas} = emojiTo(emoji, size, multiplier);
-    const dataUrl = canvas.toDataURL("png", 100);
-    // console.log(dataUrl);
-    return dataUrl;
-}
 
-export async function emojiToBlobURL(emoji, size, multiplier, revokeDelay = 100000) {
+export type PngDataURL = `data:image/png;base64,${string}`;
+export type BlobURL    = `blob:${string}`;
+
+export function emojiToDataURL(emoji: string, size: number, multiplier: number): PngDataURL {
+    const {canvas} = emojiTo(emoji, size, multiplier);
+    return canvas.toDataURL("png", 100) as PngDataURL;
+}
+export async function emojiToBlobURL(emoji: string, size: number, multiplier: number, revokeDelay = 100000): Promise<BlobURL> {
     const blob = await emojiToBlob(emoji, size, multiplier);
-    const url = URL.createObjectURL(blob);
-    // console.log(url, blob, await blob.arrayBuffer());
+    const url = URL.createObjectURL(blob) as BlobURL;
     setTimeout(() => URL.revokeObjectURL(url), revokeDelay);
     return url;
 }
 
-/** @return {{canvas: HTMLCanvasElement, context: CanvasRenderingContext2D}} */
-function emojiTo(emoji = "⬜", size = 64, multiplier = 1.01) {
 
-    /** @type {HTMLCanvasElement} */
-    const canvas = document.createElement("canvas");
+type CanvasContext2D = {
+    canvas: HTMLCanvasElement,
+    context: CanvasRenderingContext2D
+};
+
+function emojiTo(emoji = "⬜", size = 64, multiplier = 1.01): CanvasContext2D {
+
+    const canvas: HTMLCanvasElement = document.createElement("canvas");
     canvas.width  = size;
     canvas.height = size;
-    /** @type {CanvasRenderingContext2D} */
-    const context = canvas.getContext("2d");
+    const context: CanvasRenderingContext2D | null = canvas.getContext("2d");
+    if (!context) {
+        throw new Error("[emojiTo] CanvasRenderingContext2D is null");
+    }
 
     context.font = size * 0.875 * multiplier + "px serif";
     context.textBaseline = "middle";
@@ -111,59 +131,56 @@ function emojiTo(emoji = "⬜", size = 64, multiplier = 1.01) {
 
     const x = size / 2;
     const y = size / 2 + Math.round(size - size * 0.925);
-
     context.fillText(emoji, x, y);
 
     return {canvas, context};
 }
 
 // "Sun, 10 Jan 2021 22:22:22 GMT" -> "2021.01.10"
-export function dateToDayDateString(dateValue, utc = true) {
+export function dateToDayDateString(dateValue: Date | string | number, utc = true): string {
     const _date = new Date(dateValue);
-    function pad(str) {
+    function pad(str: number): string {
         return str.toString().padStart(2, "0");
     }
     const _utc = utc ? "UTC" : "";
-    const year  = _date[`get${_utc}FullYear`]();
-    const month = _date[`get${_utc}Month`]() + 1;
-    const date  = _date[`get${_utc}Date`]();
+    const year:  number = _date[`get${_utc}FullYear`]();
+    const month: number = _date[`get${_utc}Month`]() + 1;
+    const date:  number = _date[`get${_utc}Date`]();
 
     return year + "." + pad(month) + "." + pad(date);
 }
 
 export class LS {
-    static getItem(name, defaultValue) {
-        const value = localStorage.getItem(name);
-        if (value === undefined) {
-            return undefined;
-        }
-        if (value === null) { // when there is no such item
+    static getItem<T>(name: string, defaultValue: T): T {
+        const value: string | null = localStorage.getItem(name);
+        if (value === null) {
             LS.setItem(name, defaultValue);
             return defaultValue;
         }
         return JSON.parse(value);
     }
-    static setItem(name, value) {
+    static setItem(name: string, value: any): void {
         localStorage.setItem(name, JSON.stringify(value));
     }
-    static removeItem(name) {
+    static removeItem(name: string): void {
         localStorage.removeItem(name);
     }
-    static pushItem(name, value) {
-        const array = LS.getItem(name, []);
+    static pushItem<T>(name: string, value: T): void {
+        const array: T[] = LS.getItem(name, []);
         array.push(value);
         LS.setItem(name, array);
     }
-    static popItem(name, value) {
-        const array = LS.getItem(name, []);
-        if (array.indexOf(value) !== -1) {
-            array.splice(array.indexOf(value), 1);
+    static popItem<T>(name: string, value: T): void {
+        const array: T[] = LS.getItem(name, []);
+        const index: number = array.indexOf(value);
+        if (index !== -1) {
+            array.splice(index, 1);
             LS.setItem(name, array);
         }
     }
 }
 
-export function binaryStringToArrayBuffer(binaryString) {
+export function binaryStringToArrayBuffer(binaryString: string): Uint8Array {
     const u8Array = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         u8Array[i] = binaryString.charCodeAt(i);
@@ -174,12 +191,12 @@ export function binaryStringToArrayBuffer(binaryString) {
 
 // todo? escape ~ in chrome
 //  do not unescape `%0A`, for example
-const defaultEncodeMap = new Map([
- // [ " ",   "+"],
+const defaultEncodeMap: Map<string, string> = new Map([
+    // [ " ",   "+"],
     [ " ", "%20"],
     ["\"", "%22"],
- // [ "#", "%23"],
- // [ "+", "%2B"],
+    // [ "#", "%23"],
+    // [ "+", "%2B"],
     [ "/", "%2F"],
     [ "*", "%30"],
     [ ":", "%3A"],
@@ -188,17 +205,17 @@ const defaultEncodeMap = new Map([
     [ "?", "%3F"],
     ["\\", "%5C"],
     [ "|", "%7C"],
- // [ "~", "%7E"], // Since Chrome replaces `~` with `_` on file downloading // todo: option
- // [ "·", "%C2%B7"],
+    // [ "~", "%7E"], // Since Chrome replaces `~` with `_` on file downloading // todo: option
+    // [ "·", "%C2%B7"],
 ]);
-function getEncoder(replacingArray) {
+function getEncoder(replacingArray: Array<Array<string>>) {
     const map = new Map(defaultEncodeMap);
     for (const [a, b] of replacingArray) {
         map.set(a, b);
     }
     const regexp = new RegExp("[" + [...map.keys()].join("") + "]", "g");
-    return function(name) {
-        return name.replaceAll(regexp, ch => map.get(ch));
+    return function(name: string) {
+        return name.replaceAll(regexp, ch => map.get(ch) ?? ch);
     }
 }
 
@@ -206,7 +223,7 @@ const encodeSearch = getEncoder([["#", "%23"], ["·", "%C2%B7"]]);
 const encodeHash   = getEncoder([["/",   "·"], ["·", "%C2%B7"]]);
 const encodePath   = getEncoder([["#", "%23"], ["·", "%C2%B7"]]);
 
-export function fullUrlToFilename(url) {
+export function fullUrlToFilename(url: string): string {
     const u = new URL(url);
     const pathnameNorm = u.pathname.replaceAll(/\/+/g, "/");
     const pt = pathnameNorm.startsWith("/") ? pathnameNorm.slice(1) : pathnameNorm;
