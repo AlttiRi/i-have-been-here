@@ -7,4 +7,5 @@ dist
 /src/bg/change-icon-on-message.js
 /src/bg/tab-counter.js
 /src/bg/visits.js
+/src/bg/get-tabs.js
 /src/util*.js

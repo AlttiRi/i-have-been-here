@@ -15,13 +15,15 @@ export const defaultPopup = manifest.browser_action!.default_popup;
  *
  * ---
  *
- * To prevent `The message port closed before a response was received.` error,
+ * To prevent `The message port closed before a response was received.` error (on `sendResponse` call),
  * when you use `chrome.tabs.sendMessage`'s the callback argument (`responseCallback`).
  *
  * The listener (in a content script) must:
  * - use `sendResponse`,
  * - or `return true;`, with calling `sendResponse();` later (async) *
  * in `chrome.runtime.onMessage.addListener((message, sender, sendResponse)` callback.
+ *
+ * TL;DR — "Return `true` to indicate you want to send a response asynchronously".
  *
  * @see {import("src/util-ext.js").exchangeMessage}
  * @see {import("src/util-ext-bg.js").exchangeMessageWithTab}

@@ -12,16 +12,18 @@ export function logImageOnMessage() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message === "take-screenshot--message-exchange") {
             void asyncHandler(sendResponse);
+            return true;
         } else
         if (message?.command === "save-screenshot--message-exchange"){
             const {dataUrl, tabUrl} = message;
             console.log("setToStoreLocal [\"save-screenshot\"]", dataUrl);
-            void setToStoreLocal("screenshot:" + tabUrl, toStoreData(dataUrl)).then(() => {
-                console.log("stored");
-                sendResponse(true);
-            });
+            void setToStoreLocal("screenshot:" + tabUrl, toStoreData(dataUrl))
+                .then(() => {
+                    console.log("screenshot is stored");
+                    sendResponse(true);
+                });
+            return true;
         }
-        return true;
     });
 }
 
