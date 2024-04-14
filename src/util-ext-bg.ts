@@ -18,25 +18,19 @@ export async function getTitle(details?: chrome.browserAction.TabDetails): Promi
     return new Promise(resolve => chrome.browserAction.getTitle(details, resolve));
 }
 
-
+// todo move to util-ext.js
 /**
- * To prevent `The message port closed before a response was received.` error.
- * The listener (in a content script) must use `sendResponse` (or `return true;`, with calling `sendResponse();` later (async)):
- * ```
- * chrome.runtime.onMessage.addListener((message, sender, sendResponse) ...
- * ```
- * Since this function uses `responseCallback` in `chrome.tabs.sendMessage`
- * in `chrome.runtime.onMessage.addListener` callback.
- *
- * @see {exchangeMessage}
+ * Send a message from the background script to a tab's content script and get the response back.
+ * @see {import("src/util-ext.js").SendResponse}
+ * @see {import("src/util-ext.js").exchangeMessage}
  */
 export function exchangeMessageWithTab(tabId: number, message: any): Promise<any> {
     return new Promise((resolve, reject) => {
-        chrome.tabs.sendMessage(tabId, message, (response) => {
+        chrome.tabs.sendMessage(tabId, message, function responseCallback(response) {
             if (chrome.runtime.lastError) {
                 reject(chrome.runtime.lastError.message);
             }
-            console.log("Tab response message:", response);
+            console.log(`[exchangeMessageWithTab] Tab's (${tabId}) response:`, response);
             resolve(response);
         });
     });
@@ -45,7 +39,7 @@ export function exchangeMessageWithTab(tabId: number, message: any): Promise<any
 export const allowedProtocols = ["http:", "https:", "file:", "ftp:"];
 
 export async function executeScript(details: chrome.tabs.InjectDetails): Promise<boolean> {
-    const activeTab: chrome.tabs.Tab = await getActiveTab();
+    const activeTab = await getActiveTab();
 
     if (!activeTab) {
         console.warn("[warning][executeScript] No active tab for injection.");
@@ -57,7 +51,7 @@ export async function executeScript(details: chrome.tabs.InjectDetails): Promise
     }
 
     if (!allowedProtocols.includes(new URL(activeTab.url).protocol)) {
-        console.warn("[warning][executeScript] Not allowed protocol for injection.", activeTab.url);
+        console.warn("[warning][executeScript] Not allowed protocol for injection.", activeTab.url, activeTab);
         return false;
     }
 
@@ -75,11 +69,16 @@ export async function getActiveTabId(currentWindow: boolean = true) {
     return (await getActiveTab(currentWindow))?.id;
 }
 
-export const getActiveTab = async function(currentWindow: boolean = true): Promise<chrome.tabs.Tab> {
+/** Returns `null` when the last focused window is DevTools */
+export async function getActiveTab(currentWindow: boolean = true): Promise<chrome.tabs.Tab | undefined> {
     const tabs: chrome.tabs.Tab[] = await queryTabs({
         active: true,
         currentWindow
     });
+    if (tabs.length === 0) {
+        console.warn("[warning][getActiveTab] tabs.length === 0");
+        return;
+    }
     return tabs[0];
 }
 

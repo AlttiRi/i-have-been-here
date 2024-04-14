@@ -1,19 +1,17 @@
-import {getActiveTab} from "/src/util-ext-bg.js";
-import {inIncognitoContext} from "/src/util-ext.js";
+import {getActiveTab}            from "../util-ext-bg.js";
+import {inIncognitoContext}      from "../util-ext.js";
 import {emojiToImageData, sleep} from "../util.js";
 import {updateIcons} from "./tab-counter.js";
 
 export function changeIconOnMessage() {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message !== "change-icon--message") {
-            return;
+    chrome.runtime.onMessage.addListener((message, sender) => {
+        if (message === "change-icon--message") {
+            void handler(message, sender);
         }
-        void handler(message, sender, sendResponse);
-        return true;
     });
 }
 
-async function handler(message, sender, sendResponse) {
+async function handler(message: any, sender: chrome.runtime.MessageSender) {
     console.log(sender);
     // id: "llbhojonnafjopkkokcjhomnceajcdmh"
     // origin: "chrome-extension://llbhojonnafjopkkokcjhomnceajcdmh"
@@ -28,6 +26,9 @@ async function handler(message, sender, sendResponse) {
     const imageData = emojiToImageData("💾");
 
     const tab = await getActiveTab();
+    if (!tab) {
+        return;
+    }
     chrome.browserAction.setIcon({
         imageData,
         tabId: tab.id

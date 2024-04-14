@@ -29,7 +29,7 @@ initGetTabsListener();
 
 
 chrome.runtime.onMessage.addListener((message, sender) => {
-    console.log("[BG incoming message]", message, sender); // Logs any income messages
+    console.log("[BG incoming message]", {message}, "sender:", sender); // Logs any income messages
 });
 
 console.log("Test picture log:");

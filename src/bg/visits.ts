@@ -1,13 +1,22 @@
 import {getActiveTab, queryTabs} from "../util-ext-bg.js";
 import {updateIcons} from "./tab-counter.js";
-import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
+import {getFromStoreLocal, setToStoreLocal, SendResponse} from "../util-ext.js";
 import {dateToDayDateString, downloadBlob, sleep} from "../util.js";
 
 
-export async function visitedIconDataIfRequired(tab) {
-    const visits = await getVisits();
+export type Visit = {
+    url:   string,
+    title: string,
+    date:  number | number[],
+};
 
-    const visit = visits.find(visit => visit.url === tab.url);
+export async function getVisits(): Promise<Visit[]> {
+    return await getFromStoreLocal("visits") || [];
+}
+
+export async function visitedIconDataIfRequired(tab: chrome.tabs.Tab) {
+    const visits: Visit[] = await getVisits();
+    const visit: Visit | undefined = visits.find(visit => visit.url === tab.url);
 
     // todo: delete later;
     //  added since the old created visits have no title
@@ -18,7 +27,7 @@ export async function visitedIconDataIfRequired(tab) {
             if (!tab) {
                 return;
             }
-            visit.title = tab.title;
+            visit.title = tab.title || "";
             return setToStoreLocal("visits", visits);
         });
     }
@@ -32,20 +41,21 @@ export async function visitedIconDataIfRequired(tab) {
     return null;
 }
 
-export async function updateVisit(updatedVisit) {
+export async function updateVisit(newVisit: Visit): Promise<void> {
     const visits = await getVisits();
-    const visit = visits.find(visit => visit.url === updatedVisit.url);
-    Object.keys(visit).forEach(key => delete visit[key]);
-    Object.assign(visit, updatedVisit);
+    const visit: Visit | undefined = visits.find(visit => visit.url === newVisit.url);
+    if (visit === undefined) {
+        console.warn("[warning][updateVisit] visit === undefined");
+        return;
+    }
+    const keys = Object.keys(visit) as Array<keyof Visit>;
+    keys.forEach(key => delete visit[key]);
+    Object.assign(visit, newVisit);
     await setToStoreLocal("visits", visits);
 }
 
-/** @return {Promise<Object[]>} */
-export async function getVisits() {
-    return await getFromStoreLocal("visits") || [];
-}
 
-export function initVisitBackgroundHandler() {
+export function initVisitBackgroundHandler(): void {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message === "add-visit--message-exchange") {
             void addVisitHandler(sendResponse);
@@ -59,10 +69,11 @@ export function initVisitBackgroundHandler() {
 }
 
 
-async function getVisitHandler(sendResponse) {
+
+async function getVisitHandler(sendResponse: SendResponse): Promise<void> {
     const tab = await getActiveTab();
     if (!tab) {
-        console.log("[warning] no active tab available");
+        console.warn("[warning][getVisitHandler] no active tab available");
         sendResponse(null);
         return;
     }
@@ -72,22 +83,32 @@ async function getVisitHandler(sendResponse) {
     sendResponse(visit);
 }
 
-async function addVisitHandler(sendResponse) {
+async function addVisitHandler(sendResponse: SendResponse): Promise<void> {
     const date = Date.now();
     const tab = await getActiveTab();
+    if (tab === undefined) {
+        console.warn("[warning][addVisitHandler] tab === undefined");
+        sendResponse(null); // todo recheck receiver
+        return;
+    }
+    if (tab.url === undefined) {
+        console.warn("[warning][addVisitHandler] tab.url === undefined");
+        sendResponse(null); // todo recheck receiver
+        return;
+    }
 
     const visits = await getVisits();
 
-    let visit = visits.find(visit => visit.url === tab.url);
-    if (!visit) {
+    let visit: Visit | undefined = visits.find(visit => visit.url === tab.url);
+    if (visit === undefined) {
         visit = {
             url: tab.url,
-            title: tab.title,
+            title: tab.title || "",
             date,
         };
         visits.push(visit);
         await setToStoreLocal("visits", visits);
-        await updateIcons([tab]);
+        updateIcons([tab]);
     } else {
         visit.date = [visit.date, date].flat();
         await setToStoreLocal("visits", visits);
@@ -96,12 +117,12 @@ async function addVisitHandler(sendResponse) {
     sendResponse(visit);
 }
 
-export async function exportVisits() {
+export async function exportVisits(): Promise<void> {
     const visits = await getFromStoreLocal("visits") || "";
     const dateStr = dateToDayDateString(new Date());
     downloadBlob(new Blob([JSON.stringify(visits, null, " ")]), `[ihbh][${dateStr}] visits.json`);
 }
 
-export async function importVitis(visits) {
+export async function importVisits(visits: Visit[]): Promise<void> {
     await setToStoreLocal("visits", visits);
 }

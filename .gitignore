@@ -3,5 +3,8 @@ node_modules
 dist
 
 
-/src/bg/store/reactive-store-local-value.js
+/src/bg/store/*.js
+/src/bg/change-icon-on-message.js
+/src/bg/tab-counter.js
+/src/bg/visits.js
 /src/util*.js

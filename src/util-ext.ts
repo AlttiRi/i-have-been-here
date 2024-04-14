@@ -8,12 +8,38 @@ export const defaultIcon  = manifest.browser_action!.default_icon;
 export const defaultTitle = manifest.browser_action!.default_title;
 export const defaultPopup = manifest.browser_action!.default_popup;
 
+
+
 /**
- * Send message to bg, or ony extension's page (popup, options, a custom page)
+ * A function to send a response back to the sender.
+ *
+ * ---
+ *
+ * To prevent `The message port closed before a response was received.` error,
+ * when you use `chrome.tabs.sendMessage`'s the callback argument (`responseCallback`).
+ *
+ * The listener (in a content script) must:
+ * - use `sendResponse`,
+ * - or `return true;`, with calling `sendResponse();` later (async) *
+ * in `chrome.runtime.onMessage.addListener((message, sender, sendResponse)` callback.
+ *
+ * @see {import("src/util-ext.js").exchangeMessage}
+ * @see {import("src/util-ext-bg.js").exchangeMessageWithTab}
+ */
+export type SendResponse = (response?: any) => void;
+
+/**
+ * In `chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) ...`
+ * `sender` has `sender.tab` property if the message is from a content script,
+ * in another way the message is from an extension.
+ */
+
+/**
+ * Send message to bg, or any extension's page (popup, options, a custom page)
  * Also possible (not implemented in this wrapper) sending to another extension.
  *
  * It's possible to send a message FROM a content script, but not TO.
- * For sending to a content script use `sendMessageToTab`
+ * For sending to a content script use `exchangeMessageWithTab`
  *
  * The subscriber must use `sendResponse` to send response message back:
  * `chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {`

@@ -16,7 +16,8 @@
         const dataUrl = message.data;
         logPicture(dataUrl);
 
-        // Required, since is sent from `sendMessageToTab` function
+        /** Required, since the message is sent from `exchangeMessageWithTab` function
+         *  @see {import("src/util-ext-bg.js").exchangeMessageWithTab} */
         sendResponse("[content script]: image logged");
     });
 

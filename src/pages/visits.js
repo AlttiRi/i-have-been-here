@@ -1,7 +1,7 @@
-import {getFromStoreLocal, removeFromStoreLocal}           from "/src/util-ext.js";
-import {createBackgroundTab}                               from "/src/util-ext-bg.js";
-import {exportVisits, getVisits, importVitis, updateVisit} from "/src/bg/visits.js";
-import {toArrayBuffer, toDataUrl}                          from "/src/bg/image-data.js";
+import {getFromStoreLocal, removeFromStoreLocal}            from "/src/util-ext.js";
+import {createBackgroundTab}                                from "/src/util-ext-bg.js";
+import {exportVisits, getVisits, importVisits, updateVisit} from "/src/bg/visits.js";
+import {toArrayBuffer, toDataUrl}                           from "/src/bg/image-data.js";
 import {dateToDayDateString, downloadBlob, fullUrlToFilename, sleep} from "/src/util.js";
 
 console.log(location);
@@ -24,7 +24,7 @@ async function main() {
         const file = importVisitsButton.files[0];
         console.log(file);
         const array = JSON.parse(await file.text());
-        await importVitis(array);
+        await importVisits(array);
     });
 
     const exportImagesButton = document.querySelector("#export-images");
