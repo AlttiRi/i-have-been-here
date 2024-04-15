@@ -9,7 +9,7 @@ type ContextMenuFeature = "reload" | "yandex_images" | "download_shelf" | "open_
 const manifest: chrome.runtime.Manifest = chrome.runtime.getManifest();
 
 export function registerContextMenu(features: ContextMenuFeature[] = ["reload"]): void {
-    if (!manifest.permissions!.includes("contextMenus")) {
+    if (!manifest.permissions?.includes("contextMenus")) {
         console.log(`[warning] No "contextMenus" permission!`);
         return;
     }
