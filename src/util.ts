@@ -81,7 +81,7 @@ export function emojiToImageData(emoji: string, size = 64, multiplier = 1): Imag
     return context.getImageData(0, 0, size, size);
 }
 
-export function emojiToBlob(emoji: string, size: number, multiplier: number): Promise<Blob> {
+export function emojiToBlob(emoji: string, size?: number, multiplier?: number): Promise<Blob> {
     const {canvas} = emojiTo(emoji, size, multiplier);
     return new Promise((resolve, reject) => {
         canvas.toBlob((blob: (Blob | null)) => {
@@ -102,11 +102,11 @@ export type BinaryString = string;
 export type Base64 = string;
 
 
-export function emojiToDataURL(emoji: string, size: number, multiplier: number): PngDataURL {
+export function emojiToDataURL(emoji: string, size?: number, multiplier?: number): PngDataURL {
     const {canvas} = emojiTo(emoji, size, multiplier);
     return canvas.toDataURL("png", 100) as PngDataURL;
 }
-export async function emojiToBlobURL(emoji: string, size: number, multiplier: number, revokeDelay = 100000): Promise<BlobURL> {
+export async function emojiToBlobURL(emoji: string, size?: number, multiplier?: number, revokeDelay = 100000): Promise<BlobURL> {
     const blob = await emojiToBlob(emoji, size, multiplier);
     const url = URL.createObjectURL(blob) as BlobURL;
     setTimeout(() => URL.revokeObjectURL(url), revokeDelay);

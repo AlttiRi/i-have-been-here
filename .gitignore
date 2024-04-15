@@ -2,14 +2,7 @@
 node_modules
 dist
 
+!/**/*.test.js
+/src/bg/**/*.js
+/src/*.js
 
-/src/bg/store/*.js
-/src/bg/change-icon-on-message.js
-/src/bg/tab-counter.js
-/src/bg/visits.js
-/src/bg/get-tabs.js
-/src/bg/image-data.js
-/src/bg/log-image.js
-/src/bg/quick-access-url-opener.js
-/src/bg/context-menu.js
-/src/util*.js
