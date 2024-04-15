@@ -35,11 +35,7 @@ export async function enableQuickAccessUrlOpenerMode() {
     });
     chrome.contextMenus.onClicked.addListener((info: chrome.contextMenus.OnClickData, _tab: chrome.tabs.Tab | undefined) => {
         if (info.menuItemId === id) {
-            if (info.checked === undefined) {
-                console.warn("[warning][contextMenus.onClicked] info.checked === undefined");
-                return;
-            }
-            void urlOpenerMode.setValue(info.checked);
+            void urlOpenerMode.setValue(info.checked!); // must not be `undefined` since `type: "checkbox"`
         }
     });
 

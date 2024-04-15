@@ -1,17 +1,15 @@
-import {createBackgroundTab} from "/src/util-ext-bg.js";
-import {isFirefox} from "/src/util.js";
+import {createBackgroundTab} from "../util-ext-bg.js";
+import {isFirefox} from "../util.js";
 import {dlShelf} from "./store/store.js";
-import {watchEffect} from "/libs/vue-reactivity.js";
+import {watchEffect} from "../../libs/vue-reactivity.js";
 
-/**
- * @typedef {"reload", "yandex_images", "download_shelf", "open_list"} ContextMenuFeature
- */
 
-/**
- * @param {ContextMenuFeature[]} features
- */
-export function registerContextMenu(features = ["reload"]) {
-    if (!chrome.runtime.getManifest().permissions.includes("contextMenus")) {
+type ContextMenuFeature = "reload" | "yandex_images" | "download_shelf" | "open_list";
+
+const manifest: chrome.runtime.Manifest = chrome.runtime.getManifest();
+
+export function registerContextMenu(features: ContextMenuFeature[] = ["reload"]): void {
+    if (!manifest.permissions!.includes("contextMenus")) {
         console.log(`[warning] No "contextMenus" permission!`);
         return;
     }
@@ -82,7 +80,7 @@ export function registerContextMenu(features = ["reload"]) {
         chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             console.log("menuItemId", info.menuItemId, info);
             if (info.menuItemId === id) {
-                await dlShelf.setValue(info.checked);
+                await dlShelf.setValue(info.checked!); // must not be `undefined` since `type: "checkbox"`
             }
         });
     }

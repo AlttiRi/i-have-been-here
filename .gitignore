@@ -11,4 +11,5 @@ dist
 /src/bg/image-data.js
 /src/bg/log-image.js
 /src/bg/quick-access-url-opener.js
+/src/bg/context-menu.js
 /src/util*.js
