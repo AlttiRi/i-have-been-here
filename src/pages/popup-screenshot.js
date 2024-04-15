@@ -21,14 +21,13 @@ const urlElem        = document.querySelector("#url");
 let screenShotData;
 async function initPreview() {
     screenShotData = await getActiveTabData();
+    if (screenShotData === null) {
+        return;
+    }
     const {
         url, title, favIconUrl, screenshotUrl, date,
         /* id, incognito, height, width */
     } = screenShotData;
-
-    if (!screenshotUrl) {
-        return;
-    }
 
     faviconElem.title = favIconUrl;
     if (favIconUrl === undefined) {

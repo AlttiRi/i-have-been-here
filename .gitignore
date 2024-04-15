@@ -8,4 +8,7 @@ dist
 /src/bg/tab-counter.js
 /src/bg/visits.js
 /src/bg/get-tabs.js
+/src/bg/image-data.js
+/src/bg/log-image.js
+/src/bg/quick-access-url-opener.js
 /src/util*.js

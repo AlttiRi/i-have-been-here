@@ -1,19 +1,20 @@
 import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
-import {watch} from "/libs/vue-reactivity.js";
+import {watch} from "../../libs/vue-reactivity.js";
 import {urlOpenerMode, quickAccessUrl} from "./store/store.js";
 
 
-export async function openQuickAccessUrl() {
+export async function openQuickAccessUrl(): Promise<chrome.tabs.Tab | undefined> {
     console.log("openQuickAccessUrl");
     return focusOrCreateNewTab(await quickAccessUrl.getValue());
 }
 
-/** @type {{title, popup, saved}} */
-const state = {};
+type State = {title: string, popup: string, saved: boolean};
+const state: State = {popup: "", title: "", saved: false};
 async function saveState() {
     const tabId = await getActiveTabId();
     state.popup = await getPopup({tabId});
     state.title = await getTitle({tabId});
+    state.saved = true;
 }
 function restoreState() {
     const {popup, title} = state;
@@ -23,7 +24,7 @@ function restoreState() {
 }
 
 export async function enableQuickAccessUrlOpenerMode() {
-    const checked = await urlOpenerMode.getValue();
+    const checked: boolean = await urlOpenerMode.getValue();
     const id = "quick_access_url_opener";
     chrome.contextMenus.create({
         id,
@@ -32,8 +33,12 @@ export async function enableQuickAccessUrlOpenerMode() {
         type: "checkbox",
         checked
     });
-    chrome.contextMenus.onClicked.addListener((info, tab) => {
+    chrome.contextMenus.onClicked.addListener((info: chrome.contextMenus.OnClickData, _tab: chrome.tabs.Tab | undefined) => {
         if (info.menuItemId === id) {
+            if (info.checked === undefined) {
+                console.warn("[warning][contextMenus.onClicked] info.checked === undefined");
+                return;
+            }
             void urlOpenerMode.setValue(info.checked);
         }
     });
@@ -45,12 +50,11 @@ export async function enableQuickAccessUrlOpenerMode() {
                 await saveState();
                 chrome.browserAction.setPopup({popup: ""});
                 chrome.browserAction.onClicked.addListener(openQuickAccessUrl);
-                state.saved = true;
             }
             chrome.browserAction.setTitle({title: "Open " + quickAccessUrl.value});
         } else if (state.saved) {
-            restoreState();
             chrome.browserAction.onClicked.removeListener(openQuickAccessUrl);
+            restoreState();
         }
     }, {
         immediate: true

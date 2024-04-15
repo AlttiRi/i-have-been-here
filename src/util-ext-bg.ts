@@ -4,6 +4,7 @@ export function queryTabs(queryInfo?: chrome.tabs.QueryInfo): Promise<chrome.tab
     return new Promise(resolve => chrome.tabs.query(queryInfo || {}, resolve));
 }
 
+/** Gets the html document set as the popup for this browser action. */
 export async function getPopup(details?: chrome.browserAction.TabDetails): Promise<string> {
     if (details === undefined) {
         return getPopup({tabId: await getActiveTabId()});
@@ -11,6 +12,7 @@ export async function getPopup(details?: chrome.browserAction.TabDetails): Promi
     return new Promise(resolve => chrome.browserAction.getPopup(details, resolve));
 }
 
+/** Gets the title of the browser action. */
 export async function getTitle(details?: chrome.browserAction.TabDetails): Promise<string> {
     if (details === undefined) {
         return getTitle({tabId: await getActiveTabId()});
@@ -38,25 +40,31 @@ export function exchangeMessageWithTab(tabId: number, message: any): Promise<any
 
 export const allowedProtocols = ["http:", "https:", "file:", "ftp:"];
 
-export async function executeScript(details: chrome.tabs.InjectDetails): Promise<boolean> {
-    const activeTab = await getActiveTab();
+export async function executeScript(details: chrome.tabs.InjectDetails, tab?: chrome.tabs.Tab): Promise<boolean> {
+    tab = tab ? tab : await getActiveTab();
 
-    if (!activeTab) {
-        console.warn("[warning][executeScript] No active tab for injection.");
-        return false;
-    }
-    if (!activeTab.url) {
-        console.warn("[warning][executeScript] No active tab's url");
+    if (!tab) {
+        console.warn("[warning][executeScript] No tab for injection.");
         return false;
     }
 
-    if (!allowedProtocols.includes(new URL(activeTab.url).protocol)) {
-        console.warn("[warning][executeScript] Not allowed protocol for injection.", activeTab.url, activeTab);
+    const {id: tabId, url: tabUrl} = tab;
+    if (!tabId) {
+        console.warn("[warning][executeScript] No tab's id");
+        return false;
+    }
+    if (!tabUrl) {
+        console.warn("[warning][executeScript] No tab's url");
+        return false;
+    }
+
+    if (!allowedProtocols.includes(new URL(tabUrl).protocol)) {
+        console.warn("[warning][executeScript] Not allowed protocol for injection.", tabUrl, tab);
         return false;
     }
 
     const scriptResults = await new Promise(resolve => {
-        chrome.tabs.executeScript(details, result => {
+        chrome.tabs.executeScript(tabId, details, result => {
             resolve(result);
         });
     });

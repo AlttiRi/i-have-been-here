@@ -7,10 +7,10 @@
       "description": "Where is it used?"
    },
    "extension_description": {
-      "message": "extension_description"
+      "message": "The demo extension for tests. Makes screenshots, keeps visits."
    },
    "browser_action_title": {
-      "message": "#Action title"
+      "message": "Show the popup"
    },
    "context_menu_yandex_images": {
       "message": "Yandex Images"
