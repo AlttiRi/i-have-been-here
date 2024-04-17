@@ -1,17 +1,15 @@
 import {
-    captureVisibleTab,
     exchangeMessageWithTab,
     executeScript,
-    getActiveTab,
 } from "../util-ext-bg.js";
-import {logPicture, PngDataURL} from "../util.js";
-import {setToStoreLocal} from "../util-ext.js";
+import {logPicture, JpgDataURL} from "../util.js";
+import {SendResponse, setToStoreLocal} from "../util-ext.js";
 import {toStoreData} from "./image-data.js";
 
 export function logImageOnMessage(): void {
-    chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-        if (message === "take-screenshot--message-exchange") { // todo just use `chrome.runtime.sendMessage`
-            void asyncHandler();
+    function logImageOnMessageListener(message: any, _sender: chrome.runtime.MessageSender, sendResponse: SendResponse) {
+        if (message?.command === "log-screenshot--message-exchange") { // todo just use `chrome.runtime.sendMessage`
+            void asyncHandler(message.data);
             sendResponse(); // Required
         } else
         if (message?.command === "save-screenshot--message-exchange"){
@@ -24,62 +22,35 @@ export function logImageOnMessage(): void {
                 });
             return true;
         }
-    });
+    }
+    chrome.runtime.onMessage.addListener(logImageOnMessageListener);
 }
 
-export type TabData = {
-    url:        string | undefined,
-    title:      string | undefined,
-    favIconUrl: string | undefined,
-    id:     number | undefined,
-    height: number | undefined,
-    width:  number | undefined,
-    date:   number,
-    screenshotUrl: PngDataURL | null,
-    incognito: boolean,
+export type TabCapture = {
     tab: chrome.tabs.Tab,
+    screenshotUrl: JpgDataURL,
+    date: number,
 };
 
-/** It makes screenshot + tab data */
-export async function getActiveTabData(): Promise<TabData | null> {
-    const date: number = Date.now();
-    const tab: chrome.tabs.Tab | undefined = await getActiveTab();
-    if (!tab) {
-        console.log("[warning] no active tab available");
-        return null;
-    }
-    console.log("Active tab:", tab);
-    const {url, title, favIconUrl, id, incognito, height, width} = tab;
-    const screenshotUrl = await captureVisibleTab({quality: 92});
-    return {id, url, title, favIconUrl, screenshotUrl, date, incognito, height, width, tab};
-}
-
-async function asyncHandler() {
-    const tabData: TabData | null = await getActiveTabData();
-    if (tabData === null) {
-        return;
-    }
-
-    if (tabData.screenshotUrl === null) {
-        return;
-    }
+async function asyncHandler(tabData: TabCapture) {
+    const {tab, screenshotUrl} = tabData;
 
     // Log the picture in a background script //
-    logPicture(tabData.screenshotUrl);
+    logPicture(screenshotUrl);
 
     // Log the picture in a tab //
-    if (!tabData.id) {
+    if (!tab.id) {
         return;
     }
     const details: chrome.tabs.InjectDetails = {
         file: "/src/content/content--log-image.js",
     };
-    const injected = await executeScript(details, tabData.tab);
+    const injected: boolean = await executeScript(details, tab);
     if (!injected) {
         return;
     }
     // Log the image in the web page console (send the message to the injected content script)
-    const result = await exchangeMessageWithTab(tabData.id, {
+    const result = await exchangeMessageWithTab(tab.id, {
         command: "log-screenshot--message-exchange",
         data: tabData.screenshotUrl
     });

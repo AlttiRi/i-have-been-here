@@ -1,4 +1,4 @@
-import {PngDataURL} from "./util.js";
+import {JpgDataURL, sleep} from "./util.js";
 
 export function queryTabs(queryInfo?: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {
     return new Promise(resolve => chrome.tabs.query(queryInfo || {}, resolve));
@@ -97,23 +97,38 @@ export function createBackgroundTab(url: string): void {
     });
 }
 
-export async function captureVisibleTab(options: chrome.tabs.CaptureVisibleTabOptions = {}): Promise<PngDataURL | null> {
+/** {format: "jpeg", quality: 92} by default */
+export async function captureVisibleTab(
+    options: chrome.tabs.CaptureVisibleTabOptions = {},
+    waitTime: number = 550
+): Promise<JpgDataURL | null> {
     options = {...{format: "jpeg", quality: 92}, ...options};
     const activeTab = await getActiveTab();
     if (!activeTab) {
         console.warn("[warning][captureVisibleTab] No tab for capture.");
         return null;
     }
-    return new Promise(resolve => {
+    const promise: Promise<JpgDataURL | null> = new Promise(resolve => {
         chrome.tabs.captureVisibleTab(options, (screenshotDataUrl: string) => {
             if (!screenshotDataUrl) { // MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND
                 console.warn("[warning][captureVisibleTab]", chrome.runtime.lastError?.message);
                 resolve(null);
                 return;
             }
-            resolve(screenshotDataUrl as PngDataURL);
+            resolve(screenshotDataUrl as JpgDataURL);
         });
     });
+    let ok = false;
+    function noResponse(): null { // vivaldi's start page fix
+        if (!ok) {
+            console.warn(`[warning][captureVisibleTab] No response for ${waitTime} ms`);
+        }
+        return null;
+    }
+    return Promise.any([
+        promise.then(data => (ok = true, data)),
+        sleep(waitTime).then(noResponse), // todo abort
+    ]);
 }
 
 export function openOptions(old = true) {

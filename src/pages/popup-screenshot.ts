@@ -1,31 +1,38 @@
-import {getActiveTabData, TabData} from "../bg/log-image.js";
-import {downloadBlob, logPicture, sleep}        from "../util.js";
+import {downloadBlob, JpgDataURL, logPicture, sleep} from "../util.js";
 import {exchangeMessage}                        from "../util-ext.js";
 import {getScreenshotFilename, getTrimmedTitle} from "./popup-util.js";
+import {captureVisibleTab, getActiveTab} from "../util-ext-bg.js";
+import {TabCapture}                      from "../bg/log-image.js";
 
 
 const saveButton:     HTMLButtonElement = document.querySelector("#btn-save-screen")!;
 const downloadButton: HTMLButtonElement = document.querySelector("#btn-download-screenshot")!;
+const imageWrapElem:  HTMLDivElement    = document.querySelector("#image-wrap")!;
 const imageElem:   HTMLImageElement     = document.querySelector("#image")!;
 const faviconElem: HTMLImageElement     = document.querySelector("#favicon")!;
 const titleElem: HTMLDivElement         = document.querySelector("#title")!;
 const urlElem:   HTMLDivElement         = document.querySelector("#url")!;
 
 
-let screenShotData: TabData | null = null;
-async function initPreview() {
-    screenShotData = await getActiveTabData();
-    if (screenShotData === null) {
+let tabCapture: TabCapture | null = null;
+async function initPreview(): Promise<void> {
+    const tab: chrome.tabs.Tab | undefined = await getActiveTab();
+    if (!tab) {
+        console.log("[warning] no active tab available");
         return;
     }
+    console.log("tab to capture:", tab);
+
+    if (tab.height && tab.width) {
+        imageWrapElem.style.height = 320 / tab.width * tab.height + "px";
+    }
+
     const {
         url = "", title = "", favIconUrl = "",
-        screenshotUrl, date,
-        /* id, incognito, height, width */
-    } = screenShotData;
+    } = tab;
 
     faviconElem.title = favIconUrl;
-    if (favIconUrl === undefined) {
+    if (!favIconUrl) {
         faviconElem.src = "/images/empty.png";
     } else
     if (favIconUrl.startsWith("data:")) {
@@ -48,14 +55,22 @@ async function initPreview() {
     // urlElem.dataset.url = url;
     urlElem.title = url;
 
-    if (screenshotUrl) {
-        logPicture(screenshotUrl);
-        imageElem.src = screenshotUrl;
-        imageElem.alt = "";
-        imageElem.dataset.tabUrl = url;
-        imageElem.dataset.date   = date.toString();
-        saveButton.removeAttribute("disabled");
+    const date: number = Date.now();
+    const screenshotUrl: JpgDataURL | null = await captureVisibleTab();
+    if (screenshotUrl === null) {
+        console.log("screenShotData === null");
+        return;
     }
+
+    logPicture(screenshotUrl);
+    imageElem.src = screenshotUrl;
+    imageElem.alt = "";
+    imageElem.dataset.tabUrl = url;
+    imageElem.dataset.date   = date.toString();
+    saveButton.removeAttribute("disabled");
+    downloadButton.removeAttribute("disabled");
+
+    tabCapture = {tab, screenshotUrl, date};
 
     // Tor's popup's scrolls fix
     await sleep(20);
@@ -64,26 +79,27 @@ async function initPreview() {
 void initPreview();
 
 
-imageElem.addEventListener("mousedown", async () => {
-    await exchangeMessage("take-screenshot--message-exchange"); // just to log the image in bg
+imageWrapElem.addEventListener("mousedown", async () => {
     await initPreview();
+    if (!tabCapture) {
+        return;
+    }
+    await exchangeMessage({
+        command: "log-screenshot--message-exchange",
+        data: tabCapture
+    }); // just to log the image in bg
 });
 
+// todo in bg
 downloadButton.addEventListener("click", async () => {
-    if (screenShotData === null) {
-        return;
-    }
-    const {
-        url = "", title = "",
-        screenshotUrl,
-    } = screenShotData;
-    if (!screenshotUrl) {
+    if (!tabCapture) {
         return;
     }
 
-    const resp = await fetch(screenshotUrl);
+    const resp = await fetch(tabCapture.screenshotUrl);
     const blob = await resp.blob();
 
+    const {url = "", title = ""} = tabCapture.tab;
     const name = await getScreenshotFilename(url, title);
     downloadBlob(blob, name, url);
 
