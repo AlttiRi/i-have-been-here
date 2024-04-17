@@ -43,7 +43,7 @@ export async function getTitlePartForFilename(title: string, url: string): Promi
     return titleLine;
 }
 
-export async function getScreenshotFilename(title: string, url: string): Promise<string> {
+export async function getScreenshotFilename(url: string, title: string): Promise<string> {
     let urlFilename = fullUrlToFilename(url);
 
     const lengthLimit = await filenameLengthLimit.getValue();

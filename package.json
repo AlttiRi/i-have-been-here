@@ -20,7 +20,7 @@
         "clean-ts": "tsc --build --clean",
         "-": "",
         "build-vue-reactivity": "node build/vue-reactivity-build-bundle.js",
-        "build-firefox": "node ./build.js --firefox",
-        "build": "node ./build.js"
+        "build-firefox": "node build/build-extension.js --firefox",
+        "build": "node build/build-extension.js"
     }
 }

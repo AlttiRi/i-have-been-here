@@ -18,10 +18,11 @@ process.argv.forEach(function (value, index, array) {
 });
 
 
+// run it from package.json
 try {
     const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "extn-build-"));
     console.log("tmpDir", tmpDir);
-    const dot = path.toNamespacedPath("..");
+    const dot = path.toNamespacedPath(".");
 
     await fs.promises.cp(dot, tmpDir, {
         recursive: true,
@@ -55,7 +56,7 @@ try {
         );
     }
 
-    await fs.promises.cp(tmpDir, `../dist/demo-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}`, {
+    await fs.promises.cp(tmpDir, `./dist/demo-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}`, {
         recursive: true
     });
 
