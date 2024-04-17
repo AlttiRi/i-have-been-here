@@ -12,7 +12,7 @@ export function logImageOnMessage(): void {
     chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         if (message === "take-screenshot--message-exchange") { // todo just use `chrome.runtime.sendMessage`
             void asyncHandler();
-            // sendResponse(); // no need, will be executed automatically
+            sendResponse(); // Required
         } else
         if (message?.command === "save-screenshot--message-exchange"){
             const {dataUrl, tabUrl} = message;

@@ -1,6 +1,6 @@
 {
     "name": "demo-extension",
-    "version": "1.8.0.20240417",
+    "version": "1.8.1.20240417",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {
