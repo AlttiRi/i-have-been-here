@@ -106,6 +106,11 @@ export async function captureVisibleTab(options: chrome.tabs.CaptureVisibleTabOp
     }
     return new Promise(resolve => {
         chrome.tabs.captureVisibleTab(options, (screenshotDataUrl: string) => {
+            if (!screenshotDataUrl) { // MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND
+                console.warn("[warning][captureVisibleTab]", chrome.runtime.lastError?.message);
+                resolve(null);
+                return;
+            }
             resolve(screenshotDataUrl as PngDataURL);
         });
     });

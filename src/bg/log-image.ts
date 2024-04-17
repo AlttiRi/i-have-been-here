@@ -40,6 +40,7 @@ export type TabData = {
     tab: chrome.tabs.Tab,
 };
 
+/** It makes screenshot + tab data */
 export async function getActiveTabData(): Promise<TabData | null> {
     const date: number = Date.now();
     const tab: chrome.tabs.Tab | undefined = await getActiveTab();
