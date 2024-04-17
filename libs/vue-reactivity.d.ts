@@ -5,6 +5,7 @@
  * \/\*#\_\_PURE\_\_\*\/
  * So that rollup can tree-shake them if necessary.
  */
+/*! #__NO_SIDE_EFFECTS__ */
 export declare function makeMap(str: string, expectsLowerCase?: boolean): (key: string) => boolean;
 
 export declare const EMPTY_OBJ: {
@@ -679,7 +680,7 @@ export declare function isShallow(value: unknown): boolean;
  * @param value - The value to check.
  * @see {@link https://vuejs.org/api/reactivity-utilities.html#isproxy}
  */
-export declare function isProxy(value: unknown): boolean;
+export declare function isProxy(value: any): boolean;
 /**
  * Returns the raw, original object of a Vue-created proxy.
  *
