@@ -61,12 +61,12 @@ export async function logPictureAsync(url: string, scale: number = 0.5): Promise
 }
 globalThis.logPicture = logPicture;
 
-async function blobUrlToDataUrl(blobUrl: BlobURL): Promise<DataURL<string>> {
+async function blobUrlToDataUrl(blobUrl: BlobURL): Promise<DataURL> {
     const response = await fetch(blobUrl);
     const blob = await response.blob()
     return new Promise(resolve => {
         const reader = new FileReader();
-        reader.onload = (_event: ProgressEvent<FileReader>) => resolve(reader.result as DataURL<string>);
+        reader.onload = (_event: ProgressEvent<FileReader>) => resolve(reader.result as DataURL);
         reader.readAsDataURL(blob);
     });
 }
@@ -94,9 +94,10 @@ export function emojiToBlob(emoji: string, size?: number, multiplier?: number): 
     });
 }
 
-export type DataURL<type extends string> = `data:${type};base64${string}`;
-export type PngDataURL = DataURL<"image/png">;
-export type JpgDataURL = DataURL<"image/jpeg">;
+export type DataURLTyped<type extends string> = `data:${type};base64${string}`;
+export type DataURL    = DataURLTyped<string>;
+export type PngDataURL = DataURLTyped<"image/png">;
+export type JpgDataURL = DataURLTyped<"image/jpeg">;
 export type BlobURL = `blob:${string}`;
 export type BinaryString = string;
 export type Base64 = string;

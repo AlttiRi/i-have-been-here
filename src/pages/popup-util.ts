@@ -1,9 +1,8 @@
-import {filenameLengthLimit, tcSettings} from "/src/bg/store/store.js";
-import {fullUrlToFilename} from "/src/util.js";
+import {filenameLengthLimit, tcSettings, TrimOptionsObject} from "../bg/store/store.js";
+import {fullUrlToFilename} from "../util.js";
 
-export async function getTrimmedTitle(title, url) {
-    /** @type {TCSettings} */
-    const settings = await tcSettings.getValue();
+export async function getTrimmedTitle(title: string, url: string): Promise<string> {
+    const settings: TrimOptionsObject = await tcSettings.getValue();
     const _url = new URL(url);
     let _title = title;
     if (settings[_url.hostname]) {
@@ -26,7 +25,7 @@ export async function getTrimmedTitle(title, url) {
     }
     return _title.trim();
 }
-export async function getTitlePartForFilename(title, url) {
+export async function getTitlePartForFilename(title: string, url: string): Promise<string> {
     const needTitle = title && !decodeURIComponent(url).includes(title) && !url.includes(title);
     if (!needTitle) {
         return "";
@@ -44,7 +43,7 @@ export async function getTitlePartForFilename(title, url) {
     return titleLine;
 }
 
-export async function getScreenshotFilename(url, title) {
+export async function getScreenshotFilename(title: string, url: string): Promise<string> {
     let urlFilename = fullUrlToFilename(url);
 
     const lengthLimit = await filenameLengthLimit.getValue();

@@ -1,31 +1,26 @@
-import {getActiveTabData}                       from "/src/bg/log-image.js";
-import {downloadBlob, logPicture, sleep}        from "/src/util.js";
-import {exchangeMessage}                        from "/src/util-ext.js";
+import {getActiveTabData, TabData} from "../bg/log-image.js";
+import {downloadBlob, logPicture, sleep}        from "../util.js";
+import {exchangeMessage}                        from "../util-ext.js";
 import {getScreenshotFilename, getTrimmedTitle} from "./popup-util.js";
 
 
-const saveButton     = document.querySelector("#btn-save-screen");
-const downloadButton = document.querySelector("#btn-download-screenshot");
-const imageElem      = document.querySelector("#image");
-const faviconElem    = document.querySelector("#favicon");
-const titleElem      = document.querySelector("#title");
-const urlElem        = document.querySelector("#url");
+const saveButton:     HTMLButtonElement = document.querySelector("#btn-save-screen")!;
+const downloadButton: HTMLButtonElement = document.querySelector("#btn-download-screenshot")!;
+const imageElem:   HTMLImageElement     = document.querySelector("#image")!;
+const faviconElem: HTMLImageElement     = document.querySelector("#favicon")!;
+const titleElem: HTMLDivElement         = document.querySelector("#title")!;
+const urlElem:   HTMLDivElement         = document.querySelector("#url")!;
 
 
-/**
- * @type {{
- *     url, title, favIconUrl, screenshotUrl, date,
- *     id, incognito, height, width
- * }}
- */
-let screenShotData;
+let screenShotData: TabData | null = null;
 async function initPreview() {
     screenShotData = await getActiveTabData();
     if (screenShotData === null) {
         return;
     }
     const {
-        url, title, favIconUrl, screenshotUrl, date,
+        url = "", title = "", favIconUrl = "",
+        screenshotUrl, date,
         /* id, incognito, height, width */
     } = screenShotData;
 
@@ -53,18 +48,21 @@ async function initPreview() {
     // urlElem.dataset.url = url;
     urlElem.title = url;
 
-    logPicture(screenshotUrl);
-    imageElem.src = screenshotUrl;
-    imageElem.alt = "";
-    imageElem.dataset.tabUrl = url;
-    imageElem.dataset.date   = date;
-    saveButton.removeAttribute("disabled");
+    if (screenshotUrl) {
+        logPicture(screenshotUrl);
+        imageElem.src = screenshotUrl;
+        imageElem.alt = "";
+        imageElem.dataset.tabUrl = url;
+        imageElem.dataset.date   = date.toString();
+        saveButton.removeAttribute("disabled");
+    }
 
-    // Tor's popup's scroll fix
+    // Tor's popup's scrolls fix
     await sleep(20);
-    imageElem.alt = "";
+    imageElem.alt = ""; // don't remove it!
 }
 void initPreview();
+
 
 imageElem.addEventListener("mousedown", async () => {
     await exchangeMessage("take-screenshot--message-exchange"); // just to log the image in bg
@@ -72,9 +70,17 @@ imageElem.addEventListener("mousedown", async () => {
 });
 
 downloadButton.addEventListener("click", async () => {
+    if (screenShotData === null) {
+        return;
+    }
     const {
-        url, screenshotUrl, title
+        url = "", title = "",
+        screenshotUrl,
     } = screenShotData;
+    if (!screenshotUrl) {
+        return;
+    }
+
     const resp = await fetch(screenshotUrl);
     const blob = await resp.blob();
 

@@ -6,12 +6,12 @@ export const urlOpenerMode: ReactiveStoreLocalValue<boolean> =
 export const dlShelf: ReactiveStoreLocalValue<boolean>
     = new ReactiveStoreLocalValue<boolean>("downloadShelf", true);
 
-type TrimOption = {
-    trimEnd?: String[],
-    trimStart?: String[],
-    trimStartEnd?: String[][],
+export type TrimOption = {
+    trimEnd?: string[],
+    trimStart?: string[],
+    trimStartEnd?: string[][],
 };
-type TrimOptionsObject = {
+export type TrimOptionsObject = {
     [key: string]: TrimOption
 };
 

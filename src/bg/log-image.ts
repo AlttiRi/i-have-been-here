@@ -27,7 +27,7 @@ export function logImageOnMessage(): void {
     });
 }
 
-type TabData = {
+export type TabData = {
     url:        string | undefined,
     title:      string | undefined,
     favIconUrl: string | undefined,

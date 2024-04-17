@@ -1,4 +1,4 @@
-import {inIncognitoContext} from "/src/util-ext.js";
+import {inIncognitoContext} from "../util-ext.js";
 
 console.log("Popup...");
 console.log(`Incognito: ${inIncognitoContext}.`);

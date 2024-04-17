@@ -1,5 +1,5 @@
-import {quickAccessUrl}     from "/src/bg/store/store.js";
-import {openQuickAccessUrl} from "/src/bg/quick-access-url-opener.js";
+import {quickAccessUrl}     from "../bg/store/store.js";
+import {openQuickAccessUrl} from "../bg/quick-access-url-opener.js";
 
 
 ;(async function() {
@@ -7,7 +7,7 @@ import {openQuickAccessUrl} from "/src/bg/quick-access-url-opener.js";
     if (!quickAccessUrlValue) {
         return;
     }
-    const openQuickAccessUrlElem = document.querySelector("#open-quick-access-url");
+    const openQuickAccessUrlElem: HTMLButtonElement = document.querySelector("#open-quick-access-url")!;
     openQuickAccessUrlElem.title = quickAccessUrlValue;
     openQuickAccessUrlElem.removeAttribute("hidden");
     openQuickAccessUrlElem.addEventListener("click", () => {

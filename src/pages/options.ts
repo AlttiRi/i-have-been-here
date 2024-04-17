@@ -1,5 +1,5 @@
-import {dlShelf, urlOpenerMode, quickAccessUrl, filenameLengthLimit} from "/src/bg/store/store.js";
-import {watchEffect} from "/libs/vue-reactivity.js";
+import {dlShelf, urlOpenerMode, quickAccessUrl, filenameLengthLimit} from "../bg/store/store.js";
+import {watchEffect} from "../../libs/vue-reactivity.js";
 
 
 document.body.insertAdjacentHTML("beforeend", `
@@ -9,7 +9,7 @@ document.body.insertAdjacentHTML("beforeend", `
     <hr>
     <label style="display: contents">
         <h4>Filename length limit</h4>
-        <input  id="filename-length-limit" class="form-control"  type="number">
+        <input id="filename-length-limit" class="form-control"  type="number">
     </label>
     <hr>
     <label style="display: contents">
@@ -19,7 +19,7 @@ document.body.insertAdjacentHTML("beforeend", `
     <hr>
 `);
 
-const downloadShelfBtn = document.querySelector("#download-shelf");
+const downloadShelfBtn: HTMLButtonElement = document.querySelector("#download-shelf")!;
 downloadShelfBtn.addEventListener("click", async (event) => {
     await dlShelf.setValue(!dlShelf.value);
 });
@@ -29,7 +29,7 @@ watchEffect(() => {
 });
 
 
-const urlOpenerModeBtn = document.querySelector("#url-opener-mode");
+const urlOpenerModeBtn: HTMLButtonElement = document.querySelector("#url-opener-mode")!;
 urlOpenerModeBtn.addEventListener("click", async (event) => {
     await urlOpenerMode.setValue(!urlOpenerMode.value);
 });
@@ -39,7 +39,7 @@ watchEffect(() => {
 });
 
 
-const quickUrlInput = document.querySelector("#quick-url");
+const quickUrlInput: HTMLInputElement = document.querySelector("#quick-url")!;
 watchEffect(() => {
     quickUrlInput.value = quickAccessUrl.value;
     quickUrlInput.title = new URL(quickAccessUrl.value, location.origin).href;
@@ -54,11 +54,11 @@ quickUrlInput.addEventListener("input", event => {
 
 
 
-const filenameLengthLimitInput = document.querySelector("#filename-length-limit");
+const filenameLengthLimitInput: HTMLInputElement = document.querySelector("#filename-length-limit")!;
 filenameLengthLimitInput.addEventListener("input", async (event) => {
     await filenameLengthLimit.setValue(Number(filenameLengthLimitInput.value));
 });
 
 watchEffect(() => {
-    filenameLengthLimitInput.value = filenameLengthLimit.value;
+    filenameLengthLimitInput.value = filenameLengthLimit.value.toString();
 });

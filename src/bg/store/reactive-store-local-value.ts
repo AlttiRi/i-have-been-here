@@ -3,11 +3,11 @@ import {getFromStoreLocal, setToStoreLocal} from "../../util-ext.js";
 
 export class ReactiveStoreLocalValue<T> {
     private readonly keyName: string;
-    private readonly defaultValue: T;
     private readonly _ref: Ref<T>;
     private isReadyRef: Ref<boolean>;
     private resolve!: Function;
 
+    public readonly defaultValue: T;
     public readonly ref: Readonly<Ref<T>>;
     public readonly onReady: Promise<void>;
 

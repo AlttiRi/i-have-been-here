@@ -1,10 +1,16 @@
-import {exchangeMessage} from "/src/util-ext.js";
-import {debounce} from "/src/util.js";
+import {exchangeMessage} from "../../util-ext.js";
+import {debounce} from "../../util.js";
 
-const isListPage  = location.pathname.endsWith("list.html");
-const isJsonPage  = location.pathname.endsWith("json.html");
+declare global {
+    var urls: string[];
+    var tabs: chrome.tabs.Tab[];
+}
 
-let urls = [];
+
+const isListPage: boolean = location.pathname.endsWith("list.html");
+const isJsonPage: boolean = location.pathname.endsWith("json.html");
+
+let urls: string[] = [];
 
 if (isListPage) {
     void renderTabList();
@@ -20,15 +26,15 @@ if (document.querySelector("#filters")) {
     } else {
         handler = debounce(renderUrlList, 500);
     }
-    const onlyFilterElem = document.querySelector("#only-filter");
-    const ignoreFilterElem = document.querySelector("#ignore-filter");
-    const state = new URLSearchParams(location.hash.slice(1));
-    onlyFilterElem.value   = state.get("only");
+    const onlyFilterElem:   HTMLInputElement = document.querySelector("#only-filter")!;
+    const ignoreFilterElem: HTMLInputElement = document.querySelector("#ignore-filter")!;
+    const state: URLSearchParams = new URLSearchParams(location.hash.slice(1));
+    onlyFilterElem.value   = state.get("only")   || "";
     ignoreFilterElem.value = state.get("ignore") || "chrome-extension:// ";
-    const pageBtn = document.querySelector(".nav-link.active");
+    const pageBtn: HTMLAnchorElement  = document.querySelector(".nav-link.active")!;
     pageBtn.href = location.href;
 
-    function saveState(key, value) {
+    const saveState = (key: ("only" | "ignore"), value: string): void => {
         state.set(key, value);
         location.hash = state.toString();
         pageBtn.href = location.href;
@@ -43,19 +49,19 @@ if (document.querySelector("#filters")) {
         saveState("ignore", ignoreFilterElem.value);
     });
 
-    document.querySelector("#copy-btn").addEventListener("click", () => {
+    document.querySelector<HTMLButtonElement>("#copy-btn")!.addEventListener("click", () => {
         const text = globalThis.urls.join(" ");
         console.log(text);
         void navigator.clipboard.writeText(text);
     });
 
-    document.querySelector("#only-filter-text").addEventListener("contextmenu", event => {
+    document.querySelector<HTMLSpanElement>("#only-filter-text")!.addEventListener("contextmenu", event => {
         event.preventDefault();
         onlyFilterElem.value = "";
         saveState("only", "");
         handler();
     });
-    document.querySelector("#ignore-filter-text").addEventListener("contextmenu", event => {
+    document.querySelector<HTMLSpanElement>("#ignore-filter-text")!.addEventListener("contextmenu", event => {
         event.preventDefault();
         ignoreFilterElem.value = "";
         saveState("ignore", "");
@@ -75,11 +81,9 @@ if (document.querySelector("#filters")) {
 }
 
 
-function filterUrls(urls) {
-    /** @type {String[]} */
-    const only = document.querySelector("#only-filter").value.split(/\s+/).filter(o => o);
-    /** @type {String[]} */
-    const ignore = document.querySelector("#ignore-filter").value.split(/\s+/).filter(o => o);
+function filterUrls(urls: string[]): string[] {
+    const only:   string[] = document.querySelector<HTMLInputElement>("#only-filter")!.value.split(/\s+/).filter(o => o);
+    const ignore: string[] = document.querySelector<HTMLInputElement>("#ignore-filter")!.value.split(/\s+/).filter(o => o);
 
     return urls.filter(url => {
         if (ignore.length && ignore.some(i => url.includes(i))) {
@@ -95,7 +99,7 @@ function filterUrls(urls) {
 
 
 async function renderUrlList() {
-    const listElem = document.querySelector("#list-content");
+    const listElem: HTMLTableSectionElement = document.querySelector("#list-content")!;
     listElem.innerHTML = "";
 
     const _urls = filterUrls(urls);
@@ -104,33 +108,31 @@ async function renderUrlList() {
     appendListByUrls(_urls, listElem);
 }
 
-/** @param {chrome.tabs.Tab[]} tabs */
-function logTabs(tabs) {
+function logTabs(tabs: chrome.tabs.Tab[]): void {
     console.log(globalThis.tabs = tabs);
-    globalThis.urls = tabs.map(tab => tab.url);
+    const isNonEmptySting = function (str: string | undefined): str is string { return Boolean(str); }
+    globalThis.urls = tabs.map(tab => tab.url).filter(isNonEmptySting);
 }
 
-async function renderTabList() {
-    /** @type {chrome.tabs.Tab[]} */
-    const tabs = await exchangeMessage("get-tabs--message-exchange");
+async function renderTabList(): Promise<void> {
+    const tabs: chrome.tabs.Tab[] = await exchangeMessage("get-tabs--message-exchange");
 
-    const listElem = document.querySelector("#list-content");
+    const listElem: HTMLTableSectionElement = document.querySelector("#list-content")!;
     listElem.innerHTML = "";
 
-    const _tabs = tabs.filter(tab => {
-        return filterUrls([tab.url]).length;
+    const _tabs: chrome.tabs.Tab[] = tabs.filter(tab => {
+        return tab.url && filterUrls([tab.url]).length;
     });
 
     logTabs(_tabs);
 
     appendListByTabs(_tabs, listElem);
 }
-async function renderJson() {
-    /** @type {chrome.tabs.Tab[]} */
-    const tabs = await exchangeMessage("get-tabs--message-exchange");
+async function renderJson(): Promise<void> {
+    const tabs: chrome.tabs.Tab[] = await exchangeMessage("get-tabs--message-exchange");
     logTabs(tabs);
 
-    const jsonElem = document.querySelector("#json-block");
+    const jsonElem: HTMLDivElement  = document.querySelector("#json-block")!;
     jsonElem.insertAdjacentHTML("afterbegin", `
         <div>
             <pre>${JSON.stringify(tabs, null, "   ")}</pre>
@@ -139,23 +141,22 @@ async function renderJson() {
 }
 
 
-/** @param {chrome.tabs.Tab[]} tabs
- *  @param {Element} targetNode */
-function appendListByTabs(tabs, targetNode) {
+
+function appendListByTabs(tabs: chrome.tabs.Tab[], targetNode: Element): void {
     for (const tab of tabs) {
+        const title: string = tab.title || "";
         targetNode.insertAdjacentHTML("beforeend", `
             <tr>
                 <td>
                     <img class="favicon" src="${tab.favIconUrl || "/images/empty.png"}" alt=""/>
-                    <a class="url link-primary" title="${tab.title.replaceAll(`"`, "&quot;")}" href="${tab.url}" target="_blank" rel="noreferrer noopener">${tab.url}</a>
+                    <a class="url link-primary" title="${title.replaceAll(`"`, "&quot;")}" href="${tab.url}" target="_blank" rel="noreferrer noopener">${tab.url}</a>
                 </td>                
             </tr>
     `.replaceAll(/\s{2,}/g, ""));
     }
 }
-/** @param {String[]} urls
- *  @param {Element} targetNode */
-function appendListByUrls(urls, targetNode) {
+
+function appendListByUrls(urls: string[], targetNode: Element): void {
     for (const url of urls) {
         targetNode.insertAdjacentHTML("beforeend", `
             <tr>
@@ -169,11 +170,12 @@ function appendListByUrls(urls, targetNode) {
 }
 
 
-const listBlockElem = document.querySelector("#list-block");
+const listBlockElem: HTMLDivElement = document.querySelector("#list-block")!;
 if (listBlockElem) {
     listBlockElem.addEventListener("click", event => {
-        if (event.target.classList.contains("link-primary")) {
-            event.target.closest("tr").classList.add("clicked");
+        const target = event.target as Element;
+        if (target.classList.contains("link-primary")) {
+            target.closest("tr")!.classList.add("clicked");
         }
     });
     listBlockElem.addEventListener("mousedown", event => {
@@ -183,8 +185,9 @@ if (listBlockElem) {
         if (event.button !== MIDDLE_BUTTON) {
             return;
         }
-        if (event.target.classList.contains("favicon")) {
-            event.target.closest("tr").classList.remove("clicked");
+        const target = event.target as Element;
+        if (target.classList.contains("favicon")) {
+            target.closest("tr")!.classList.remove("clicked");
         }
     });
 }

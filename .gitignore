@@ -4,5 +4,6 @@ dist
 
 !/**/*.test.js
 /src/bg/**/*.js
+/src/pages/**/*.js
 /src/*.js
 
