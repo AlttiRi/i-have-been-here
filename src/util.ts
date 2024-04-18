@@ -100,7 +100,8 @@ export type PngDataURL = DataURLTyped<"image/png">;
 export type JpgDataURL = DataURLTyped<"image/jpeg">;
 export type BlobURL = `blob:${string}`;
 export type BinaryString = string;
-export type Base64 = string;
+export type Base64  = string;
+export type TextURL = string;
 
 
 export function emojiToDataURL(emoji: string, size?: number, multiplier?: number): PngDataURL {

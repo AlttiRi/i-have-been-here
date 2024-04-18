@@ -1,16 +1,8 @@
 import {queryTabs} from "../util-ext-bg.js";
-import {SendResponse} from "../util-ext.js";
+import {GetTabsGS} from "../message-center.js";
 
-export function initGetTabsListener() {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message === "get-tabs--message-exchange") {
-            void asyncHandler(sendResponse);
-            return true;
-        }
+export function initGetTabsListener(): void {
+    GetTabsGS.addListener(function getTabsHandler(): Promise<chrome.tabs.Tab[]> {
+        return queryTabs({});
     });
-}
-
-async function asyncHandler(sendResponse: SendResponse) {
-    const tabs = await queryTabs({});
-    sendResponse(tabs);
 }

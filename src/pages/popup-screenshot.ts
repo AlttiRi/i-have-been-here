@@ -1,8 +1,8 @@
 import {JpgDataURL, logPicture, sleep} from "../util.js";
-import {exchangeMessage} from "../util-ext.js";
 import {getTrimmedTitle} from "./popup-util.js";
 import {captureVisibleTab, getActiveTab} from "../util-ext-bg.js";
 import {TabCapture}      from "../bg/log-image.js";
+import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "../message-center.js";
 
 
 const saveButton:     HTMLButtonElement = document.querySelector("#btn-save-screen")!;
@@ -79,15 +79,15 @@ async function initPreview(): Promise<void> {
 void initPreview();
 
 
-imageWrapElem.addEventListener("mousedown", async () => {
+imageWrapElem.addEventListener("mousedown", async (event) => {
+    if (event.buttons !== 1) {
+        return;
+    }
     await initPreview();
     if (!tabCapture) {
         return;
     }
-    await exchangeMessage({
-        command: "log-screenshot--message-exchange",
-        data: tabCapture
-    }); // just to log the image in bg
+    LogScreenshotSS.sendMessage(tabCapture); // just to log the image in bg
 });
 
 downloadButton.addEventListener("click", async () => {
@@ -95,10 +95,7 @@ downloadButton.addEventListener("click", async () => {
         return;
     }
 
-    chrome.runtime.sendMessage({
-        command: "download-screenshot--message",
-        data: tabCapture
-    });
+    DownloadScreenshotSS.sendMessage(tabCapture);
 
     downloadButton.classList.add("btn-outline-success");
     chrome.runtime.sendMessage("change-icon--message");
@@ -107,13 +104,11 @@ downloadButton.addEventListener("click", async () => {
 });
 
 saveButton.addEventListener("click", async () => {
-    const dataUrl = imageElem.src;
-    const tabUrl = imageElem.dataset.tabUrl;
-    const response = await exchangeMessage({
-        command: "save-screenshot--message-exchange",
-        dataUrl,
-        tabUrl,
+    const dataUrl = imageElem.src as JpgDataURL;
+    const tabUrl = imageElem.dataset.tabUrl as string;
+    const response = await SaveScreenshotES.sendMessage({
+        tabUrl, dataUrl
     });
-    console.log("save-screenshot--message-exchange response:", response);
+    console.log("saveScreenshot response:", response);
     saveButton.classList.add("btn-outline-success");
 });

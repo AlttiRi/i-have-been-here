@@ -1,5 +1,5 @@
-import {exchangeMessage} from "../../util-ext.js";
 import {debounce} from "../../util.js";
+import {GetTabsGS} from "../../message-center.js";
 
 declare global {
     var urls: string[];
@@ -115,7 +115,7 @@ function logTabs(tabs: chrome.tabs.Tab[]): void {
 }
 
 async function renderTabList(): Promise<void> {
-    const tabs: chrome.tabs.Tab[] = await exchangeMessage("get-tabs--message-exchange");
+    const tabs: chrome.tabs.Tab[] = await GetTabsGS.sendMessage();
 
     const listElem: HTMLTableSectionElement = document.querySelector("#list-content")!;
     listElem.innerHTML = "";
@@ -129,7 +129,7 @@ async function renderTabList(): Promise<void> {
     appendListByTabs(_tabs, listElem);
 }
 async function renderJson(): Promise<void> {
-    const tabs: chrome.tabs.Tab[] = await exchangeMessage("get-tabs--message-exchange");
+    const tabs: chrome.tabs.Tab[] = await GetTabsGS.sendMessage();
     logTabs(tabs);
 
     const jsonElem: HTMLDivElement  = document.querySelector("#json-block")!;

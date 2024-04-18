@@ -10,7 +10,7 @@
 
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.command !== "log-screenshot--message-exchange") {
+        if (message.command !== "log-screenshot--message-exchange-tab") {
             return;
         }
         const dataUrl = message.data;

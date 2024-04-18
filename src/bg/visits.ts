@@ -1,7 +1,8 @@
 import {getActiveTab, queryTabs} from "../util-ext-bg.js";
 import {updateIcons} from "./tab-counter.js";
-import {getFromStoreLocal, setToStoreLocal, SendResponse} from "../util-ext.js";
+import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
 import {dateToDayDateString, downloadBlob, sleep} from "../util.js";
+import {AddVisitGS, GetVisitGS} from "../message-center.js";
 
 
 export type Visit = {
@@ -56,45 +57,34 @@ export async function updateVisit(newVisit: Visit): Promise<void> {
 
 
 export function initVisitBackgroundHandler(): void {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message === "add-visit--message-exchange") {
-            void addVisitHandler(sendResponse);
-            return true;
-        } else
-        if (message === "get-visit--message-exchange") {
-            void getVisitHandler(sendResponse);
-            return true;
-        }
-    });
+    AddVisitGS.addListener(addVisitHandler);
+    GetVisitGS.addListener(getVisitHandler);
 }
 
 
 
-async function getVisitHandler(sendResponse: SendResponse): Promise<void> {
+async function getVisitHandler(): Promise<Visit | null> {
     const tab = await getActiveTab();
     if (!tab) {
         console.warn("[warning][getVisitHandler] no active tab available");
-        sendResponse(null);
-        return;
+        return null;
     }
 
     const visits = await getVisits();
     const visit = visits.find(visit => visit.url === tab.url);
-    sendResponse(visit);
+    return visit || null;
 }
 
-async function addVisitHandler(sendResponse: SendResponse): Promise<void> {
+async function addVisitHandler(): Promise<Visit | null> {
     const date = Date.now();
     const tab = await getActiveTab();
     if (tab === undefined) {
         console.warn("[warning][addVisitHandler] tab === undefined");
-        sendResponse(null); // todo recheck receiver
-        return;
+        return null; // todo recheck receiver
     }
     if (tab.url === undefined) {
         console.warn("[warning][addVisitHandler] tab.url === undefined");
-        sendResponse(null); // todo recheck receiver
-        return;
+        return null; // todo recheck receiver
     }
 
     const visits = await getVisits();
@@ -114,7 +104,7 @@ async function addVisitHandler(sendResponse: SendResponse): Promise<void> {
         await setToStoreLocal("visits", visits);
     }
 
-    sendResponse(visit);
+    return visit;
 }
 
 export async function exportVisits(): Promise<void> {

@@ -1,6 +1,6 @@
-import {exchangeMessage}     from "../util-ext.js";
 import {createBackgroundTab} from "../util-ext-bg.js";
 import {Visit} from "../bg/visits";
+import {AddVisitGS, GetVisitGS} from "../message-center.js";
 
 
 const visitButton:      HTMLButtonElement = document.querySelector("#btn-visit")!;
@@ -8,9 +8,11 @@ const openVisitsButton: HTMLButtonElement = document.querySelector("#btn-open-vi
 
 
 visitButton.addEventListener("click", async () => {
-    const visit = await exchangeMessage("add-visit--message-exchange");
-    visitButton.classList.add("btn-outline-success");
-    visitButton.title = visitToButtonTitle(visit);
+    const visit = await AddVisitGS.sendMessage();
+    if (visit) {
+        visitButton.classList.add("btn-outline-success");
+        visitButton.title = visitToButtonTitle(visit);
+    }
 });
 
 openVisitsButton.addEventListener("click", async () => {
@@ -19,7 +21,7 @@ openVisitsButton.addEventListener("click", async () => {
 
 
 ;(async function() {
-    const visit = await exchangeMessage("get-visit--message-exchange");
+    const visit = await GetVisitGS.sendMessage();
     if (visit) {
         visitButton.classList.add("btn-outline-success");
         visitButton.title = visitToButtonTitle(visit);
