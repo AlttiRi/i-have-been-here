@@ -2,28 +2,34 @@ import {
     exchangeMessageWithTab,
     executeScript,
 } from "../util-ext-bg.js";
-import {logPicture, JpgDataURL} from "../util.js";
+import {logPicture, downloadBlob, JpgDataURL} from "../util.js";
 import {SendResponse, setToStoreLocal} from "../util-ext.js";
 import {toStoreData} from "./image-data.js";
+import {getScreenshotFilename} from "../pages/popup-util.js";
 
-export function logImageOnMessage(): void {
-    function logImageOnMessageListener(message: any, _sender: chrome.runtime.MessageSender, sendResponse: SendResponse) {
+export function logImageOnMessage(): void { // todo rename
+    function screenshotCommandHandler(message: any, _sender: chrome.runtime.MessageSender, sendResponse: SendResponse) {
         if (message?.command === "log-screenshot--message-exchange") { // todo just use `chrome.runtime.sendMessage`
-            void asyncHandler(message.data);
-            sendResponse(); // Required
+            void logScreenshot(message.data);
+            sendResponse(); // Required, since "-exchange",
+            // return true; // No need, since `sendResponse` is sync (with no meaningful response payload)
         } else
         if (message?.command === "save-screenshot--message-exchange"){
             const {dataUrl, tabUrl} = message;
-            console.log("setToStoreLocal [\"save-screenshot\"]", dataUrl);
-            void setToStoreLocal("screenshot:" + tabUrl, toStoreData(dataUrl))
-                .then(() => {
-                    console.log("screenshot is stored");
-                    sendResponse(true);
-                });
-            return true;
+            void saveScreenshot({dataUrl, tabUrl}).then(() => {
+                sendResponse("[handler]: screenshot is stored");
+            });
+            return true; // since `sendResponse` call is async
+        } else if (message?.command === "download-screenshot--message") {
+            void downloadScreenshot(message.data);
         }
     }
-    chrome.runtime.onMessage.addListener(logImageOnMessageListener);
+    chrome.runtime.onMessage.addListener(screenshotCommandHandler);
+}
+
+async function saveScreenshot({dataUrl, tabUrl}: {dataUrl: JpgDataURL, tabUrl: string}): Promise<void> {
+    console.log(`setToStoreLocal ["save-screenshot"]`, tabUrl, dataUrl);
+    void setToStoreLocal("screenshot:" + tabUrl, toStoreData(dataUrl));
 }
 
 export type TabCapture = {
@@ -32,7 +38,16 @@ export type TabCapture = {
     date: number,
 };
 
-async function asyncHandler(tabData: TabCapture) {
+async function downloadScreenshot(tabCapture: TabCapture): Promise<void> {
+    const resp = await fetch(tabCapture.screenshotUrl);
+    const blob = await resp.blob();
+
+    const {url = "", title = ""} = tabCapture.tab;
+    const name = await getScreenshotFilename(url, title);
+    downloadBlob(blob, name, url);
+}
+
+async function logScreenshot(tabData: TabCapture) {
     const {tab, screenshotUrl} = tabData;
 
     // Log the picture in a background script //

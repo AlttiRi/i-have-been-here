@@ -90,18 +90,15 @@ imageWrapElem.addEventListener("mousedown", async () => {
     }); // just to log the image in bg
 });
 
-// todo in bg
 downloadButton.addEventListener("click", async () => {
     if (!tabCapture) {
         return;
     }
 
-    const resp = await fetch(tabCapture.screenshotUrl);
-    const blob = await resp.blob();
-
-    const {url = "", title = ""} = tabCapture.tab;
-    const name = await getScreenshotFilename(url, title);
-    downloadBlob(blob, name, url);
+    chrome.runtime.sendMessage({
+        command: "download-screenshot--message",
+        data: tabCapture
+    });
 
     downloadButton.classList.add("btn-outline-success");
     chrome.runtime.sendMessage("change-icon--message");
