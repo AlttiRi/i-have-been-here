@@ -1,8 +1,8 @@
-import {downloadBlob, JpgDataURL, logPicture, sleep} from "../util.js";
-import {exchangeMessage}                        from "../util-ext.js";
-import {getScreenshotFilename, getTrimmedTitle} from "./popup-util.js";
+import {JpgDataURL, logPicture, sleep} from "../util.js";
+import {exchangeMessage} from "../util-ext.js";
+import {getTrimmedTitle} from "./popup-util.js";
 import {captureVisibleTab, getActiveTab} from "../util-ext-bg.js";
-import {TabCapture}                      from "../bg/log-image.js";
+import {TabCapture}      from "../bg/log-image.js";
 
 
 const saveButton:     HTMLButtonElement = document.querySelector("#btn-save-screen")!;
