@@ -10,14 +10,14 @@
 
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-        if (message.command !== "log-screenshot--message-exchange-tab") {
+        if (message?.command !== "log-screenshot--message-exchange-tab") {
             return;
         }
         const dataUrl = message.data;
         logPicture(dataUrl);
 
         /** Required, since the message is sent from `exchangeMessageWithTab` function
-         *  @see {import("src/util-ext-bg.js").exchangeMessageWithTab} */
+         *  @see {import("src/util-ext.js").exchangeMessageWithTab} */
         sendResponse("[content script]: image logged");
     });
 

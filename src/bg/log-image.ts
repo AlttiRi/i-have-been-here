@@ -1,9 +1,6 @@
-import {
-    exchangeMessageWithTab,
-    executeScript,
-} from "../util-ext-bg.js";
+import {executeScript} from "../util-ext-bg.js";
 import {logPicture, downloadBlob, JpgDataURL, TextURL} from "../util.js";
-import {setToStoreLocal} from "../util-ext.js";
+import {exchangeMessageWithTab, setToStoreLocal} from "../util-ext.js";
 import {toStoreData} from "./image-data.js";
 import {getScreenshotFilename} from "../pages/popup-util.js";
 import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "../message-center.js";

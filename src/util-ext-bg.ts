@@ -20,23 +20,6 @@ export async function getTitle(details?: chrome.browserAction.TabDetails): Promi
     return new Promise(resolve => chrome.browserAction.getTitle(details, resolve));
 }
 
-// todo move to util-ext.js
-/**
- * Send a message from the background script to a tab's content script and get the response back.
- * @see {import("src/util-ext.js").SendResponse}
- * @see {import("src/util-ext.js").exchangeMessage}
- */
-export function exchangeMessageWithTab(tabId: number, message: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-        chrome.tabs.sendMessage(tabId, message, function responseCallback(response) {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError.message);
-            }
-            console.log(`[exchangeMessageWithTab] Tab's (${tabId}) response:`, response);
-            resolve(response);
-        });
-    });
-}
 
 export const allowedProtocols = ["http:", "https:", "file:", "ftp:"];
 

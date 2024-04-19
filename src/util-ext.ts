@@ -10,43 +10,36 @@ export const defaultPopup = manifest.browser_action!.default_popup;
 
 
 
-/**
- * A function to send a response back to the sender.
- *
- * ---
- *
- * To prevent `The message port closed before a response was received.` error (on `sendResponse` call),
- * when you use `chrome.tabs.sendMessage`'s the callback argument (`responseCallback`).
- *
- * The listener (in a content script) must:
- * - use `sendResponse`,
- * - or `return true;`, with calling `sendResponse();` later (async) *
- * in `chrome.runtime.onMessage.addListener((message, sender, sendResponse)` callback.
- *
- * TL;DR — "Return `true` to indicate you want to send a response asynchronously".
- *
- * @see {import("src/util-ext.js").exchangeMessage}
- * @see {import("src/util-ext-bg.js").exchangeMessageWithTab}
- */
-export type SendResponse = (response?: any) => void;
 
 /**
- * In `chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) ...`
- * `sender` has `sender.tab` property if the message is from a content script,
- * in another way the message is from an extension.
- */
-
-/**
- * Send message to bg, or any extension's page (popup, options, a custom page)
- * Also possible (not implemented in this wrapper) sending to another extension.
+ * Sends a message to an extension's bg script, or to any extension's page (popup, option, a custom page)
+ * Also, possible (not implemented in this wrapper) sending to another extension.
  *
  * It's possible to send a message FROM a content script, but not TO.
  * For sending to a content script use `exchangeMessageWithTab`
  *
- * The subscriber must use `sendResponse` to send response message back:
- * `chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {`
+ * The subscriber must use `sendResponse` to send a response message back
  * to prevent the `The message port closed before a response was received.` error.
- * @see {import("src/util-ext-bg.js").exchangeMessageWithTab}
+ *
+ * @example
+ * ```js
+ * chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+ *     if (!isThisMessageForMe(message)) {
+ *         return;
+ *     }
+ *     const response = handler(message);
+ *     if (isPromise(response)) {
+ *         response.then(sendResponse);
+ *         return true;
+ *     } else {
+ *         sendResponse(response);
+ *     }
+ * });
+ * BTW, `sender` has no `sender.tab` property if the message is from the bg script.
+ * ```
+ * @deprecated Use `ExchangeService`.
+ * @see {import("./util-ext-messages.js").ExchangeService}
+ * @see {import("./util-ext.js").exchangeMessageWithTab}
  */
 export function exchangeMessage(message: any): Promise<any> {
     console.log("[sendMessage][send]", message);
@@ -61,7 +54,24 @@ export function exchangeMessage(message: any): Promise<any> {
     });
 }
 
-// For exporting
+/**
+ * Send a message from the background script to a tab's content script and get the response back.
+ * @see {import("./util-ext.js").SendResponse}
+ * @see {import("./util-ext.js").exchangeMessage}
+ */
+export function exchangeMessageWithTab(tabId: number, message: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+        chrome.tabs.sendMessage(tabId, message, function responseCallback(response) {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError.message);
+            }
+            console.log(`[exchangeMessageWithTab] Tab's (${tabId}) response:`, response);
+            resolve(response);
+        });
+    });
+}
+
+// [note] For exporting
 // chrome.storage.local.get(store => console.log(JSON.stringify(store, null, " ")));
 
 export function setToStoreLocal(key: string, value: any): Promise<void> {
