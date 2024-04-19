@@ -81,8 +81,15 @@ export class ExchangeService<D, R> extends Service<CommandExchange> {
                 return;
             }
             const response: R | Promise<R> = handler(message.data as D, sender);
-            Promise.resolve(response).then(sendResponse);
-            return true;
+            if (isPromise(response)) {
+                response.then(sendResponse);
+                return true;
+            } else {
+                sendResponse(response);
+            }
+            // // or
+            // Promise.resolve(response).then(sendResponse);
+            // return true;
         });
     }
 }
@@ -90,4 +97,8 @@ export class GetService<R> extends ExchangeService<undefined, R> {
     get(): Promise<R> {
         return super.exchange(undefined);
     }
+}
+
+function isPromise(value: any): value is Promise<unknown> {
+    return Boolean(typeof value?.then === "function");
 }
