@@ -87,7 +87,7 @@ imageWrapElem.addEventListener("mousedown", async (event) => {
     if (!tabCapture) {
         return;
     }
-    LogScreenshotSS.sendMessage(tabCapture); // just to log the image in bg
+    LogScreenshotSS.send(tabCapture); // just to log the image in bg
 });
 
 downloadButton.addEventListener("click", async () => {
@@ -95,7 +95,7 @@ downloadButton.addEventListener("click", async () => {
         return;
     }
 
-    DownloadScreenshotSS.sendMessage(tabCapture);
+    DownloadScreenshotSS.send(tabCapture);
 
     downloadButton.classList.add("btn-outline-success");
     chrome.runtime.sendMessage("change-icon--message");
@@ -106,7 +106,7 @@ downloadButton.addEventListener("click", async () => {
 saveButton.addEventListener("click", async () => {
     const dataUrl = imageElem.src as JpgDataURL;
     const tabUrl = imageElem.dataset.tabUrl as string;
-    const response = await SaveScreenshotES.sendMessage({
+    const response = await SaveScreenshotES.exchange({
         tabUrl, dataUrl
     });
     console.log("saveScreenshot response:", response);

@@ -8,7 +8,7 @@ const openVisitsButton: HTMLButtonElement = document.querySelector("#btn-open-vi
 
 
 visitButton.addEventListener("click", async () => {
-    const visit = await AddVisitGS.sendMessage();
+    const visit = await AddVisitGS.get();
     if (visit) {
         visitButton.classList.add("btn-outline-success");
         visitButton.title = visitToButtonTitle(visit);
@@ -21,7 +21,7 @@ openVisitsButton.addEventListener("click", async () => {
 
 
 ;(async function() {
-    const visit = await GetVisitGS.sendMessage();
+    const visit = await GetVisitGS.get();
     if (visit) {
         visitButton.classList.add("btn-outline-success");
         visitButton.title = visitToButtonTitle(visit);

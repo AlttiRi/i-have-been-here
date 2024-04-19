@@ -32,7 +32,7 @@ export class SendService<D> extends Service<Command> {
     constructor(name: string, multiple = false) {
         super(`${name}--message`, multiple);
     }
-    sendMessage(data: D): void {
+    send(data: D): void {
         const message: Message<D> = {
             command: this.command,
             data,
@@ -50,15 +50,15 @@ export class SendService<D> extends Service<Command> {
     }
 }
 export class PingService extends SendService<undefined> {
-    sendMessage() {
-        super.sendMessage(undefined);
+    ping() {
+        super.send(undefined);
     }
 }
 export class ExchangeService<D, R> extends Service<CommandExchange> {
     constructor(name: string, multiple = false) {
         super(`${name}--message-exchange`, multiple);
     }
-    sendMessage(data: D): Promise<R> {
+    exchange(data: D): Promise<R> {
         const message: MessageExchange<D> = {
             command: this.command,
             data,
@@ -87,7 +87,7 @@ export class ExchangeService<D, R> extends Service<CommandExchange> {
     }
 }
 export class GetService<R> extends ExchangeService<undefined, R> {
-    sendMessage(): Promise<R> {
-        return super.sendMessage(undefined);
+    get(): Promise<R> {
+        return super.exchange(undefined);
     }
 }
