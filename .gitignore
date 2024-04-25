@@ -7,3 +7,4 @@ dist
 /src/pages/**/*.js
 /src/*.js
 
+/dev/
