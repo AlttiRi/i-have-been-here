@@ -1,15 +1,11 @@
-import {getActiveTab, queryTabs} from "../util-ext-bg.js";
+import {getActiveTab} from "../util-ext-bg.js";
 import {updateIcons} from "./tab-counter.js";
 import {getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
-import {dateToDayDateString, downloadBlob, sleep} from "../util.js";
+import {dateToDayDateString, downloadBlob} from "../util.js";
 import {AddVisitGS, GetVisitGS} from "../message-center.js";
+import {Visit} from "../types.js";
 
 
-export type Visit = {
-    url:   string,
-    title: string,
-    date:  number | number[],
-};
 
 export async function getVisits(): Promise<Visit[]> {
     return await getFromStoreLocal("visits") || [];
@@ -18,20 +14,6 @@ export async function getVisits(): Promise<Visit[]> {
 export async function visitedIconDataIfRequired(tab: chrome.tabs.Tab) {
     const visits: Visit[] = await getVisits();
     const visit: Visit | undefined = visits.find(visit => visit.url === tab.url);
-
-    // todo: delete later;
-    //  added since the old created visits have no title
-    if (visit && (!visit.title || visit.url === visit.title || visit.url.slice(0, -1 /*remove slash*/) === visit.title)) {
-        const tabId = tab.id;
-        sleep(2000).then(async () => {
-            const tab = (await queryTabs()).find(tab => tab.id === tabId);
-            if (!tab) {
-                return;
-            }
-            visit.title = tab.title || "";
-            return setToStoreLocal("visits", visits);
-        });
-    }
 
     if (visit) {
         return {
@@ -75,16 +57,16 @@ async function getVisitHandler(): Promise<Visit | null> {
     return visit || null;
 }
 
-async function addVisitHandler(): Promise<Visit | null> {
+async function addVisitHandler(_data: undefined, sender: chrome.runtime.MessageSender): Promise<Visit | null> {
     const date = Date.now();
     const tab = await getActiveTab();
     if (tab === undefined) {
-        console.warn("[warning][addVisitHandler] tab === undefined");
-        return null; // todo recheck receiver
+        console.warn("[warning][addVisitHandler] tab === undefined", sender);
+        return null;
     }
     if (tab.url === undefined) {
-        console.warn("[warning][addVisitHandler] tab.url === undefined");
-        return null; // todo recheck receiver
+        console.warn("[warning][addVisitHandler] tab.url === undefined", sender);
+        return null;
     }
 
     const visits = await getVisits();
@@ -94,13 +76,13 @@ async function addVisitHandler(): Promise<Visit | null> {
         visit = {
             url: tab.url,
             title: tab.title || "",
-            date,
+            created: date,
         };
         visits.push(visit);
         await setToStoreLocal("visits", visits);
         updateIcons([tab]);
     } else {
-        visit.date = [visit.date, date].flat();
+        visit.lastVisited = date;
         await setToStoreLocal("visits", visits);
     }
 
@@ -108,8 +90,8 @@ async function addVisitHandler(): Promise<Visit | null> {
 }
 
 export async function exportVisits(): Promise<void> {
-    const visits = await getFromStoreLocal("visits") || "";
-    const dateStr = dateToDayDateString(new Date());
+    const visits = await getFromStoreLocal("visits") || [];
+    const dateStr = dateToDayDateString(new Date(), false);
     downloadBlob(new Blob([JSON.stringify(visits, null, " ")]), `[ihbh][${dateStr}] visits.json`);
 }
 

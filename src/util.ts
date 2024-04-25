@@ -103,6 +103,9 @@ export type BinaryString = string;
 export type Base64  = string;
 export type TextURL = string;
 
+export function toHex(ab: ArrayBuffer): Lowercase<string> {
+    return [...new Uint8Array(ab)].map(b => b.toString(16).padStart(2, "0")).join("") as Lowercase<string>;
+}
 
 export function emojiToDataURL(emoji: string, size?: number, multiplier?: number): PngDataURL {
     const {canvas} = emojiTo(emoji, size, multiplier);
@@ -142,19 +145,6 @@ function emojiTo(emoji = "⬜", size = 64, multiplier = 1.01): CanvasContext2D {
     return {canvas, context};
 }
 
-// "Sun, 10 Jan 2021 22:22:22 GMT" -> "2021.01.10"
-export function dateToDayDateString(dateValue: Date | string | number, utc = true): string {
-    const _date = new Date(dateValue);
-    function pad(str: number): string {
-        return str.toString().padStart(2, "0");
-    }
-    const _utc = utc ? "UTC" : "";
-    const year:  number = _date[`get${_utc}FullYear`]();
-    const month: number = _date[`get${_utc}Month`]() + 1;
-    const date:  number = _date[`get${_utc}Date`]();
-
-    return year + "." + pad(month) + "." + pad(date);
-}
 
 export class LS {
     static getItem<T>(name: string, defaultValue: T): T {
@@ -186,7 +176,7 @@ export class LS {
     }
 }
 
-export function binaryStringToArrayBuffer(binaryString: string): Uint8Array {
+export function binaryStringToArrayBuffer(binaryString: BinaryString): Uint8Array {
     const u8Array = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
         u8Array[i] = binaryString.charCodeAt(i);
@@ -276,4 +266,59 @@ export function fullUrlToFilename(url: string): string {
 
     const last = search + hash;
     return [header, main.join("·")].filter(o => o).join(" ") + last;
+}
+
+
+
+/** "Sun, 10 Jan 2021 22:22:22 GMT" -> "2021.01.10" */
+export function dateToDayDateString(dateValue?: Date | string | number, utc = true) {
+    return formatDate(dateValue, "YYYY.MM.DD", utc);
+}
+
+/** "Sun, 10 Jan 2021 22:22:22 GMT" -> "2021.01.10 22:22:22Z" */
+export function dateToDayDateTimeString(dateValue?: Date | string | number, utc = true) {
+    return formatDate(dateValue, "YYYY.MM.DD HH:mm:SS", utc) + (utc ? "Z" : "");
+}
+
+/**
+ * Formats date. Supports: YY.YYYY.MM.DD HH:mm:SS.
+ * Default format: "YYYY.MM.DD". formatDate() -> "2022.01.07"
+ */
+export function formatDate(dateValue: Date | string | number = new Date(), pattern = "YYYY.MM.DD", utc = true): string {
+    dateValue = firefoxDateFix(dateValue);
+    const date = new Date(dateValue);
+    if (date.toString() === "Invalid Date") {
+        console.warn("Invalid Date value: ", dateValue);
+    }
+    const formatter = new DateFormatter(date, utc);
+    return pattern.replaceAll(/YYYY|YY|MM|DD|HH|mm|SS/g, (...args) => {
+        return formatter[args[0] as "YYYY"|"YY"|"MM"|"DD"|"HH"|"mm"|"SS"];
+    });
+}
+
+function isString(input: unknown): input is string {
+    return typeof input === "string" || input instanceof String;
+}
+function firefoxDateFix(dateValue: Date | string | number) {
+    return isString(dateValue) ? dateValue.replace(/(?<y>\d{4})\.(?<m>\d{2})\.(?<d>\d{2})/, "$<y>-$<m>-$<d>") : dateValue;
+}
+
+function pad0(value: number, count = 2): string {
+    return value.toString().padStart(count, "0");
+}
+class DateFormatter {
+    private readonly date: Date;
+    private readonly utc: "UTC" | "";
+    constructor(date = new Date(), utc = true) {
+        this.date = date;
+        this.utc = utc ? "UTC" : "";
+    }
+    get SS()   {return pad0(this.date[`get${this.utc}Seconds`]())}
+    get mm()   {return pad0(this.date[`get${this.utc}Minutes`]())}
+    get HH()   {return pad0(this.date[`get${this.utc}Hours`]())}
+
+    get MM()   {return pad0(this.date[`get${this.utc}Month`]() + 1)}
+    get DD()   {return pad0(this.date[`get${this.utc}Date`]())}
+    get YYYY() {return pad0(this.date[`get${this.utc}FullYear`](), 4)}
+    get YY()   {return this.YYYY.slice(2);}
 }

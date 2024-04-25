@@ -1,3 +1,5 @@
+import {StoreLocalModel} from "./types.js";
+
 export const extensionName = chrome.i18n.getMessage("extension_name");
 export const extensionId = chrome.runtime.id;
 export const extensionUUID = chrome.i18n.getMessage("@@extension_id");
@@ -74,7 +76,7 @@ export function exchangeMessageWithTab(tabId: number, message: any): Promise<any
 // [note] For exporting
 // chrome.storage.local.get(store => console.log(JSON.stringify(store, null, " ")));
 
-export function setToStoreLocal(key: string, value: any): Promise<void> {
+export function setToStoreLocal<K extends keyof StoreLocalModel>(key: K, value: StoreLocalModel[K]): Promise<void> {
     return new Promise((resolve, reject) => {
         chrome.storage.local.set({[key]: value}, () => {
             if (chrome.runtime.lastError) {
@@ -85,7 +87,9 @@ export function setToStoreLocal(key: string, value: any): Promise<void> {
     });
 }
 
-export function getFromStoreLocal(key?: string): Promise<any> {
+export function getFromStoreLocal(): Promise<StoreLocalModel>;
+export function getFromStoreLocal<K extends keyof StoreLocalModel>(key:  K): Promise<StoreLocalModel[K]>
+export function getFromStoreLocal<K extends keyof StoreLocalModel>(key?: K): Promise<StoreLocalModel[K] | StoreLocalModel> {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get(key ? [key] : null, object => {
             if (chrome.runtime.lastError) {
@@ -95,7 +99,7 @@ export function getFromStoreLocal(key?: string): Promise<any> {
         });
     });
 }
-export function removeFromStoreLocal(key: string): Promise<void> {
+export function removeFromStoreLocal<K extends keyof StoreLocalModel>(key: K): Promise<void> {
     return new Promise((resolve, reject) => {
         chrome.storage.local.remove([key], () => {
             if (chrome.runtime.lastError) {
@@ -105,5 +109,3 @@ export function removeFromStoreLocal(key: string): Promise<void> {
         });
     });
 }
-
-

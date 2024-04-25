@@ -1,9 +1,10 @@
 import {executeScript} from "../util-ext-bg.js";
-import {logPicture, downloadBlob, JpgDataURL, TextURL} from "../util.js";
-import {exchangeMessageWithTab, setToStoreLocal} from "../util-ext.js";
-import {toStoreData} from "./image-data.js";
+import {logPicture, downloadBlob, JpgDataURL, Base64} from "../util.js";
+import {exchangeMessageWithTab, getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
+import {getScdId, toStoreData} from "./image-data.js";
 import {getScreenshotFilename} from "../pages/popup-util.js";
 import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "../message-center.js";
+import {ScreenshotInfo} from "../types.js";
 
 export function logImageOnMessage(): void { // todo rename
     LogScreenshotSS.addListener(_logScreenshot);
@@ -11,18 +12,27 @@ export function logImageOnMessage(): void { // todo rename
     SaveScreenshotES.addListener(_saveScreenshot);
 }
 
-export type ScreenshotSaveData = {
-    dataUrl: JpgDataURL,
-    tabUrl:  TextURL,
-}
-async function _saveScreenshot({dataUrl, tabUrl}: ScreenshotSaveData): Promise<string> {
-    console.log(`setToStoreLocal ["save-screenshot"]`, tabUrl, dataUrl);
-    await setToStoreLocal("screenshot:" + tabUrl, toStoreData(dataUrl));
-    return "[handler]: screenshot is stored";
+
+async function _saveScreenshot(tc: TabCapture): Promise<string> {
+    console.log("_saveScreenshot", tc.tab.url, tc.screenshotUrl);
+    const base64: Base64 = toStoreData(tc.screenshotUrl);
+    const scd_id = await getScdId(base64);
+    await setToStoreLocal(scd_id, base64);
+    const sci: ScreenshotInfo = {
+        title: tc.tab.title || "",
+        url: tc.tab.url || "",
+        created: tc.date,
+        scd_id,
+    };
+    const screenshots: ScreenshotInfo[] = await getFromStoreLocal("screenshots") || [];
+    screenshots.push(sci);
+    await setToStoreLocal("screenshots", screenshots);
+
+    return `[handler]: screenshot is stored (${scd_id})`;
 }
 
 export type TabCapture = {
-    tab: chrome.tabs.Tab,
+    tab: chrome.tabs.Tab/* & {url: string}*/,
     screenshotUrl: JpgDataURL,
     date: number,
 };

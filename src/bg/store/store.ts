@@ -1,10 +1,10 @@
 import {ReactiveStoreLocalValue} from "./reactive-store-local-value.js";
 import {isFirefox, isOpera} from "../../util.js";
 
-export const urlOpenerMode: ReactiveStoreLocalValue<boolean> =
-    new ReactiveStoreLocalValue("quickAccessUrlOpenerMode", false);
-export const dlShelf: ReactiveStoreLocalValue<boolean>
-    = new ReactiveStoreLocalValue<boolean>("downloadShelf", true);
+export const urlOpenerMode: ReactiveStoreLocalValue<"quickAccessUrlOpenerMode">
+    = new ReactiveStoreLocalValue("quickAccessUrlOpenerMode", false);
+export const dlShelf: ReactiveStoreLocalValue<"downloadShelf">
+    = new ReactiveStoreLocalValue("downloadShelf", true);
 
 export type TrimOption = {
     trimEnd?: string[],
@@ -28,7 +28,7 @@ const tcSettingsDefaultValue: TrimOptionsObject = {
     }
 };
 
-export const tcSettings: ReactiveStoreLocalValue<TrimOptionsObject>
+export const tcSettings: ReactiveStoreLocalValue<"titleCutterSettings">
     = new ReactiveStoreLocalValue("titleCutterSettings", tcSettingsDefaultValue);
 
 
@@ -39,9 +39,9 @@ if (isOpera) {
     quickAccessUrlDefaultValue = "";
 }
 
-export const quickAccessUrl: ReactiveStoreLocalValue<string>
+export const quickAccessUrl: ReactiveStoreLocalValue<"quickAccessUrl">
     = new ReactiveStoreLocalValue("quickAccessUrl", quickAccessUrlDefaultValue);
 
-export const filenameLengthLimit: ReactiveStoreLocalValue<number>
+export const filenameLengthLimit: ReactiveStoreLocalValue<"filenameLengthLimit">
     = new ReactiveStoreLocalValue("filenameLengthLimit", 220);
 

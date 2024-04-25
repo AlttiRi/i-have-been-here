@@ -104,11 +104,10 @@ downloadButton.addEventListener("click", async () => {
 });
 
 saveButton.addEventListener("click", async () => {
-    const dataUrl = imageElem.src as JpgDataURL;
-    const tabUrl = imageElem.dataset.tabUrl as string;
-    const response = await SaveScreenshotES.exchange({
-        tabUrl, dataUrl
-    });
+    if (!tabCapture) {
+        return;
+    }
+    const response: string = await SaveScreenshotES.exchange(tabCapture);
     console.log("saveScreenshot response:", response);
     saveButton.classList.add("btn-outline-success");
 });

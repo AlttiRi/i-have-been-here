@@ -1,6 +1,7 @@
 import {createBackgroundTab} from "../util-ext-bg.js";
-import {Visit} from "../bg/visits";
 import {AddVisitGS, GetVisitGS} from "../message-center.js";
+import {Visit} from "../types.js";
+import {dateToDayDateTimeString} from "../util.js";
 
 
 const visitButton:      HTMLButtonElement = document.querySelector("#btn-visit")!;
@@ -30,5 +31,8 @@ openVisitsButton.addEventListener("click", async () => {
 
 
 function visitToButtonTitle(visit: Visit): string {
-    return [visit.date].flat().map(ms => new Date(ms)).join("\n");
+    return [visit.created, visit.lastVisited]
+        .filter((d): d is number => d !== undefined)
+        .map(ms => dateToDayDateTimeString(ms, false))
+        .join("\n");
 }

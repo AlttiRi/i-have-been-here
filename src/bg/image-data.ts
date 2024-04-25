@@ -1,41 +1,25 @@
-import {binaryStringToArrayBuffer, Base64, BinaryString, JpgDataURL} from "../util.js";
+import {binaryStringToArrayBuffer, Base64, JpgDataURL, BinaryString, toHex} from "../util.js";
+import {ScreenshotDataId} from "../types.js";
 
-// In Chrome binary takes more space than base64, however. // Need to test it more with large data
-const binary = false;
-// const useBase85 = false;
-// const base85 = {encode, decode};
+// todo re-test base85, binary string
 
-export function toDataUrl(storeData: Base64 | BinaryString): JpgDataURL {
-    let base64 = storeData;
-    // if (useBase85) {
-    //     base64 = btoa(arrayBufferToBinaryString(base85.decode(storeData, "z85")));
-    // } else
-    if (binary) {
-        base64 = btoa(storeData);
-    }
+export function toJpgDataUrl(base64: Base64): JpgDataURL {
     return ("data:image/jpeg;base64," + base64) as JpgDataURL;
 }
 
-export function toArrayBuffer(storeData: Base64 | BinaryString): Uint8Array {
-    // if (useBase85) {
-    //     return base85.decode(storeData, "z85");
-    // }
-    let binaryString;
-    if (binary) {
-        binaryString = storeData;
-    } else {
-        binaryString = atob(storeData);
-    }
+export function toArrayBuffer(base64: Base64): Uint8Array {
+    const binaryString: BinaryString = atob(base64);
     return binaryStringToArrayBuffer(binaryString);
 }
 
+const prefixLength: number = "data:image/jpeg;base64,".length;
 export function toStoreData(dataUrl: JpgDataURL): Base64 {
-    const base64: Base64 = dataUrl.substring("data:image/jpeg;base64,".length);
-    // if (useBase85) {
-    //     return base85.encode(binaryStringToArrayBuffer(atob(base64)), "z85");
-    // }
-    if (binary) {
-        return atob(base64);
-    }
-    return base64;
+    return dataUrl.substring(prefixLength);
+}
+
+export async function getScdId(base64: Base64): Promise<ScreenshotDataId> {
+    const jpgUI8A: Uint8Array = toArrayBuffer(base64);
+    const hashAB: ArrayBuffer = await crypto.subtle.digest("SHA-1", jpgUI8A);
+    const hash: Lowercase<string> = toHex(hashAB).slice(0, 12) as Lowercase<string>;
+    return `scd:${hash}`;
 }

@@ -30,7 +30,7 @@ if (document.querySelector("#filters")) {
     const ignoreFilterElem: HTMLInputElement = document.querySelector("#ignore-filter")!;
     const state: URLSearchParams = new URLSearchParams(location.hash.slice(1));
     onlyFilterElem.value   = state.get("only")   || "";
-    ignoreFilterElem.value = state.get("ignore") || "chrome-extension:// ";
+    ignoreFilterElem.value = state.get("ignore") || "-extension:// "; // moz-extension:// chrome-extension://
     const pageBtn: HTMLAnchorElement  = document.querySelector(".nav-link.active")!;
     pageBtn.href = location.href;
 

@@ -1,8 +1,9 @@
-import {getFromStoreLocal, removeFromStoreLocal}            from "../util-ext.js";
-import {createBackgroundTab}                                from "../util-ext-bg.js";
-import {exportVisits, getVisits, importVisits, updateVisit, Visit} from "../bg/visits.js";
-import {toArrayBuffer, toDataUrl}                           from "../bg/image-data.js";
-import {DataURL, dateToDayDateString, downloadBlob, fullUrlToFilename, sleep} from "../util.js";
+import {getFromStoreLocal, removeFromStoreLocal}  from "../util-ext.js";
+import {createBackgroundTab}                      from "../util-ext-bg.js";
+import {exportVisits, getVisits, importVisits}    from "../bg/visits.js";
+import {toArrayBuffer, toJpgDataUrl} from "../bg/image-data.js";
+import {dateToDayDateTimeString, downloadBlob, fullUrlToFilename, sleep} from "../util.js";
+import {ScreenshotInfo, Visit}       from "../types.js";
 
 console.log(location);
 
@@ -28,19 +29,7 @@ async function main() {
     });
 
     const exportImagesButton: HTMLButtonElement = document.querySelector("#export-images")!;
-    exportImagesButton.addEventListener("click", async () => {
-        const imageEntries = await getImageEntries();
-        for (const [key, /** @type {string}*/ data] of imageEntries) {
-            const ab = toArrayBuffer(data);
-            const blob = new Blob([ab], {type: "image/jpeg"});
-            const url = key.slice("screenshot:".length);
-            const urlFilename = fullUrlToFilename(url);
-            const name = `[ihbh]${urlFilename}.jpg`;
-            downloadBlob(blob, name, url);
-            await sleep(125);
-            console.log(name, url);
-        }
-    });
+    exportImagesButton.addEventListener("click", exportImages);
 
     const deleteImagesButton: HTMLButtonElement = document.querySelector("#delete-images")!;
     deleteImagesButton.addEventListener("click", async () => {
@@ -67,7 +56,8 @@ async function main() {
         elem.innerHTML = `
             <h4 class="title">${visit.title || ""}</h4> 
             <h5><a href="${visit.url}" rel="noreferrer noopener" title="${visit.title || ""}">${visit.url}</a></h5>
-            <div>${[visit.date].flat().map(dateFormatter).join("")}</div>
+            <div title="created">${dateFormatter(visit.created)}</div>
+            <i title="last visited time">${visit.lastVisited ? dateFormatter(visit.lastVisited) : ""}</i>
         `.trim();
         const a: HTMLAnchorElement = elem.querySelector("a")!;
         a.addEventListener("click", event => {
@@ -75,13 +65,6 @@ async function main() {
             createBackgroundTab(a.href);
         });
         const titleElem: HTMLHeadingElement = elem.querySelector(".title")!;
-        // titleElem.addEventListener("dblclick", async function deleteTitle(event)  { // todo remove
-        //     event.preventDefault();
-        //     console.log("dblclick");
-        //     delete visit.title;
-        //     await updateVisit(visit);
-        //     titleElem.textContent = "";
-        // });
         titleElem.addEventListener("click", event => {
             event.preventDefault();
             if (event.ctrlKey) {
@@ -93,32 +76,32 @@ async function main() {
 
     // ----
 
-    const imageEntries: Array<[string, DataURL]> = await getImageEntries();
-    console.log("Screenshots:", imageEntries);
-    for (const [key, data] of imageEntries) {
-        document.body.append(createImageItem(key, data));
+    const screenshots: ScreenshotInfo[] = await getFromStoreLocal("screenshots") || [];
+    console.log("Screenshots:", screenshots);
+    const div = document.createElement("div");
+    div.classList.add("screenshots");
+    document.body.append(div);
+    for (const screenshot of screenshots) {
+        div.append(await createImageItem(screenshot));
     }
-    function createImageItem(key: string, data: DataURL): HTMLDivElement {
-        const url = key.slice("screenshot:".length);
-        console.log("data.length", url, data.length);
+    async function createImageItem(screenshots: ScreenshotInfo): Promise<HTMLDivElement> {
 
-        const item = document.createElement("div");
-
-        const imgElem = document.createElement("img");
-        imgElem.src = toDataUrl(data);
-        item.append(imgElem);
-
-        const h2 = document.createElement("h2");
-        h2.setAttribute("style", `align-self: start; margin: 12px`);
-        h2.textContent = url;
-        imgElem.before(h2);
+        const {url, created, title, scd_id} = screenshots;
+        const base64 = await getFromStoreLocal(scd_id);
+        const src = toJpgDataUrl(base64);
 
         const div = document.createElement("div");
-        div.setAttribute("style", `align-self: start; margin: 12px`);
-        div.textContent = fullUrlToFilename(url);
-        imgElem.before(div);
+        div.classList.add("screenshot-info");
+        div.dataset.hash = scd_id;
+        div.dataset.created = created.toString();
+        div.insertAdjacentHTML("afterbegin", `
+            <h3 class="title" style="align-self: start; margin: 12px;">${title || fullUrlToFilename(url)}</h3>
+            <div class="url"  style="align-self: start; margin: 12px;">${url}</div>
+            <div class="created" style="align-self: start; margin: 12px;">${created? dateFormatter(created) : ""}</div>
+            <img src="${src}" alt="${title}" title="${fullUrlToFilename(url)}">
+        `);
 
-        return item;
+        return div;
     }
 
     // ----
@@ -144,23 +127,29 @@ async function main() {
 
 type HTMLString = string;
 function dateFormatter(date: number | string | Date): HTMLString {
-    return `<div>${dateToDayDateString(new Date(date))}</div>`;
-}
-
-async function getImageEntries(): Promise<Array<[string, DataURL]>> {
-    return Object.entries(await getFromStoreLocal())
-        .filter(([key, value]) => {
-            return key.startsWith("screenshot:");
-        }) as Array<[string, DataURL]>;
+    return `<div>${dateToDayDateTimeString(date, false)}</div>`;
 }
 
 async function removeImages(): Promise<void> {
-    const imageEntries: Array<[string, DataURL]> = await getImageEntries();
-    const promises = [];
-    for (const [key, data] of imageEntries) {
-        // const url = key.slice("screenshot:".length);
-        // console.log("remove:", url, data);
-        promises.push(removeFromStoreLocal(key));
+    const screenshots: ScreenshotInfo[] = await getFromStoreLocal("screenshots") || [];
+    const promises: Promise<unknown>[] = [];
+    for (const screenshot of screenshots) {
+        promises.push(removeFromStoreLocal(screenshot.scd_id));
     }
     await Promise.all(promises);
+}
+
+async function exportImages() {
+    const screenshots: ScreenshotInfo[] = await getFromStoreLocal("screenshots") || [];
+    for (const screenshot of screenshots) {
+        const base64 = await getFromStoreLocal(screenshot.scd_id);
+        const ab = toArrayBuffer(base64);
+        const blob = new Blob([ab], {type: "image/jpeg"});
+        const urlFilename = fullUrlToFilename(screenshot.url);
+        const name = `[ihbh]${urlFilename}.jpg`;
+        downloadBlob(blob, name, screenshot.url);
+        await sleep(125);
+        console.log(name, screenshot.url);
+    }
+
 }

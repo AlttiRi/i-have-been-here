@@ -1,6 +1,6 @@
 import {ExchangeService, SendService, PingService, GetService} from "./util-ext-messages.js";
-import {ScreenshotSaveData, TabCapture} from "./bg/log-image.js";
-import {Visit} from "./bg/visits.js";
+import {TabCapture} from "./bg/log-image.js";
+import {Visit} from "./types.js";
 
 const enum COMMANDS {
     logScreenshot      = "log-screenshot",
@@ -8,12 +8,12 @@ const enum COMMANDS {
     downloadScreenshot = "download-screenshot",
     addVisit = "add-visit",
     getVisit = "get-visit",
-    getTabs = "get-tabs",
+    getTabs  = "get-tabs",
 }
 
 export const LogScreenshotSS:      SendService<TabCapture> = new SendService(COMMANDS.logScreenshot);
 export const DownloadScreenshotSS: SendService<TabCapture> = new SendService(COMMANDS.downloadScreenshot);
-export const SaveScreenshotES: ExchangeService<ScreenshotSaveData, string> = new ExchangeService(COMMANDS.saveScreenshot);
+export const SaveScreenshotES: ExchangeService<TabCapture, string> = new ExchangeService(COMMANDS.saveScreenshot);
 
 export const AddVisitGS: GetService<Visit | null> = new GetService(COMMANDS.addVisit);
 export const GetVisitGS: GetService<Visit | null> = new GetService(COMMANDS.getVisit);
