@@ -31,8 +31,8 @@ import {updateStoreModel} from "./bg/store-updaters.js";
     initGetTabsListener();
 
 
-    chrome.runtime.onMessage.addListener((message, sender) => {
-        console.log("[BG incoming message]", {message}, "sender:", sender); // Logs any income messages
+    chrome.runtime.onMessage.addListener(function logEverything(message, sender) {
+        console.log(`[${inIncognitoContext ? "⬛" : "⬜"}][Incoming message]`, message, {from: sender});
     });
 
     void (async function imgLogTest(){
@@ -44,8 +44,8 @@ import {updateStoreModel} from "./bg/store-updaters.js";
     })();
     void (async function debugStoreLog(){
         await sleep(20);
-        chrome.storage.local.get(store => console.log("chrome.storage.local.get(console.log)", store));
-        chrome.bookmarks.getTree(tree => console.log("chrome.bookmarks.getTree(console.log)", tree));
+        chrome.storage.local.get(store => console.log("[⚒] chrome.storage.local.get(console.log)", store));
+        chrome.bookmarks.getTree(tree => console.log("[⚒] chrome.bookmarks.getTree(console.log)", tree));
 
         // chrome.storage.local.get(store => console.log(JSON.stringify(store, null, " ")));
         // chrome.bookmarks.getTree(bookmarks => console.log(JSON.stringify(bookmarks)));
