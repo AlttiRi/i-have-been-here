@@ -2,7 +2,7 @@ import {JpgDataURL, logPicture, sleep} from "../util.js";
 import {getTrimmedTitle} from "./popup-util.js";
 import {captureVisibleTab, getActiveTab} from "../util-ext-bg.js";
 import {TabCapture}      from "../bg/log-image.js";
-import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "../message-center.js";
+import {ChangeIconPS, DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "../message-center.js";
 
 
 const saveButton:     HTMLButtonElement = document.querySelector("#btn-save-screen")!;
@@ -98,7 +98,7 @@ downloadButton.addEventListener("click", async () => {
     DownloadScreenshotSS.send(tabCapture);
 
     downloadButton.classList.add("btn-outline-success");
-    chrome.runtime.sendMessage("change-icon--message");
+    ChangeIconPS.ping();
     await sleep(500);
     downloadButton.classList.remove("btn-outline-success");
 });

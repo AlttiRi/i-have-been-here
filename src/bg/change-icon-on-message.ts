@@ -1,22 +1,19 @@
 import {getActiveTab}            from "../util-ext-bg.js";
 import {inIncognitoContext}      from "../util-ext.js";
 import {emojiToImageData, sleep} from "../util.js";
-import {updateIcons} from "./tab-counter.js";
+import {updateIcons}  from "./tab-counter.js";
+import {ChangeIconPS} from "../message-center.js";
 
 export function changeIconOnMessage() {
-    chrome.runtime.onMessage.addListener((message, sender) => {
-        if (message === "change-icon--message") {
-            void handler(message, sender);
-        }
-    });
+    ChangeIconPS.addListener(blinkDownloadEmoji);
 }
 
-async function handler(message: any, sender: chrome.runtime.MessageSender) {
+async function blinkDownloadEmoji(data: undefined, sender: chrome.runtime.MessageSender) {
     console.log(sender);
     // id: "llbhojonnafjopkkokcjhomnceajcdmh"
     // origin: "chrome-extension://llbhojonnafjopkkokcjhomnceajcdmh"
     // url: "chrome-extension://llbhojonnafjopkkokcjhomnceajcdmh/popup.html"
-    console.log(message);
+    console.log(data);
     console.log(`Incognito: ${inIncognitoContext}.`);
 
     // const color = [88, 88, 88, 255];

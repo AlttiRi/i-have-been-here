@@ -8,8 +8,8 @@ type MessageExchange<T> = {
     command: `${string}-message-exchange`;
     data: T;
 }
-type MessageHandler<T>     = (data: T, sender?: chrome.runtime.MessageSender) => void;
-type ExchangeHandler<T, R> = (data: T, sender: chrome.runtime.MessageSender) => R | Promise<R>;
+type MessageHandler<T>     = (data: T, sender: chrome.runtime.MessageSender) => void | Promise<void>;
+type ExchangeHandler<T, R> = (data: T, sender: chrome.runtime.MessageSender) => R    | Promise<R>;
 type SendResponse<R> = (response: R) => void;
 
 class Service<C extends string> {
