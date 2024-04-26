@@ -72,7 +72,7 @@ async function initPreview(): Promise<void> {
 
     tabCapture = {tab, screenshotUrl, date};
 
-    // Tor's popup's scrolls fix
+    // Firefox's popup's scrolls fix
     await sleep(20);
     imageElem.alt = ""; // don't remove it!
 }
