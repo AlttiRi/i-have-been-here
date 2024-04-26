@@ -1,6 +1,6 @@
-import {JpgDataURL, logPicture, sleep} from "../util.js";
-import {getTrimmedTitle} from "./popup-util.js";
+import {JpgDataURL, logPicture, sleep}   from "../util.js";
 import {captureVisibleTab, getActiveTab} from "../util-ext-bg.js";
+import {getTrimmedTitle} from "./popup-util.js";
 import {TabCapture}      from "../bg/log-image.js";
 import {ChangeIconPS, DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "../message-center.js";
 
@@ -94,9 +94,7 @@ downloadButton.addEventListener("click", async () => {
     if (!tabCapture) {
         return;
     }
-
     DownloadScreenshotSS.send(tabCapture);
-
     downloadButton.classList.add("btn-outline-success");
     ChangeIconPS.ping();
     await sleep(500);
