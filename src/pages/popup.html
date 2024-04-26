@@ -10,9 +10,12 @@
 
 	<script src="./popup.js" type="module"></script>
 	<style>
-	#favicon {
+	img#favicon {
 		height: 22px;
 		width: 22px
+	}
+	img#favicon[src="#"] {
+		display: none;
 	}
 	.favicon-wrap {
 		display: flex;
@@ -38,10 +41,6 @@
 		overflow: hidden;
 		white-space: nowrap;
 		padding-left:  0.5rem;
-	}
-	img[src="#"] {
-		height: 0;
-		display: none;
 	}
 	#image-wrap {
 		overflow: hidden;
