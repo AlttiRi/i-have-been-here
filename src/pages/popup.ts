@@ -1,8 +1,14 @@
+import {initControls, initHomeBtn} from "./popup-0-other.js";
+import {initPreview, updatePreview} from "./popup-3-screenshot.js";
+import {initVisits} from "./popup-2-visits.js";
 import {inIncognitoContext} from "../util-ext.js";
 
-console.log("Popup...");
-console.log(`Incognito: ${inIncognitoContext}.`);
+console.log("[Popup] Incognito:", inIncognitoContext);
 
-import "./popup-screenshot.js";
-import "./popup-visits.js";
-import "./popup-other.js";
+;(async function main(): Promise<void> {
+    initControls();
+    void updatePreview();
+    void initHomeBtn();
+    void initPreview();
+    void initVisits();
+})();

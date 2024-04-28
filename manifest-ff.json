@@ -4,7 +4,7 @@
     "name": "__MSG_extension_name__",
     "short_name": "__MSG_extension_name__",
     "description": "__MSG_extension_description__",
-    "version": "1.9.2.20240425",
+    "version": "1.10.0.20240428",
     "content_scripts": [
 		    {
             "matches": ["<all_urls>"],
