@@ -8,3 +8,4 @@ dist
 /src/*.js
 
 /dev/
+/dist-popup/
