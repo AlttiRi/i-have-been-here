@@ -1,9 +1,9 @@
-import {getActiveTab} from "@/src/util-ext-bg";
-import {updateIcons} from "@/src/bg/tab-counter";
-import {getFromStoreLocal, setToStoreLocal} from "@/src/util-ext";
-import {dateToDayDateString, downloadBlob} from "@/src/util";
-import {AddVisitGS, GetVisitGS} from "@/src/message-center";
-import {Visit} from "@/src/types";
+import {getActiveTab} from "@/util-ext-bg";
+import {updateIcons}  from "@/bg/tab-counter";
+import {getFromStoreLocal, setToStoreLocal} from "@/util-ext";
+import {dateToDayDateString, downloadBlob}  from "@/util";
+import {AddVisitGS, GetVisitGS} from "@/message-center";
+import {Visit} from "@/types";
 
 
 

@@ -1,6 +1,6 @@
-import {ExchangeService, SendService, PingService, GetService} from "@/src/util-ext-messages";
-import {TabCapture} from "@/src/bg/log-image";
-import {Visit}      from "@/src/types";
+import {ExchangeService, SendService, PingService, GetService} from "@/util-ext-messages";
+import {TabCapture} from "@/bg/log-image";
+import {Visit}      from "@/types";
 
 const enum COMMANDS {
     logScreenshot      = "log-screenshot",

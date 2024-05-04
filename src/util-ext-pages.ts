@@ -1,5 +1,5 @@
-import {filenameLengthLimit, tcSettings, TrimOptionsObject} from "@/src/bg/store/store";
-import {fullUrlToFilename} from "@/src/util";
+import {filenameLengthLimit, tcSettings, TrimOptionsObject} from "@/bg/store/store";
+import {fullUrlToFilename} from "@/util";
 
 
 export async function getTrimmedTitle(title: string, url: string): Promise<string> {

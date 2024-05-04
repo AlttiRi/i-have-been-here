@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import {defineAsyncComponent} from "vue";
-import {prependCss} from "@/src/util";
+import {prependCss} from "@/util";
 
 
 const cssReady = prependCss("/libs/bootstrap.css", "sha256-o+AsfCHj7A1M5Xgm1kJmZiGEIvMQEzQqrXz2072Gkkg=");

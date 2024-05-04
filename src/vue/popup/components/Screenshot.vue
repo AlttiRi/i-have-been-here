@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {TabCapture} from "@/src/bg/log-image";
-import {captureVisibleTab, getActiveTab} from "@/src/util-ext-bg";
-import {JpgDataURL, logPicture, sleep}   from "@/src/util";
-import {ChangeIconPS, DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/src/message-center";
+import {TabCapture} from "@/bg/log-image";
+import {captureVisibleTab, getActiveTab} from "@/util-ext-bg";
+import {JpgDataURL, logPicture, sleep}   from "@/util";
+import {ChangeIconPS, DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/message-center";
 import {core} from "./core";
 
 

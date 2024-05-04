@@ -1,6 +1,6 @@
 import {watch} from "vue";
-import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "@/src/util-ext-bg";
-import {urlOpenerMode, quickAccessUrl} from "@/src/bg/store/store";
+import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "@/util-ext-bg";
+import {urlOpenerMode, quickAccessUrl} from "@/bg/store/store";
 
 
 export async function openQuickAccessUrl(): Promise<chrome.tabs.Tab | undefined> {

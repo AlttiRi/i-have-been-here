@@ -1,11 +1,11 @@
-import {executeScript} from "@/src/util-ext-bg";
-import {logPicture, downloadBlob, JpgDataURL, Base64} from "@/src/util";
-import {exchangeMessageWithTab, getFromStoreLocal, setToStoreLocal} from "@/src/util-ext";
-import {getScdId, toStoreData} from "@/src/bg/image-data";
-import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/src/message-center";
-import {ScreenshotInfo} from "@/src/types";
-import {getScreenshotFilename} from "@/src/util-ext-pages";
-import {PagePaths} from "@/src/page-paths";
+import {executeScript} from "@/util-ext-bg";
+import {logPicture, downloadBlob, JpgDataURL, Base64} from "@/util";
+import {exchangeMessageWithTab, getFromStoreLocal, setToStoreLocal} from "@/util-ext";
+import {getScdId, toStoreData} from "@/bg/image-data";
+import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/message-center";
+import {ScreenshotInfo} from "@/types";
+import {getScreenshotFilename} from "@/util-ext-pages";
+import {PagePaths} from "@/page-paths";
 
 export function logImageOnMessage(): void { // todo rename
     LogScreenshotSS.addListener(_logScreenshot);

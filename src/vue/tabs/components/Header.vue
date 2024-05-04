@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {PagePaths} from "@/src/page-paths";
+import {PagePaths} from "@/page-paths";
 
 
 const activePage = ref(new URL(location.href).searchParams.get("page") as "list" | "json");

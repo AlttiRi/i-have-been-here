@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {PagePaths} from "@/src/page-paths";
+import {PagePaths} from "@/page-paths";
 </script>
 
 <template>

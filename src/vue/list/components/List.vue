@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
-import {toArrayBuffer}         from "@/src/bg/image-data";
-import {ScreenshotInfo, Visit} from "@/src/types";
-import {exportVisits, getVisits, importVisits}   from "@/src/bg/visits";
-import {getFromStoreLocal, removeFromStoreLocal} from "@/src/util-ext";
-import {downloadBlob, fullUrlToFilename, sleep}  from "@/src/util";
+import {toArrayBuffer}         from "@/bg/image-data";
+import {ScreenshotInfo, Visit} from "@/types";
+import {exportVisits, getVisits, importVisits}   from "@/bg/visits";
+import {getFromStoreLocal, removeFromStoreLocal} from "@/util-ext";
+import {downloadBlob, fullUrlToFilename, sleep}  from "@/util";
 
 import Header         from "./Header.vue";
 import VisitItem      from "./VisitItem.vue";

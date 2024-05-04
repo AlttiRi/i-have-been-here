@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {createBackgroundTab} from "@/src/util-ext-bg";
-import {Visit} from "@/src/types";
+import {createBackgroundTab} from "@/util-ext-bg";
+import {Visit} from "@/types";
 import {dateFormatter} from "./core";
 
 const props = defineProps<{visit: Visit}>();

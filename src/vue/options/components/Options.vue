@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, watchEffect} from "vue";
-import {dlShelf, filenameLengthLimit, quickAccessUrl, urlOpenerMode} from "@/src/bg/store/store";
+import {dlShelf, filenameLengthLimit, quickAccessUrl, urlOpenerMode} from "@/bg/store/store";
 
 import Header       from "./Header.vue";
 import TitleTrimmer from "./TitleTrimmer.vue";

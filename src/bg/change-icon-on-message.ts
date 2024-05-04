@@ -1,7 +1,7 @@
-import {getActiveTab}            from "@/src/util-ext-bg";
-import {emojiToImageData, sleep} from "@/src/util";
-import {updateIcons}  from "@/src/bg/tab-counter";
-import {ChangeIconPS} from "@/src/message-center";
+import {getActiveTab}            from "@/util-ext-bg";
+import {emojiToImageData, sleep} from "@/util";
+import {updateIcons}  from "@/bg/tab-counter";
+import {ChangeIconPS} from "@/message-center";
 
 export function changeIconOnMessage() {
     ChangeIconPS.addListener(blinkDownloadEmoji);

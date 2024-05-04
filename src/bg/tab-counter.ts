@@ -1,10 +1,10 @@
 // Count tabs with separation for incognito and normal mode
 // + changes icon
 
-import {queryTabs} from "@/src/util-ext-bg";
-import {visitedIconDataIfRequired} from "@/src/bg/visits";
+import {queryTabs} from "@/util-ext-bg";
+import {visitedIconDataIfRequired} from "@/bg/visits";
 
-import {urlOpenerMode} from "@/src/bg/store/store";
+import {urlOpenerMode} from "@/bg/store/store";
 import {watch} from "vue";
 
 

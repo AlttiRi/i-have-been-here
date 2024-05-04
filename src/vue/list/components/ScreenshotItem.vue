@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {ScreenshotInfo}    from "@/src/types";
-import {getFromStoreLocal} from "@/src/util-ext";
-import {toJpgDataUrl}      from "@/src/bg/image-data";
-import {fullUrlToFilename} from "@/src/util";
+import {ScreenshotInfo}    from "@/types";
+import {getFromStoreLocal} from "@/util-ext";
+import {toJpgDataUrl}      from "@/bg/image-data";
+import {fullUrlToFilename} from "@/util";
 import {dateFormatter}     from "./core";
 
 const props = defineProps<{screenshot: ScreenshotInfo}>();

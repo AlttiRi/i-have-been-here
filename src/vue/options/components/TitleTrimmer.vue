@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref, watchEffect} from "vue";
-import {sleep}      from "@/src/util";
-import {tcSettings} from "@/src/bg/store/store";
+import {sleep}      from "@/util";
+import {tcSettings} from "@/bg/store/store";
 
 const editorValue = ref("");
 

@@ -2,17 +2,17 @@ import {
     emojiToDataURL,
     emojiToBlobURL,
     logPicture, sleep,
-} from "@/src/util";
-import {extensionName, inIncognitoContext} from "@/src/util-ext";
-import {countTabs} from "@/src/bg/tab-counter"
-import {changeIconOnMessage} from "@/src/bg/change-icon-on-message"
-import {logImageOnMessage} from "@/src/bg/log-image"
-import {registerContextMenu} from "@/src/bg/context-menu"
-import {enableQuickAccessUrlOpenerMode} from "@/src/bg/quick-access-url-opener";
+} from "@/util";
+import {extensionName, inIncognitoContext} from "@/util-ext";
+import {countTabs}           from "@/bg/tab-counter"
+import {changeIconOnMessage} from "@/bg/change-icon-on-message"
+import {logImageOnMessage}   from "@/bg/log-image"
+import {registerContextMenu} from "@/bg/context-menu"
+import {enableQuickAccessUrlOpenerMode} from "@/bg/quick-access-url-opener";
 
-import {initVisitBackgroundHandler} from "@/src/bg/visits";
-import {initGetTabsListener} from "@/src/bg/get-tabs";
-import {updateStoreModel} from "@/src/bg/store-updaters";
+import {initVisitBackgroundHandler} from "@/bg/visits";
+import {initGetTabsListener}        from "@/bg/get-tabs";
+import {updateStoreModel}           from "@/bg/store-updaters";
 
 ;(async function main(): Promise<void> {
     console.log(`[${extensionName}] background.js loaded.`);

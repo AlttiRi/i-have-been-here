@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {GetTabsGS} from "@/src/message-center";
+import {GetTabsGS} from "@/message-center";
 import {logTabs} from "./core";
 
 const tabs = ref<chrome.tabs.Tab[]>();

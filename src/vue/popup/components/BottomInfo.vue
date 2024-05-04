@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, watchEffect} from "vue";
-import {getTrimmedTitle} from "@/src/util-ext-pages";
+import {getTrimmedTitle} from "@/util-ext-pages";
 import {core} from "./core";
 
 

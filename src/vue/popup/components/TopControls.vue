@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {Ref, ref, watchEffect} from "vue";
-import {quickAccessUrl}     from "@/src/bg/store/store";
-import {openQuickAccessUrl} from "@/src/bg/quick-access-url-opener";
-import {AddVisitGS, GetVisitGS}  from "@/src/message-center";
-import {createBackgroundTab}     from "@/src/util-ext-bg";
-import {dateToDayDateTimeString} from "@/src/util";
-import {Visit}     from "@/src/types";
-import {PagePaths} from "@/src/page-paths";
+import {quickAccessUrl}     from "@/bg/store/store";
+import {openQuickAccessUrl} from "@/bg/quick-access-url-opener";
+import {AddVisitGS, GetVisitGS}  from "@/message-center";
+import {createBackgroundTab}     from "@/util-ext-bg";
+import {dateToDayDateTimeString} from "@/util";
+import {Visit}     from "@/types";
+import {PagePaths} from "@/page-paths";
 
 import SvgOpenInNewTab from "./SvgOpenInNewTab.vue";
 import SvgReload       from "./SvgReload.vue";
