@@ -12,7 +12,7 @@ getFromStoreLocal("screenshots").then(value => {
 </script>
 
 <template>
-  <div data-comp="ScreenshotsPage" id="screenshots">
+  <div data-comp="ScreenshotsPage" id="screenshots-page">
     <ScreenshotItem v-for="screenshot of screenshots" :screenshot/>
   </div>
 </template>

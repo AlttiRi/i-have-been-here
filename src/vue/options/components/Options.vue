@@ -34,6 +34,7 @@ watchEffect(() => {
 <template>
   <div data-comp="Options" id="options" class="container">
     <Header/>
+    <hr>
     <h4>Options</h4>
     <button id="download-shelf" class="btn m-3" @click="toggleDlShelf">{{dlShelfBtnText}}</button>
     <button id="url-opener-mode" class="btn m-3" @click="toggleUrlOpenerMode">{{urlOpenerModeBtnText}}</button>

@@ -27,7 +27,7 @@ onMounted(async function scrollToHash() {
 </script>
 
 <template>
-  <div data-comp="VisitsPage" id="visits">
+  <div data-comp="VisitsPage" id="visits-page" class="container">
     <VisitItem v-for="visit of visits" :visit/>
   </div>
 </template>

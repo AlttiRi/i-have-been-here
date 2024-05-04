@@ -47,7 +47,7 @@ async function exportImages() {
 </script>
 
 <template>
-  <div data-comp="Controls" class="container" id="controls">
+  <div data-comp="Controls" id="controls" class="container">
     <button class="btn btn-outline-primary m-2" id="export-visits"
             @click="exportVisits"
     >Export visits
