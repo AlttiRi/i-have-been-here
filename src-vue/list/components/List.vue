@@ -119,20 +119,4 @@ a:visited {
 a {
   text-decoration: none;
 }
-body {
-  overflow-x: hidden;
-}
-.visit {
-  padding-left: 12px;
-}
-.visit:hover {
-  padding-left: 11px;
-  border-left: 1px #0d6efd solid;
-}
-header {
-  user-select: none;
-}
-:target {
-  font-weight: bold;
-}
 </style>

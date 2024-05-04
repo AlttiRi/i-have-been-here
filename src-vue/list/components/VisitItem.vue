@@ -41,5 +41,14 @@ function onTitleClick(event: MouseEvent) {
 </template>
 
 <style scoped>
-
+.visit:target {
+  font-weight: bold;
+}
+.visit {
+  padding-left: 12px;
+}
+.visit:hover {
+  padding-left: 11px;
+  border-left: 1px #0d6efd solid;
+}
 </style>
