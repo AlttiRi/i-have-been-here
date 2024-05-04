@@ -5,10 +5,12 @@ import {Visit} from "@/types";
 import {getVisits} from "@/bg/visits";
 import {sleep} from "@/util";
 
+const hrHidden = ref(true);
 const visits = ref<Visit[]>([]);
 getVisits().then(value => {
   visits.value = value;
   console.log("Visits:", value);
+  hrHidden.value = false;
 });
 
 onMounted(async function scrollToHash() {
@@ -29,6 +31,7 @@ onMounted(async function scrollToHash() {
 <template>
   <div data-comp="VisitsPage" id="visits-page" class="container">
     <VisitItem v-for="visit of visits" :visit/>
+    <hr :hidden="hrHidden">
   </div>
 </template>
 

@@ -48,6 +48,7 @@ async function exportImages() {
 
 <template>
   <div data-comp="Controls" id="controls" class="container">
+    <hr>
     <button class="btn btn-outline-primary m-2" id="export-visits"
             @click="exportVisits"
     >Export visits
@@ -63,9 +64,12 @@ async function exportImages() {
     <button class="btn btn-outline-danger m-2" id="delete-images"
             @click="deleteImages"
     >Delete images</button>
+    <hr>
   </div>
 </template>
 
 <style scoped>
-
+#controls {
+  padding-left: 17px;
+}
 </style>

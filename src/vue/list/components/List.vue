@@ -8,11 +8,8 @@ import Controls       from "./Controls.vue";
 <template>
   <div data-comp="List" id="list">
     <Header/>
-    <hr>
     <Controls/>
-    <hr>
     <VisitsPage/>
-    <hr>
     <ScreenshotPage/>
   </div>
 </template>
