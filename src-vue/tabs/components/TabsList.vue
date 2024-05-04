@@ -20,7 +20,7 @@ watch([onlyFilter, ignoreFilter], async () => {
 
 
 function getTitle(tab: chrome.tabs.Tab) {
-  return (tab.title || '').replaceAll('"', '&quot;');
+  return (tab.title || "").replaceAll(`"`, "&quot;");
 }
 
 function copyText() {
@@ -82,14 +82,7 @@ function removeClicked(event: MouseEvent) {
   </div>
 </template>
 
-<style>
-body > div {
-  width: 100%;
-}
-body {
-  min-height: 100vh;
-}
-
+<style scoped>
 .favicon {
   height: 16px;
   width: 16px;
@@ -98,21 +91,13 @@ body {
 .url {
   padding-left: 8px;
 }
-
-header {
-  user-select: none;
-}
-
 a {
   text-decoration: none;
 }
-
 .input-page a.url:visited {
   color: darkorange;
 }
-
-.clicked {
+tr.clicked {
   background-color: #0000000f;
 }
-
 </style>
