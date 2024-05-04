@@ -113,10 +113,5 @@ onMounted(async function scrollToHash() {
 </template>
 
 <style>
-a:visited {
-  color: #0a53be;
-}
-a {
-  text-decoration: none;
-}
+
 </style>

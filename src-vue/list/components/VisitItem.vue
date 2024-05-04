@@ -51,4 +51,10 @@ function onTitleClick(event: MouseEvent) {
   padding-left: 11px;
   border-left: 1px #0d6efd solid;
 }
+a:visited {
+  color: #0a53be;
+}
+a {
+  text-decoration: none;
+}
 </style>
