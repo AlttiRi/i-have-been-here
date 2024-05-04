@@ -1,0 +1,12 @@
+html, body {
+    min-height: 100vh;
+    margin: 0;
+}
+/* scroll dependent content jump fix */
+html, body {
+    width: 100vw;
+    overflow-x: hidden;
+}
+#app {
+    display: contents;
+}

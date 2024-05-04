@@ -1,7 +1,7 @@
-import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "../util-ext.js";
-import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "../types.js";
-import {Base64} from "../util.js";
-import {getScdId} from "./image-data.js";
+import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "@/src/util-ext";
+import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/src/types";
+import {Base64} from "@/src/util";
+import {getScdId} from "@/src/bg/image-data";
 
 const lastStoreVersion = 2;
 

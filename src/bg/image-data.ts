@@ -1,5 +1,5 @@
-import {binaryStringToArrayBuffer, Base64, JpgDataURL, BinaryString, toHex} from "../util.js";
-import {ScreenshotDataId} from "../types.js";
+import {binaryStringToArrayBuffer, Base64, JpgDataURL, BinaryString, toHex} from "@/src/util";
+import {ScreenshotDataId} from "@/src/types";
 
 // todo re-test base85, binary string
 

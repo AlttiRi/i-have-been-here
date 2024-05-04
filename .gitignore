@@ -1,11 +1,8 @@
-.idea
-node_modules
-dist
+/.idea/
+/node_modules/
 
-!/**/*.test.js
-/src/bg/**/*.js
-/src/pages/**/*.js
-/src/*.js
+/dist/
+/dist-ext/
+/dist-bundle/
 
-/dev/
-/dist-popup/
+/.__dev/

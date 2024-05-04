@@ -1,7 +1,8 @@
-import {createBackgroundTab} from "../util-ext-bg.js";
-import {isFirefox} from "../util.js";
-import {dlShelf} from "./store/store.js";
-import {watchEffect} from "../../libs/vue-reactivity.js";
+import {watchEffect} from "vue";
+import {createBackgroundTab} from "@/src/util-ext-bg";
+import {isFirefox} from "@/src/util";
+import {dlShelf} from "@/src/bg/store/store";
+import {PagePaths} from "@/src/page-paths";
 
 
 type ContextMenuFeature = "reload" | "yandex_images" | "download_shelf" | "open_list";
@@ -98,7 +99,7 @@ export function registerContextMenu(features: ContextMenuFeature[] = ["reload"])
         });
         chrome.contextMenus.onClicked.addListener((info, tab) => {
             if (info.menuItemId === id) {
-                createBackgroundTab(chrome.runtime.getURL("/src/pages/visits.html"));
+                createBackgroundTab(chrome.runtime.getURL(PagePaths.visits));
             }
         });
     }

@@ -1,6 +1,6 @@
-import {readonly, ref, Ref} from "../../../libs/vue-reactivity.js";
-import {getFromStoreLocal, setToStoreLocal} from "../../util-ext.js";
-import {StoreLocalModel} from "../../types.js";
+import {readonly, ref, Ref} from "vue";
+import {getFromStoreLocal, setToStoreLocal} from "@/src/util-ext";
+import {StoreLocalModel} from "@/src/types";
 
 export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
 
@@ -24,7 +24,7 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
 
         chrome.runtime.onMessage.addListener(message => {
             if (message.command === `set-${this.keyName}--message`) {
-                void this.setValue(message.data, true);
+                void this._setValue(message.data, true);
             }
         });
 
@@ -44,6 +44,10 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
     public get value(): StoreLocalModel[K] {
         return this.ref.value;
     }
+    public set value(newValue: StoreLocalModel[K]) {
+        void this.setValue(newValue);
+    }
+
     public get isReady(): boolean {
         return this.isReadyRef.value;
     }
@@ -53,17 +57,20 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
         }
         return this.value;
     }
-    public async setValue(newValue: StoreLocalModel[K], isSync: boolean = false): Promise<void> {
+    public setValue(newValue: StoreLocalModel[K]): Promise<void> {
+        return this._setValue(newValue);
+    }
+    private async _setValue(newValue: StoreLocalModel[K], isSyncMessage: boolean = false): Promise<void> {
         if (newValue === this._ref.value) {
             return;
         }
-        if (isSync) {
+        if (isSyncMessage) {
             this._ref.value = newValue;
             return;
         }
         await setToStoreLocal(this.keyName, newValue);
         this._ref.value = newValue;
-        chrome.runtime.sendMessage({
+        chrome.runtime.sendMessage({ // todo add "time" param (to prevent race condition)
             command: `set-${this.keyName}--message`,
             data: newValue
         });

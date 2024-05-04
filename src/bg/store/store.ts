@@ -1,5 +1,5 @@
-import {ReactiveStoreLocalValue} from "./reactive-store-local-value.js";
-import {isFirefox, isOpera} from "../../util.js";
+import {ReactiveStoreLocalValue} from "./reactive-store-local-value";
+import {isFirefox, isOpera} from "@/src/util";
 
 export const urlOpenerMode: ReactiveStoreLocalValue<"quickAccessUrlOpenerMode">
     = new ReactiveStoreLocalValue("quickAccessUrlOpenerMode", false);

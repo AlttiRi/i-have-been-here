@@ -1,8 +1,11 @@
 // Count tabs with separation for incognito and normal mode
 // + changes icon
 
-import {queryTabs} from "../util-ext-bg.js";
-import {visitedIconDataIfRequired} from "./visits.js";
+import {queryTabs} from "@/src/util-ext-bg";
+import {visitedIconDataIfRequired} from "@/src/bg/visits";
+
+import {urlOpenerMode} from "@/src/bg/store/store";
+import {watch} from "vue";
 
 
 const tabsArray: chrome.tabs.Tab[] = [];
@@ -72,8 +75,6 @@ function setDefaultIcon(path: string) {
     });
 }
 
-import {urlOpenerMode} from "./store/store.js";
-import {watch} from "../../libs/vue-reactivity.js";
 watch(urlOpenerMode.ref, async () => {
     updateIcons(await queryTabs());
 });

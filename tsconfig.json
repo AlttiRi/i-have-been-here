@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+
     // It very notable slow-downs the object instancing for the "target" is less than "ES2022" if is set to `true`.
     "useDefineForClassFields": false,
 
@@ -23,10 +28,5 @@
     "allowJs": false,
 
     "noEmit": false
-//  "sourceMap": true,
-//  "declaration": true,
-  },
-  "include": [
-    "./src/**/*.ts"
-  ]
+  }
 }

@@ -1,31 +1,23 @@
 {
-    "name": "demo-extension",
-    "version": "1.11.0.20240430",
+    "name": "i-have-been-here",
+    "keywords": ["extension", "bookmarks", "screenshots", "visits", "typescript", "vue"],
+    "version": "1.12.0.20240504",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {
+        "@alttiri/util-js": "1.9.1",
         "@alttiri/util-node-js": "2.0.9",
-        "@rollup/plugin-node-resolve": "15.2.3",
-        "@rollup/plugin-replace": "5.0.5",
         "@types/chrome": "0.0.142",
-        "@vue-reactivity/watch": "0.2.0",
-        "@vue/reactivity": "3.4.23",
-        "rollup": "4.14.3",
         "@types/node": "20.12.7",
         "typescript": "5.4.5",
+        "vite": "5.2.10",
         "vue": "3.4.26",
-        "@vitejs/plugin-vue": "5.0.4",
-        "vite": "5.2.10"
+        "@vitejs/plugin-vue": "5.0.4"
     },
     "scripts": {
-        "compile-ts": "tsc --build",
-        "compile-ts-watch": "tsc --build --watch",
-        "clean-ts": "tsc --build --clean",
-        "-": "",
-        "build-vue-reactivity": "node build/vue-reactivity-build-bundle.js",
-        "build-firefox": "node build/build-extension.js --firefox",
-        "build": "node build/build-extension.js",
-        "--": "",
-        "build-vue-popup": "vite build --watch --config src-vue/vite.config.ts"
+        "build-ext-chrome":  "node build-extension.js",
+        "build-ext-firefox": "node build-extension.js --firefox",
+        "build-vue":       "vite build --config pages/vite.config.ts",
+        "build-vue-watch": "vite build --config pages/vite.config.ts --watch"
     }
 }

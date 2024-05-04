@@ -1,6 +1,6 @@
-import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "../util-ext-bg.js";
-import {watch} from "../../libs/vue-reactivity.js";
-import {urlOpenerMode, quickAccessUrl} from "./store/store.js";
+import {watch} from "vue";
+import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "@/src/util-ext-bg";
+import {urlOpenerMode, quickAccessUrl} from "@/src/bg/store/store";
 
 
 export async function openQuickAccessUrl(): Promise<chrome.tabs.Tab | undefined> {

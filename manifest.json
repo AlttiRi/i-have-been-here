@@ -4,7 +4,7 @@
     "name": "__MSG_extension_name__",
     "short_name": "__MSG_extension_name__",
     "description": "__MSG_extension_description__",
-    "version": "1.10.0.20240428",
+    "version": "1.12.0.20240504",
     "content_scripts": [
 		    {
             "matches": ["<all_urls>"],
@@ -13,17 +13,17 @@
         }
     ],
     "background": {
-        "page": "src/background.html",
+        "page": "dist-bundle/pages/background.html",
         "persistent": true
     },
     "permissions": ["<all_urls>", "activeTab", "tabs", "contextMenus", "storage", "unlimitedStorage", "bookmarks", "downloads", "downloads.shelf", "chrome://favicon/"],
     "browser_action": {
         "default_title": "__MSG_browser_action_title__",
-        "default_popup": "src/pages/popup.html",
+        "default_popup": "dist-bundle/pages/popup.html",
         "default_icon": "images/hash.png"
     },
     "options_ui": {
-        "page": "src/pages/options.html",
+        "page": "dist-bundle/pages/options.html",
         "open_in_tab": true
     },
     "web_accessible_resources": [

@@ -1,5 +1,5 @@
-import {TrimOptionsObject} from "./bg/store/store.js";
-import {Base64} from "./util.js";
+import {TrimOptionsObject} from "@/src/bg/store/store";
+import {Base64} from "@/src/util";
 
 export type StoreLocalBase = {
     bookmarkOpenerMode: boolean,

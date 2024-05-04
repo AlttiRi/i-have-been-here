@@ -1,4 +1,4 @@
-import {StoreLocalModel} from "./types.js";
+import {StoreLocalModel} from "@/src/types";
 
 export const extensionName = chrome.i18n.getMessage("extension_name");
 export const extensionId = chrome.runtime.id;

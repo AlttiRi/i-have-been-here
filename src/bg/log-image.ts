@@ -1,10 +1,11 @@
-import {executeScript} from "../util-ext-bg.js";
-import {logPicture, downloadBlob, JpgDataURL, Base64} from "../util.js";
-import {exchangeMessageWithTab, getFromStoreLocal, setToStoreLocal} from "../util-ext.js";
-import {getScdId, toStoreData} from "./image-data.js";
-import {getScreenshotFilename} from "../pages/popup-util.js";
-import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "../message-center.js";
-import {ScreenshotInfo} from "../types.js";
+import {executeScript} from "@/src/util-ext-bg";
+import {logPicture, downloadBlob, JpgDataURL, Base64} from "@/src/util";
+import {exchangeMessageWithTab, getFromStoreLocal, setToStoreLocal} from "@/src/util-ext";
+import {getScdId, toStoreData} from "@/src/bg/image-data";
+import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/src/message-center";
+import {ScreenshotInfo} from "@/src/types";
+import {getScreenshotFilename} from "@/src/util-ext-pages";
+import {PagePaths} from "@/src/page-paths";
 
 export function logImageOnMessage(): void { // todo rename
     LogScreenshotSS.addListener(_logScreenshot);
@@ -57,7 +58,7 @@ async function _logScreenshot(tabData: TabCapture): Promise<void> {
         return;
     }
     const details: chrome.tabs.InjectDetails = {
-        file: "/src/content/content--log-image.js",
+        file: PagePaths.content_log_image,
     };
     const injected: boolean = await executeScript(details, tab);
     if (!injected) {

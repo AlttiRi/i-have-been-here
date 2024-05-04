@@ -322,3 +322,25 @@ class DateFormatter {
     get YYYY() {return pad0(this.date[`get${this.utc}FullYear`](), 4)}
     get YY()   {return this.YYYY.slice(2);}
 }
+
+export function prependCss(href: string, integrity?: string): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.onload = resolve;
+        link.onerror = event => {
+            reject(Object.assign(new Error("Failed to load css"), {href, integrity, event}));
+        };
+        link.href = href;
+        if (integrity) {
+            link.integrity = integrity;
+            link.crossOrigin = "anonymous";
+        }
+        const firstLink = document.head.querySelector(`link[rel="stylesheet"]`);
+        if (firstLink) {
+            firstLink.before(link);
+        } else {
+            document.head.prepend(link);
+        }
+    });
+}

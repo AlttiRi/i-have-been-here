@@ -2,17 +2,17 @@ import {
     emojiToDataURL,
     emojiToBlobURL,
     logPicture, sleep,
-} from "./util.js";
-import {extensionName, inIncognitoContext} from "./util-ext.js";
-import {countTabs} from "./bg/tab-counter.js"
-import {changeIconOnMessage} from "./bg/change-icon-on-message.js"
-import {logImageOnMessage} from "./bg/log-image.js"
-import {registerContextMenu} from "./bg/context-menu.js"
-import {enableQuickAccessUrlOpenerMode} from "./bg/quick-access-url-opener.js";
+} from "@/src/util";
+import {extensionName, inIncognitoContext} from "@/src/util-ext";
+import {countTabs} from "@/src/bg/tab-counter"
+import {changeIconOnMessage} from "@/src/bg/change-icon-on-message"
+import {logImageOnMessage} from "@/src/bg/log-image"
+import {registerContextMenu} from "@/src/bg/context-menu"
+import {enableQuickAccessUrlOpenerMode} from "@/src/bg/quick-access-url-opener";
 
-import {initVisitBackgroundHandler} from "./bg/visits.js";
-import {initGetTabsListener} from "./bg/get-tabs.js";
-import {updateStoreModel} from "./bg/store-updaters.js";
+import {initVisitBackgroundHandler} from "@/src/bg/visits";
+import {initGetTabsListener} from "@/src/bg/get-tabs";
+import {updateStoreModel} from "@/src/bg/store-updaters";
 
 ;(async function main(): Promise<void> {
     console.log(`[${extensionName}] background.js loaded.`);
@@ -43,7 +43,7 @@ import {updateStoreModel} from "./bg/store-updaters.js";
         logPicture(emojiToDataURL("🔲"));
     })();
     void (async function debugStoreLog(){
-        await sleep(20);
+        await sleep(2000);
         chrome.storage.local.get(store => console.log("[⚒] chrome.storage.local.get(console.log)", store));
         chrome.bookmarks.getTree(tree => console.log("[⚒] chrome.bookmarks.getTree(console.log)", tree));
 
