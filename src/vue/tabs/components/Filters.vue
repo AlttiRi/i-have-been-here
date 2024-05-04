@@ -14,7 +14,7 @@ function clearIgnore(event: MouseEvent) {
 </script>
 
 <template>
-<div class="col-12" data-comp-part="Filters#1">
+<div data-comp-part="Filters#1" class="col-12">
   <label style="display: contents;">
     <span class="input-group">
         <span class="input-group-text" id="only-filter-text" @contextmenu="clearOnly">Only</span>
@@ -22,7 +22,7 @@ function clearIgnore(event: MouseEvent) {
     </span>
   </label>
 </div>
-<div class="col-12" data-comp-part="Filters#2">
+<div data-comp-part="Filters#2" class="col-12">
   <label style="display: contents;">
     <span class="input-group">
         <span class="input-group-text" id="ignore-filter-text" @contextmenu="clearIgnore">Ignore</span>

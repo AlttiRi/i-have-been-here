@@ -3,7 +3,7 @@ import {PagePaths} from "@/page-paths";
 </script>
 
 <template>
-  <header class="d-flex justify-content-center py-3 pb-0">
+  <header data-comp="Header" class="d-flex justify-content-center py-3 pb-0">
     <ul class="nav nav-pills px-3">
       <li class="nav-item"><a :href="PagePaths.visits" class="nav-link active" id="visits-btn">📃 Visits</a></li>
     </ul>
