@@ -56,5 +56,6 @@ a:visited {
 }
 a {
   text-decoration: none;
+  overflow-wrap: break-word;
 }
 </style>
