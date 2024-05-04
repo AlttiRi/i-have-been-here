@@ -153,5 +153,24 @@ async function addScreenshot() {
 </template>
 
 <style scoped>
-
+.card {
+  border-bottom: 0;
+  border-top: 0;
+}
+#image-wrap {
+  overflow: hidden;
+}
+.screenshot-part:not(:hover) button {
+  opacity: 0;
+  pointer-events: none;
+}
+#screenshotControls:not(:hover) #addScreenshotBtn {
+  opacity: 0;
+  pointer-events: none;
+}
+.img-thumbnail {
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+}
 </style>

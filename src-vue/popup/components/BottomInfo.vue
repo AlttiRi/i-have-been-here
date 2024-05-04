@@ -64,5 +64,35 @@ async function updateBottomHtml(tab: chrome.tabs.Tab): Promise<void> {
 </template>
 
 <style scoped>
-
+img#faviconElem {
+  height: 22px;
+  width: 22px
+}
+img#faviconElem[src="#"] {
+  display: none;
+}
+.favicon-wrap {
+  display: flex;
+  margin: 0;
+}
+.info {
+  max-width: 320px;
+}
+#titleElem {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  padding-top:  0.5rem;
+}
+#urlElem {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left:  0.5rem;
+}
 </style>
