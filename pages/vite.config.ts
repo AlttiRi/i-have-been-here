@@ -35,7 +35,7 @@ export default defineConfig({
       output: {
         compact: false,
         minifyInternalExports: false,
-        hashCharacters: "base36"
+        hashCharacters: "base36",
         // preserveModules: true,  // for prod
       }
     },
