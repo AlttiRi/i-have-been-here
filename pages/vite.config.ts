@@ -36,7 +36,10 @@ export default defineConfig({
         compact: false,
         minifyInternalExports: false,
         hashCharacters: "base36",
-        // preserveModules: true,  // for prod
+        manualChunks: {
+          "vue-js": ["vue"],
+        },
+        // preserveModules: true,  // for prod [?]
       }
     },
     sourcemap: "inline", // for dev
