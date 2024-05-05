@@ -2,11 +2,12 @@ import os     from "node:os";
 import fs     from "node:fs";
 import path   from "node:path";
 import crypto from "node:crypto";
+import {pipeline} from "node:stream/promises";
+import archiver   from "archiver";
+import {exists, listFiles} from "@alttiri/util-node-js";
 import packageJson from "./package.json" assert {type: "json"};
 const {version} = packageJson;
 
-import {exists, listFiles} from "@alttiri/util-node-js";
-import {zipFolder} from "./fflate-zip-folder.js";
 
 
 let ff = false;
@@ -82,11 +83,13 @@ try {
     // ---
 
     const zipPath = `./dist/ihbh-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}.zip`;
-    const ui8a = await zipFolder(folPath, zipPath);
+    await zipDirectory(folPath, zipPath);
 
-    const sha1Hash = crypto.createHash("sha1").update(ui8a).digest("hex");
-    console.log(sha1Hash);
-    const newZipPath = `./dist/ihbh-ext-${version}-${suffix}-${sha1Hash.slice(0, 10)}.zip`;
+    const hashInput = [...tempHashes.values()].reduce((acc, hash) => acc + hash, "");
+    const sha1 = crypto.createHash("sha1").update(hashInput).digest("hex");
+    console.log(sha1);
+
+    const newZipPath = `./dist/ihbh-ext-${version}-${suffix}-${sha1.slice(0, 10)}.zip`;
     await fs.promises.rename(zipPath, newZipPath);
 
 } catch (err) {
@@ -104,4 +107,12 @@ async function getFileHashMap(filepath) {
         hashMap.set(path.relative(filepath, item.path), sha1);
     }
     return hashMap;
+}
+
+export async function zipDirectory(sourceDir, outPath) {
+    const archive = archiver("zip");
+    const writeStream = fs.createWriteStream(outPath);
+    const readStream = archive.directory(sourceDir, "");
+    await archive.finalize();
+    await pipeline(readStream, writeStream);
 }

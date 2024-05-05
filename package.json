@@ -1,7 +1,7 @@
 {
     "name": "i-have-been-here",
     "keywords": ["extension", "bookmarks", "screenshots", "visits", "typescript", "vue"],
-    "version": "1.14.0.20240505",
+    "version": "1.14.1.20240505",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {
@@ -13,7 +13,8 @@
         "vite": "5.2.11",
         "vue": "3.4.26",
         "@vitejs/plugin-vue": "5.0.4",
-        "fflate": "0.8.2"
+        "archiver": "7.0.1",
+        "@types/archiver": "6.0.2"
     },
     "scripts": {
         "build-ext-chrome":  "node build-extension.js",
