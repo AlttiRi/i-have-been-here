@@ -34,7 +34,7 @@ try {
                 return true;
             }
             if (![
-                "_locales", "dist-bundle", "images", "libs",
+                "_locales", "bundle", "images", "libs",
                 "license", "manifest", "package", "readme",
             ].some(name => rel.startsWith(name))) {
                 return false;
@@ -56,7 +56,7 @@ try {
     }
 
     // ---
-    const folPath = `./dist-ext/ihbh-ext-${suffix}`;
+    const folPath = `./dist/ihbh-ext-${suffix}`;
     const folPathTemp = folPath + "-temp";
 
     await fs.promises.cp(tmpDir, folPathTemp, {
@@ -81,12 +81,12 @@ try {
     await fs.promises.rename(folPathTemp, folPath);
     // ---
 
-    const zipPath = `./dist-ext/ihbh-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}.zip`;
+    const zipPath = `./dist/ihbh-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}.zip`;
     const ui8a = await zipFolder(folPath, zipPath);
 
     const sha1Hash = crypto.createHash("sha1").update(ui8a).digest("hex");
     console.log(sha1Hash);
-    const newZipPath = `./dist-ext/ihbh-ext-${version}-${suffix}-${sha1Hash.slice(0, 10)}.zip`;
+    const newZipPath = `./dist/ihbh-ext-${version}-${suffix}-${sha1Hash.slice(0, 10)}.zip`;
     await fs.promises.rename(zipPath, newZipPath);
 
 } catch (err) {

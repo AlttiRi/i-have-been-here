@@ -53,7 +53,7 @@ class Zip {
 /**
  * @example
  * ```js
- * await zipFolder("./dist-bundle", "result.zip");
+ * await zipFolder("./bundle", "result.zip");
  * ```
  */
 export async function zipFolder(folderPath, resultZipPath) {

@@ -21,7 +21,7 @@ export default defineConfig({
     target: "es2021",
   },
   build: {
-    outDir: "./dist-bundle",
+    outDir: "./bundle",
     target: "es2020",
     rollupOptions: {
       input: [

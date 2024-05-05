@@ -21,8 +21,7 @@ const PopupAsync = defineAsyncComponent(async () => {
 
 // import PopupAsync from "./components/Popup.vue";
 //
-// chrome-extension://llbhojonnafjopkkokcjhomnceajcdmh/dist-popup/index.html
-// chrome-extension://llbhojonnafjopkkokcjhomnceajcdmh/src/pages/popup.html
+// chrome-extension://ljjoafkhpecgfpppmbkenhojmcilpmgp/bundle/pages/popup.html
 /*
  <link rel="stylesheet" href="../libs/bootstrap.css" integrity="sha256-o+AsfCHj7A1M5Xgm1kJmZiGEIvMQEzQqrXz2072Gkkg=" crossorigin="anonymous">
 */
