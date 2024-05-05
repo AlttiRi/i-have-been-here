@@ -1,16 +1,18 @@
-import os   from "node:os";
-import fs   from "node:fs";
-import path from "node:path";
+import os     from "node:os";
+import fs     from "node:fs";
+import path   from "node:path";
+import crypto from "node:crypto";
 import packageJson from "./package.json" assert {type: "json"};
 const {version} = packageJson;
 
-import {sleep} from "@alttiri/util-js";
+import {exists, listFiles} from "@alttiri/util-node-js";
+import {zipFolder} from "./fflate-zip-folder.js";
 
 
 let ff = false;
 let suffix = "cr";
 
-process.argv.forEach(function (value, index, array) {
+process.argv.forEach(function (value, _index, _array) {
     if (value === "--firefox") {
         ff = true;
         suffix = "ff"
@@ -22,12 +24,12 @@ process.argv.forEach(function (value, index, array) {
 try {
     const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "extn-build-"));
     console.log("tmpDir", tmpDir);
-    const dot = path.toNamespacedPath(".");
 
-    await fs.promises.cp(dot, tmpDir, {
+    const projectDir = path.toNamespacedPath(".");
+    await fs.promises.cp(projectDir, tmpDir, {
         recursive: true,
         filter(source, destination) {
-            const rel = path.relative(dot, source);
+            const rel = path.relative(projectDir, source);
             if (!rel) {
                 return true;
             }
@@ -35,9 +37,6 @@ try {
                 "_locales", "dist-bundle", "images", "libs",
                 "license", "manifest", "package", "readme",
             ].some(name => rel.startsWith(name))) {
-                return false;
-            }
-            if (source.endsWith(".ts") && !source.endsWith(".d.ts")) {
                 return false;
             }
             console.log(rel);
@@ -56,12 +55,53 @@ try {
         );
     }
 
-    await fs.promises.cp(tmpDir, `./dist-ext/ihbh-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}`, {
+    // ---
+    const folPath = `./dist-ext/ihbh-ext-${suffix}`;
+    const folPathTemp = folPath + "-temp";
+
+    await fs.promises.cp(tmpDir, folPathTemp, {
         recursive: true
     });
-
-    await sleep(999);
     await fs.promises.rm(tmpDir, {recursive: true});
+
+
+    const targetHashes = await getFileHashMap(folPath);
+    const tempHashes   = await getFileHashMap(folPathTemp);
+    for (const [relPath, sha1] of tempHashes) {
+        if (targetHashes.get(relPath) === sha1) {
+            const old = path.resolve(folPath,     relPath);
+            const tmp = path.resolve(folPathTemp, relPath);
+            await fs.promises.rename(old, tmp);
+        }
+    }
+
+    if (await exists(folPath)) {
+        await fs.promises.rm(folPath, {recursive: true});
+    }
+    await fs.promises.rename(folPathTemp, folPath);
+    // ---
+
+    const zipPath = `./dist-ext/ihbh-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}.zip`;
+    const ui8a = await zipFolder(folPath, zipPath);
+
+    const sha1Hash = crypto.createHash("sha1").update(ui8a).digest("hex");
+    console.log(sha1Hash);
+    const newZipPath = `./dist-ext/ihbh-ext-${version}-${suffix}-${sha1Hash.slice(0, 10)}.zip`;
+    await fs.promises.rename(zipPath, newZipPath);
+
 } catch (err) {
     console.error(err);
+}
+
+async function getFileHashMap(filepath) {
+    const hashMap = new Map();
+    for await (const item of listFiles({filepath, stats: false})) {
+        if ("errors" in item) {
+            continue;
+        }
+        const file = await fs.promises.readFile(item.path);
+        const sha1 = crypto.createHash("sha1").update(file).digest("hex");
+        hashMap.set(path.relative(filepath, item.path), sha1);
+    }
+    return hashMap;
 }
