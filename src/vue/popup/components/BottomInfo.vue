@@ -95,4 +95,7 @@ img#faviconElem[src="#"] {
   white-space: nowrap;
   padding-left:  0.5rem;
 }
+.card {
+  border: none;
+}
 </style>

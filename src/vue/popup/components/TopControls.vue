@@ -106,5 +106,7 @@ function visitToButtonTitle(visit: Visit): string {
 </template>
 
 <style scoped>
-
+.card {
+  border: none;
+}
 </style>
