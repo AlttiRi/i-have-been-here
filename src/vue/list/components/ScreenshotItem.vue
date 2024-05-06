@@ -19,10 +19,12 @@ getFromStoreLocal(scd_id).then(base64 => src.value = toJpgDataUrl(base64));
   <div data-comp="ScreenshotItem" class="screenshot-item" :data-hash="scd_id" :data-created="created">
     <div class="info">
       <h3 class="title" style="align-self: start; margin: 12px;">{{ title || fullUrlToFilename(url) }}</h3>
-      <div class="url"  style="align-self: start; margin: 12px;">{{ url }}</div>
+      <h5 class="url"  style="align-self: start; margin: 12px;">
+        <a :href="url" rel="noreferrer noopener">{{ url }}</a>
+      </h5>
       <div class="created" style="align-self: start; margin: 12px;">{{ created ? dateFormatter(created) : "" }}</div>
     </div>
-    <img :src="src" :alt="title" :title="fullUrlToFilename(url)">
+    <img :src="src" :alt="title" :title=" title || fullUrlToFilename(url)">
   </div>
 </template>
 
@@ -36,5 +38,9 @@ getFromStoreLocal(scd_id).then(base64 => src.value = toJpgDataUrl(base64));
 }
 a:visited {
   color: #0a53be;
+}
+a {
+  text-decoration: none;
+  overflow-wrap: break-word;
 }
 </style>
