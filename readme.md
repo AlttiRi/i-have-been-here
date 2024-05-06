@@ -1,7 +1,9 @@
-# demo-extension
+# i-have-been-here
 
-It's the demo extension that I use for some tests.
+The old demo extension that I use for some tests.
 
----
+The most useful things that it does:
+- screenshots downloading (also, screenshots saving)
+- visits (it's something like bookmarks)
 
-https://alttiri.github.io/demo-extension/.__trash_bin/char-to-canvas-demo/canvas.html
+Currently, in development. In plans to do a bookmarks manager.
