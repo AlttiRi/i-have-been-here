@@ -1,9 +1,10 @@
 import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "@/util-ext";
 import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/types";
-import {Base64}   from "@/util";
-import {getScdId} from "@/bg/image-data";
+import {Base64}     from "@/util";
+import {getScdId}   from "@/bg/image-data";
+import {TrimConfig} from "@/bg/store/store";
 
-const lastStoreVersion = 2;
+const lastStoreVersion = 3;
 
 chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrome.runtime.InstalledDetails) {
     console.log("chrome.runtime.onInstalled", details.reason);
@@ -85,7 +86,24 @@ export async function updateStoreModel(): Promise<void> {
         await setToStoreLocal("version", version);
         console.log(`Store was updated to version ${version}`);
     }
+
+    if (version === 2) {
+        // @ts-ignore
+        const tcs: TrimConfig = await getFromStoreLocal("titleCutterSettings");
+        if (tcs) {
+            await setToStoreLocal("titleTrimmerConfig", tcs);
+        }
+        // @ts-ignore
+        await removeFromStoreLocal("titleCutterSettings");
+
+        version = 3;
+        await setToStoreLocal("version", version);
+        console.log(`Store was updated to version ${version}`);
+    }
+
+
 }
+// [note] Do not forget to update `lastStoreVersion` above!
 
 
 /*

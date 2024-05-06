@@ -1,24 +1,25 @@
-import {filenameLengthLimit, tcSettings, TrimOptionsObject} from "@/bg/store/store";
+import {filenameLengthLimit, ttConfig, TrimConfig} from "@/bg/store/store";
 import {fullUrlToFilename} from "@/util";
 
 
+// todo recursive option
 export async function getTrimmedTitle(title: string, url: string): Promise<string> {
-    const settings: TrimOptionsObject = await tcSettings.getValue();
+    const config: TrimConfig = await ttConfig.getValue();
     const _url = new URL(url);
     let _title = title;
-    if (settings[_url.hostname]) {
-        const hostSettings = settings[_url.hostname];
-        hostSettings.trimStartEnd?.forEach(value => {
+    if (config[_url.hostname]) {
+        const hostOptions = config[_url.hostname];
+        hostOptions.trimStartEnd?.forEach(value => {
             if (title.startsWith(value[0]) && title.endsWith(value[1])) {
                 _title = _title.slice(value[0].length, -value[1].length);
             }
         });
-        hostSettings.trimStart?.forEach(value => {
+        hostOptions.trimStart?.forEach(value => {
             if (title.startsWith(value)) {
                 _title = _title.slice(value.length);
             }
         });
-        hostSettings.trimEnd?.forEach(value => {
+        hostOptions.trimEnd?.forEach(value => {
             if (title.endsWith(value)) {
                 _title = _title.slice(0, -value.length);
             }

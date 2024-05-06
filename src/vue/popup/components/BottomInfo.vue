@@ -34,7 +34,7 @@ async function updateBottomHtml(tab: chrome.tabs.Tab): Promise<void> {
   }
 
   const trimmedTitle = await getTrimmedTitle(title, url);
-  titleText.value  = trimmedTitle.length > 3 ? trimmedTitle : title;
+  titleText.value = trimmedTitle.length ? trimmedTitle : title;
   titleTitle.value = titleText.value;
   const u = new URL(url);
   if (u.protocol.startsWith("http")) {

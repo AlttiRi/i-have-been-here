@@ -6,16 +6,17 @@ export const urlOpenerMode: ReactiveStoreLocalValue<"quickAccessUrlOpenerMode">
 export const dlShelf: ReactiveStoreLocalValue<"downloadShelf">
     = new ReactiveStoreLocalValue("downloadShelf", true);
 
-export type TrimOption = {
+export type TrimOptions = {
     trimEnd?: string[],
     trimStart?: string[],
     trimStartEnd?: string[][],
 };
-export type TrimOptionsObject = {
-    [key: string]: TrimOption
+type hostname = string;
+export type TrimConfig = {
+    [key: hostname]: TrimOptions
 };
 
-const tcSettingsDefaultValue: TrimOptionsObject = {
+const ttConfigDefaultValue: TrimConfig = {
     "example.com": {
         "trimEnd": [" - example"],
         "trimStart": ["☑", "✅"],
@@ -28,8 +29,8 @@ const tcSettingsDefaultValue: TrimOptionsObject = {
     }
 };
 
-export const tcSettings: ReactiveStoreLocalValue<"titleCutterSettings">
-    = new ReactiveStoreLocalValue("titleCutterSettings", tcSettingsDefaultValue);
+export const ttConfig: ReactiveStoreLocalValue<"titleTrimmerConfig">
+    = new ReactiveStoreLocalValue("titleTrimmerConfig", ttConfigDefaultValue);
 
 
 let quickAccessUrlDefaultValue: string = "chrome://bookmarks/";

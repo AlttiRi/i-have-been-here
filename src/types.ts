@@ -1,4 +1,4 @@
-import {TrimOptionsObject} from "@/bg/store/store";
+import {TrimConfig} from "@/bg/store/store";
 import {Base64} from "@/util";
 
 export type StoreLocalBase = {
@@ -7,7 +7,7 @@ export type StoreLocalBase = {
     filenameLengthLimit: number,
     quickAccessUrl: string,
     quickAccessUrlOpenerMode: boolean,
-    titleCutterSettings: TrimOptionsObject,
+    titleTrimmerConfig: TrimConfig,
     version: number,
 }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref, watchEffect} from "vue";
-import {sleep}      from "@/util";
-import {tcSettings} from "@/bg/store/store";
+import {sleep}    from "@/util";
+import {ttConfig} from "@/bg/store/store";
 
 const editorValue = ref("");
 
@@ -11,9 +11,9 @@ async function save(event: MouseEvent) {
   try {
     let json = JSON.parse(editorValue.value);
     if (!json) {
-      json = tcSettings.defaultValue;
+      json = ttConfig.defaultValue;
     }
-    await tcSettings.setValue(json);
+    await ttConfig.setValue(json);
     btn.classList.add("btn-outline-success");
   } catch {
     btn.classList.add("btn-warning");
@@ -27,14 +27,14 @@ async function save(event: MouseEvent) {
 }
 
 watchEffect(() => {
-  editorValue.value = JSON.stringify(tcSettings.value, null, "    ");
+  editorValue.value = JSON.stringify(ttConfig.value, null, "    ");
 });
 
 </script>
 
 <template>
   <div data-comp="TitleTrimmer">
-    <h4 class="">Title Trimmer Settings</h4>
+    <h4 class="">Title Trimmer Config</h4>
     <textarea spellcheck="false" id="editor" class="form-control"
               v-model="editorValue"
     ></textarea>
