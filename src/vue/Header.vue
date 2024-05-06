@@ -2,12 +2,13 @@
 import {PagePaths} from "@/page-paths";
 
 const sp = new URL(location.href).searchParams;
-const isTabs       = location.pathname.endsWith("tabs.html");
-const isTabsList   = isTabs && sp.get("page") === "list";
-const isTabsJson   = isTabs && sp.get("page") === "json";
-const isSettings   = location.pathname.endsWith("settings.html");
-const isList       = location.pathname.endsWith("list.html");
-const isListVisits = isList && sp.get("page") === "visits";
+const isTabs        = location.pathname.endsWith("tabs.html");
+const isTabsList    = isTabs && sp.get("page") === "list";
+const isTabsJson    = isTabs && sp.get("page") === "json";
+const isSettings    = location.pathname.endsWith("settings.html");
+const isList        = location.pathname.endsWith("list.html");
+const isListVisits  = isList && sp.get("page") === "visits";
+const isListScreens = isList && sp.get("page") === "screens";
 
 
 </script>
@@ -19,6 +20,13 @@ const isListVisits = isList && sp.get("page") === "visits";
         <a :href="PagePaths.list_visits" id="list_visits-btn"
            :class="{ active: isListVisits }" class="nav-link"
         >📃 Visits</a>
+      </li>
+    </ul>
+    <ul class="nav nav-pills px-3">
+      <li class="nav-item">
+        <a :href="PagePaths.list_screens" id="list_screens-btn"
+           :class="{ active: isListScreens }" class="nav-link"
+        >🖼 Screens</a>
       </li>
     </ul>
     <ul class="nav nav-pills px-3">

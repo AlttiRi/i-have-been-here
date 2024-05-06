@@ -5,7 +5,9 @@ import {getFromStoreLocal, removeFromStoreLocal} from "@/util-ext";
 import {toArrayBuffer} from "@/bg/image-data";
 import {downloadBlob, fullUrlToFilename, sleep} from "@/util";
 
-
+defineProps<{
+  activePage: "visits" | "screens"
+}>();
 
 async function importVisitsListener(event: Event) {
   const inputElement = event.currentTarget as HTMLInputElement;
@@ -49,21 +51,25 @@ async function exportImages() {
 <template>
   <div data-comp="Controls" id="controls" class="container">
     <hr>
-    <button class="btn btn-outline-primary m-2" id="export-visits"
-            @click="exportVisits"
-    >Export visits
-    </button>
-    <label class="btn btn-outline-primary m-2">
-      <input type="file" accept="application/json" style="display: none"
-             @change="importVisitsListener"
-      >Import visits
-    </label>
-    <button class="btn btn-outline-primary m-2 ms-md-5" id="export-images"
-            @click="exportImages"
-    >Export images</button>
-    <button class="btn btn-outline-danger m-2" id="delete-images"
-            @click="deleteImages"
-    >Delete images</button>
+    <div v-if="activePage === 'visits'" class="d-flex flex-row-reverse ">
+      <label class="btn btn-outline-primary m-2">
+        <input type="file" accept="application/json" style="display: none"
+               @change="importVisitsListener"
+        >Import visits
+      </label>
+      <button class="btn btn-outline-primary m-2" id="export-visits"
+              @click="exportVisits"
+      >Export visits
+      </button>
+    </div>
+    <div v-if="activePage === 'screens'" class="d-flex flex-row-reverse ">
+      <button class="btn btn-outline-danger m-2" id="delete-images"
+              @click="deleteImages"
+      >Delete images</button>
+      <button class="btn btn-outline-primary m-2" id="export-images"
+              @click="exportImages"
+      >Export images</button>
+    </div>
     <hr>
   </div>
 </template>
@@ -71,5 +77,8 @@ async function exportImages() {
 <style scoped>
 #controls {
   padding-left: 17px;
+}
+.btn {
+  width: 130px;
 }
 </style>
