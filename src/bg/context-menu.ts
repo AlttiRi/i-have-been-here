@@ -99,7 +99,7 @@ export function registerContextMenu(features: ContextMenuFeature[] = ["reload"])
         });
         chrome.contextMenus.onClicked.addListener((info, tab) => {
             if (info.menuItemId === id) {
-                createBackgroundTab(chrome.runtime.getURL(PagePaths.visits));
+                createBackgroundTab(chrome.runtime.getURL(PagePaths.list_visits));
             }
         });
     }

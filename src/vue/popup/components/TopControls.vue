@@ -30,7 +30,7 @@ async function addVisit()  {
 }
 
 function openVisits() {
-  createBackgroundTab(chrome.runtime.getURL(PagePaths.visits));
+  createBackgroundTab(chrome.runtime.getURL(PagePaths.list_visits));
 }
 
 function visitToButtonTitle(visit: Visit): string {
