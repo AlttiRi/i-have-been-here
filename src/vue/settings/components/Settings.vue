@@ -2,7 +2,7 @@
 import {computed, watchEffect} from "vue";
 import {dlShelf, filenameLengthLimit, quickAccessUrl, urlOpenerMode} from "@/bg/store/store";
 
-import Header       from "./Header.vue";
+import Header       from "../../Header.vue";
 import TitleTrimmer from "./TitleTrimmer.vue";
 
 
@@ -32,7 +32,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div data-comp="Options" id="options" class="container">
+  <div data-comp="Settings" id="settings" class="container">
     <Header/>
     <hr>
     <h4>Options</h4>

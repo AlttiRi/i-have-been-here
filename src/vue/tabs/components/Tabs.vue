@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import Header   from "./Header.vue";
+import Header   from "../../Header.vue";
 import TabsList from "./TabsList.vue";
 import TabsJson from "./TabsJson.vue";
 

@@ -23,7 +23,7 @@
         "default_icon": "images/hash.png"
     },
     "options_ui": {
-        "page": "bundle/pages/options.html",
+        "page": "bundle/pages/settings.html",
         "open_in_tab": true
     },
     "web_accessible_resources": [

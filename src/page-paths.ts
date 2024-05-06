@@ -1,6 +1,6 @@
 export const enum PagePaths {
     visits    = "/bundle/pages/list.html?page=visits",
-    options   = "/bundle/pages/options.html",
+    settings  = "/bundle/pages/settings.html",
     tabs_list = "/bundle/pages/tabs.html?page=list",
     tabs_json = "/bundle/pages/tabs.html?page=json",
 

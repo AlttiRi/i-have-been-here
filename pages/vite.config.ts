@@ -27,7 +27,7 @@ export default defineConfig({
       input: [
           path.resolve(__dirname, "popup.html"),
           path.resolve(__dirname, "background.html"),
-          path.resolve(__dirname, "options.html"),
+          path.resolve(__dirname, "settings.html"),
           path.resolve(__dirname, "tabs.html"),
           path.resolve(__dirname, "list.html"),
       ],
