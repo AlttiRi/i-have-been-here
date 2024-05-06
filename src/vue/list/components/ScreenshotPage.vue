@@ -6,7 +6,7 @@ import {getFromStoreLocal} from "@/util-ext";
 
 const screenshots = ref<ScreenshotInfo[]>([]);
 getFromStoreLocal("screenshots").then(value => {
-  screenshots.value = value || [];
+  screenshots.value = value?.reverse() || [];
   console.log("Screenshots:", value);
 });
 </script>

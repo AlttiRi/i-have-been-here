@@ -8,7 +8,7 @@ import {sleep} from "@/util";
 const hrHidden = ref(true);
 const visits = ref<Visit[]>([]);
 getVisits().then(value => {
-  visits.value = value;
+  visits.value = value.reverse();
   console.log("Visits:", value);
   hrHidden.value = false;
 });
