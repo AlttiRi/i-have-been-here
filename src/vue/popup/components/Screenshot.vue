@@ -143,10 +143,10 @@ async function addScreenshot() {
           style="min-width: 100px;"
           :disabled="disabled"
           :class="{
-            'btn-outline-success': addScreenshotSuccess
+            'btn-success': addScreenshotSuccess
           }"
           @click="addScreenshot"
-        >Save</button>
+        >Save{{addScreenshotSuccess ? "d" : ""}}</button>
       </div>
     </div>
   </div>
