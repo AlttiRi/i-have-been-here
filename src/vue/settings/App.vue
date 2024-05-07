@@ -7,7 +7,7 @@ import {defineAsyncComponent} from "vue";
 import {prependCss} from "@/util";
 
 
-const cssReady = prependCss("/libs/bootstrap.css", "sha256-o+AsfCHj7A1M5Xgm1kJmZiGEIvMQEzQqrXz2072Gkkg=");
+const cssReady = prependCss("/libs/bootstrap.css");
 
 const SettingsComp = import("./components/Settings.vue");
 const SettingsAsync = defineAsyncComponent(async () => {
