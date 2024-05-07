@@ -101,7 +101,6 @@ export async function updateStoreModel(): Promise<void> {
         console.log(`Store was updated to version ${version}`);
     }
 
-
 }
 // [note] Do not forget to update `lastStoreVersion` above!
 
