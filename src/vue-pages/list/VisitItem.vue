@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import {dateFormatter}       from "@/util";
 import {createBackgroundTab} from "@/util-ext-bg";
-import {Visit} from "@/types";
-import {dateFormatter} from "./core";
+import {getHash, setHash}    from "@/vue-pages/header/router";
+import {Visit}               from "@/types";
+
 
 const props = defineProps<{visit: Visit}>();
 
@@ -14,10 +16,10 @@ function onTitleClick(event: MouseEvent) {
   console.log("onTitleClick");
   event.preventDefault();
   if (event.ctrlKey) {
-    if (location.hash.slice(1) !== props.visit.url) {
-      location.hash = props.visit.url;
+    if (getHash() !== props.visit.url) {
+      void setHash(props.visit.url);
     } else {
-      location.hash = "null";
+      void setHash("");
     }
   }
 }
@@ -29,10 +31,10 @@ function onTitleClick(event: MouseEvent) {
         @click="onTitleClick"
     >{{visit.title || ""}}</h4>
     <h5>
-      <a rel="noreferrer noopener"
-         :href="visit.url"
+      <a :href="visit.url"
          :title="visit.title || ''"
          @click="onUrlClick"
+         rel="noreferrer noopener" target="_blank"
       >{{visit.url}}</a>
     </h5>
     <div title="created">{{dateFormatter(visit.created)}}</div>
@@ -41,12 +43,16 @@ function onTitleClick(event: MouseEvent) {
 </template>
 
 <style scoped>
-.visit:target {
+.visit:target,
+.visit.hash-target
+{
   font-weight: bold;
 }
 .visit {
   padding-left: 12px;
+  scroll-margin: 80px;
 }
+
 .visit:hover {
   padding-left: 11px;
   border-left: 1px #0d6efd solid;

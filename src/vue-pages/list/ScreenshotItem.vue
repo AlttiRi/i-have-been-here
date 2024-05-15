@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {ScreenshotInfo}    from "@/types";
+import {dateFormatter, fullUrlToFilename} from "@/util";
 import {getFromStoreLocal} from "@/util-ext";
 import {toJpgDataUrl}      from "@/bg/image-data";
-import {fullUrlToFilename} from "@/util";
-import {dateFormatter}     from "./core";
+import {ScreenshotInfo}    from "@/types";
+import {allImagesReady}    from "./core-list";
 
 const props = defineProps<{screenshot: ScreenshotInfo}>();
 
@@ -13,6 +13,10 @@ const src = ref();
 getFromStoreLocal(scd_id).then(base64 => src.value = toJpgDataUrl(base64));
 
 
+let onImageReady: (e: Event) => void;
+allImagesReady.push(new Promise(resolve => {
+  onImageReady = resolve;
+}));
 </script>
 
 <template>
@@ -20,21 +24,24 @@ getFromStoreLocal(scd_id).then(base64 => src.value = toJpgDataUrl(base64));
     <div class="info">
       <h3 class="title" style="align-self: start; margin: 12px;">{{ title || fullUrlToFilename(url) }}</h3>
       <h5 class="url"  style="align-self: start; margin: 12px;">
-        <a :href="url" rel="noreferrer noopener">{{ url }}</a>
+        <a :href="url" rel="noreferrer noopener" target="_blank" >{{ url }}</a>
       </h5>
       <div class="created" style="align-self: start; margin: 12px;">{{ created ? dateFormatter(created) : "" }}</div>
     </div>
-    <img :src="src" :alt="title" :title=" title || fullUrlToFilename(url)">
+    <img :src="src" :alt="title" :title=" title || fullUrlToFilename(url)"
+         @load="onImageReady" @error="onImageReady"
+    >
   </div>
 </template>
 
 <style scoped>
 .info {
   padding-left: 12px;
+  margin-left: 1px;
 }
 .screenshot-item:hover .info {
-  padding-left: 11px;
-  border-left: 1px #0d6efd solid;
+  padding-left: 9px;
+  border-left: 3px #0d6efd solid;
 }
 a:visited {
   color: #0a53be;

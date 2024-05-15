@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import {GetTabsGS} from "@/message-center";
-import {filterUrls, ignoreFilter, logTabs, onlyFilter} from "./core";
+import {GetTabsGS}  from "@/message-center";
+import {getHash, iAmReady, waitMe} from "@/vue-pages/header/router";
+import {defaultIgnore, filterUrls, ignoreFilter, logTabs, onlyFilter, updateHash} from "./core-tabs";
 import Filters from "./Filters.vue";
+
+
+const sp = new URLSearchParams(getHash());
+onlyFilter.value   = sp.get("only")   || "";
+ignoreFilter.value = sp.get("ignore") || defaultIgnore;
+void updateHash();
 
 
 const tabs = ref<chrome.tabs.Tab[]>();
 const urls = ref<string[]>([]);
-watch([onlyFilter, ignoreFilter], async () => {
+watch([onlyFilter, ignoreFilter], update);
+async function update() {
   const _tabs = await GetTabsGS.get();
   const _tabs_filtered = _tabs.filter(tab => {
     return tab.url && filterUrls([tab.url]).length;
@@ -15,9 +23,10 @@ watch([onlyFilter, ignoreFilter], async () => {
 
   tabs.value = _tabs_filtered;
   logTabs(_tabs_filtered);
-}, {immediate: true});
+}
 
-
+waitMe();
+void update().then(iAmReady);
 
 function getTitle(tab: chrome.tabs.Tab) {
   return (tab.title || "").replaceAll(`"`, "&quot;");
@@ -53,7 +62,7 @@ function removeClicked(event: MouseEvent) {
 </script>
 
 <template>
-  <div data-comp="TabsList" id="tabs-list">
+  <div data-comp="TabsListPage" id="tabs-list" class="container">
     <div id="controls" class="row row-cols-lg-3 g-3 align-items-center">
       <Filters/>
       <div class="col-12">
@@ -72,7 +81,7 @@ function removeClicked(event: MouseEvent) {
             <a class="url link-primary"
                :title="getTitle(tab)"
                :href="tab.url"
-               target="_blank" rel="noreferrer noopener">{{ tab.url }}
+               rel="noreferrer noopener" target="_blank" >{{ tab.url }}
             </a>
           </td>
         </tr>

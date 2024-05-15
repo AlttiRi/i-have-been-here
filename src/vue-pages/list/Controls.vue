@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import {exportVisits, importVisits} from "@/bg/visits";
-import {ScreenshotInfo} from "@/types";
+import {downloadBlob, fullUrlToFilename, sleep}  from "@/util";
 import {getFromStoreLocal, removeFromStoreLocal} from "@/util-ext";
-import {toArrayBuffer} from "@/bg/image-data";
-import {downloadBlob, fullUrlToFilename, sleep} from "@/util";
+import {exportVisits, importVisits} from "@/bg/visits";
+import {toArrayBuffer}              from "@/bg/image-data";
+import {ScreenshotInfo} from "@/types";
+
 
 defineProps<{
   activePage: "visits" | "screens"
@@ -49,8 +50,7 @@ async function exportImages() {
 </script>
 
 <template>
-  <div data-comp="Controls" id="controls" class="container">
-    <hr>
+  <div data-comp="Controls" id="controls">
     <div v-if="activePage === 'visits'" class="d-flex flex-row-reverse ">
       <label class="btn btn-outline-primary m-2">
         <input type="file" accept="application/json" style="display: none"
@@ -75,9 +75,6 @@ async function exportImages() {
 </template>
 
 <style scoped>
-#controls {
-  padding-left: 17px;
-}
 .btn {
   width: 130px;
 }

@@ -2,9 +2,8 @@ html, body {
     min-height: 100vh;
     margin: 0;
 }
-/* scroll dependent content jump fix */
-html, body {
-    width: 100vw;
+body {
+    margin-left: calc(100vw - 100%);
     overflow-x: hidden;
 }
 #app {

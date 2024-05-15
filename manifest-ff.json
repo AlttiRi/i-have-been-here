@@ -4,7 +4,7 @@
     "name": "__MSG_extension_name__",
     "short_name": "__MSG_extension_name__",
     "description": "__MSG_extension_description__",
-    "version": "1.15.0.20240506",
+    "version": "1.16.0.20240515",
     "content_scripts": [
 		    {
             "matches": ["<all_urls>"],
@@ -23,7 +23,7 @@
         "default_icon": "images/hash.png"
     },
     "options_ui": {
-        "page": "bundle/pages/settings.html",
+        "page": "bundle/pages/pages.html#/settings",
         "open_in_tab": true
     },
     "web_accessible_resources": [

@@ -323,6 +323,10 @@ class DateFormatter {
     get YY()   {return this.YYYY.slice(2);}
 }
 
+export function dateFormatter(date: number | string | Date): string {
+    return dateToDayDateTimeString(date, false);
+}
+
 export function prependCss(href: string, integrity?: string): Promise<unknown> {
     return new Promise((resolve, reject) => {
         const link = document.createElement("link");

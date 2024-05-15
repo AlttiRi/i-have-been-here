@@ -4,7 +4,7 @@ import {TabCapture} from "@/bg/log-image";
 import {captureVisibleTab, getActiveTab} from "@/util-ext-bg";
 import {JpgDataURL, logPicture, sleep}   from "@/util";
 import {ChangeIconPS, DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/message-center";
-import {core} from "./core";
+import {core} from "./core-popup";
 
 
 const imageHeight = ref("auto");

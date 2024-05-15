@@ -1,5 +1,5 @@
 <template>
-  <TabsAsync/>
+  <MainAsync/>
 </template>
 
 <script setup lang="ts">
@@ -9,13 +9,13 @@ import {prependCss} from "@/util";
 
 const cssReady = prependCss("/libs/bootstrap.css");
 
-const TabsComp = import("./components/Tabs.vue");
-const TabsAsync = defineAsyncComponent(async () => {
+const MainComp = import("./Main.vue");
+const MainAsync = defineAsyncComponent(async () => {
   try {
     await cssReady;
   } catch (e) {
     console.error(e, e.href);
   }
-  return TabsComp;
+  return MainComp;
 });
 </script>

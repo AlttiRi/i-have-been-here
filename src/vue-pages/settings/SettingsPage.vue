@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {computed, watchEffect} from "vue";
 import {dlShelf, filenameLengthLimit, quickAccessUrl, urlOpenerMode} from "@/bg/store/store";
-
-import Header       from "../../Header.vue";
 import TitleTrimmer from "./TitleTrimmer.vue";
 
 
@@ -32,9 +30,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div data-comp="Settings" id="settings" class="container">
-    <Header/>
-    <hr>
+  <div data-comp="SettingsPage" id="settings" class="container">
     <h4>Options</h4>
     <button id="download-shelf" class="btn m-3" @click="toggleDlShelf">{{dlShelfBtnText}}</button>
     <button id="url-opener-mode" class="btn m-3" @click="toggleUrlOpenerMode">{{urlOpenerModeBtnText}}</button>

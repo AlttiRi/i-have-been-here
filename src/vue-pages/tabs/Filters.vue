@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ignoreFilter, onlyFilter} from "./core";
+import {ignoreFilter, onlyFilter} from "./core-tabs";
 
 
 function clearOnly(event: MouseEvent) {
@@ -33,5 +33,7 @@ function clearIgnore(event: MouseEvent) {
 </template>
 
 <style scoped>
-
+.input-group-text {
+  user-select: none;
+}
 </style>

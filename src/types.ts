@@ -43,7 +43,7 @@ export type ScreenshotInfo = {
  * Like a bookmark, but simpler.
  * Just to mark a page that it was visited.
  */
-export type Visit = {
+export type Visit = { // todo add id
     url: URLString,
     title: string,
     created: number,
