@@ -49,6 +49,7 @@ const routes = [
 let lastTargetElement: HTMLElement | null = null;
 
 // todo keep page's height and set it before `iAmReady` for the instant scroll
+//  or set the height as "savedPosition" + windows' height
 let promise = Promise.resolve("initial");
 const dummy = (value?: any) => {};
 let _resolve = dummy;
