@@ -13,7 +13,6 @@ void updateHash();
 
 
 const tabs = ref<chrome.tabs.Tab[]>();
-const urls = ref<string[]>([]);
 watch([onlyFilter, ignoreFilter], update);
 async function update() {
   const _tabs = await GetTabsGS.get();
@@ -32,12 +31,19 @@ function getTitle(tab: chrome.tabs.Tab) {
   return (tab.title || "").replaceAll(`"`, "&quot;");
 }
 
+function getUrls(): string[] {
+  return tabs.value?.map(tab => tab.url).filter((u: string | undefined): u is string => Boolean(u)) || [];
+}
 function copyText() {
-  const text = urls.value.join(" ");
+  const text = getUrls().join(" ");
   console.log(text);
   void navigator.clipboard.writeText(text);
 }
-
+function copyTextAsLines() {
+  const text = getUrls().join("\n") + "\n";
+  console.log(text);
+  void navigator.clipboard.writeText(text);
+}
 
 
 function addClicked(event: MouseEvent) {
@@ -66,8 +72,10 @@ function removeClicked(event: MouseEvent) {
     <div id="controls" class="row row-cols-lg-3 g-3 align-items-center">
       <Filters/>
       <div class="col-12">
-        <button class="btn btn-primary" title="Copy URLs" id="copy-btn"
+        <button class="btn btn-primary" id="copy-btn"
+                :title="'Copy URLs\nCopy URLs as lines (RMB click)'"
                 @click="copyText"
+                @contextmenu.prevent="copyTextAsLines"
         >Copy</button>
       </div>
     </div>
