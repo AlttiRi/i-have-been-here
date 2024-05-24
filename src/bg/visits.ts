@@ -1,7 +1,8 @@
+import {localDate}    from "@alttiri/util-js";
 import {getActiveTab} from "@/util-ext-bg";
 import {updateIcons}  from "@/bg/tab-counter";
 import {getFromStoreLocal, setToStoreLocal} from "@/util-ext";
-import {dateToDayDateString, downloadBlob}  from "@/util";
+import {downloadBlob} from "@/util";
 import {AddVisitGS, GetVisitGS} from "@/message-center";
 import {Visit} from "@/types";
 
@@ -91,7 +92,7 @@ async function addVisitHandler(_data: undefined, sender: chrome.runtime.MessageS
 
 export async function exportVisits(): Promise<void> {
     const visits = await getFromStoreLocal("visits") || [];
-    const dateStr = dateToDayDateString(new Date(), false);
+    const dateStr = localDate(new Date());
     downloadBlob(new Blob([JSON.stringify(visits, null, " ")]), `[ihbh][${dateStr}] visits.json`);
 }
 

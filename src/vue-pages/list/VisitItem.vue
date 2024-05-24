@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {dateFormatter}       from "@/util";
+import {localDateTime}       from "@alttiri/util-js";
 import {createBackgroundTab} from "@/util-ext-bg";
 import {getHash, setHash}    from "@/vue-pages/header/router";
 import {Visit}               from "@/types";
@@ -37,8 +37,8 @@ function onTitleClick(event: MouseEvent) {
          rel="noreferrer noopener" target="_blank"
       >{{visit.url}}</a>
     </h5>
-    <div title="created">{{dateFormatter(visit.created)}}</div>
-    <i title="last visited time" v-if="visit.lastVisited">{{dateFormatter(visit.lastVisited)}}</i>
+    <div title="created">{{localDateTime(visit.created)}}</div>
+    <i title="last visited time" v-if="visit.lastVisited">{{localDateTime(visit.lastVisited)}}</i>
   </div>
 </template>
 

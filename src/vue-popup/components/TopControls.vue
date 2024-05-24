@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {Ref, ref, watchEffect} from "vue";
+import {localDateTime}         from "@alttiri/util-js";
 import {quickAccessUrl}     from "@/bg/store/store";
 import {openQuickAccessUrl} from "@/bg/quick-access-url-opener";
 import {AddVisitGS, GetVisitGS}  from "@/message-center";
 import {createBackgroundTab}     from "@/util-ext-bg";
-import {dateToDayDateTimeString} from "@/util";
 import {Visit}     from "@/types";
 import {PagePaths} from "@/page-paths";
 
@@ -36,7 +36,7 @@ function openVisits() {
 function visitToButtonTitle(visit: Visit): string {
   return [visit.created, visit.lastVisited]
     .filter((d): d is number => d !== undefined)
-    .map(ms => dateToDayDateTimeString(ms, false))
+    .map(ms => localDateTime(ms))
     .join("\n");
 }
 

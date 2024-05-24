@@ -1,11 +1,11 @@
 {
     "name": "i-have-been-here",
     "keywords": ["extension", "bookmarks", "screenshots", "visits", "typescript", "vue"],
-    "version": "1.16.1.20240523",
+    "version": "1.16.2.20240524",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {
-        "@alttiri/util-js": "1.9.1",
+        "@alttiri/util-js": "1.9.2-20240524",
         "@alttiri/util-node-js": "2.0.9",
         "@types/chrome": "0.0.142",
         "@types/node": "20.12.7",

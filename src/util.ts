@@ -269,64 +269,6 @@ export function fullUrlToFilename(url: string): string {
 }
 
 
-
-/** "Sun, 10 Jan 2021 22:22:22 GMT" -> "2021.01.10" */
-export function dateToDayDateString(dateValue?: Date | string | number, utc = true) {
-    return formatDate(dateValue, "YYYY.MM.DD", utc);
-}
-
-/** "Sun, 10 Jan 2021 22:22:22 GMT" -> "2021.01.10 22:22:22Z" */
-export function dateToDayDateTimeString(dateValue?: Date | string | number, utc = true) {
-    return formatDate(dateValue, "YYYY.MM.DD HH:mm:SS", utc) + (utc ? "Z" : "");
-}
-
-/**
- * Formats date. Supports: YY.YYYY.MM.DD HH:mm:SS.
- * Default format: "YYYY.MM.DD". formatDate() -> "2022.01.07"
- */
-export function formatDate(dateValue: Date | string | number = new Date(), pattern = "YYYY.MM.DD", utc = true): string {
-    dateValue = firefoxDateFix(dateValue);
-    const date = new Date(dateValue);
-    if (date.toString() === "Invalid Date") {
-        console.warn("Invalid Date value: ", dateValue);
-    }
-    const formatter = new DateFormatter(date, utc);
-    return pattern.replaceAll(/YYYY|YY|MM|DD|HH|mm|SS/g, (...args) => {
-        return formatter[args[0] as "YYYY"|"YY"|"MM"|"DD"|"HH"|"mm"|"SS"];
-    });
-}
-
-function isString(input: unknown): input is string {
-    return typeof input === "string" || input instanceof String;
-}
-function firefoxDateFix(dateValue: Date | string | number) {
-    return isString(dateValue) ? dateValue.replace(/(?<y>\d{4})\.(?<m>\d{2})\.(?<d>\d{2})/, "$<y>-$<m>-$<d>") : dateValue;
-}
-
-function pad0(value: number, count = 2): string {
-    return value.toString().padStart(count, "0");
-}
-class DateFormatter {
-    private readonly date: Date;
-    private readonly utc: "UTC" | "";
-    constructor(date = new Date(), utc = true) {
-        this.date = date;
-        this.utc = utc ? "UTC" : "";
-    }
-    get SS()   {return pad0(this.date[`get${this.utc}Seconds`]())}
-    get mm()   {return pad0(this.date[`get${this.utc}Minutes`]())}
-    get HH()   {return pad0(this.date[`get${this.utc}Hours`]())}
-
-    get MM()   {return pad0(this.date[`get${this.utc}Month`]() + 1)}
-    get DD()   {return pad0(this.date[`get${this.utc}Date`]())}
-    get YYYY() {return pad0(this.date[`get${this.utc}FullYear`](), 4)}
-    get YY()   {return this.YYYY.slice(2);}
-}
-
-export function dateFormatter(date: number | string | Date): string {
-    return dateToDayDateTimeString(date, false);
-}
-
 export function prependCss(href: string, integrity?: string): Promise<unknown> {
     return new Promise((resolve, reject) => {
         const link = document.createElement("link");

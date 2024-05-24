@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {dateFormatter, fullUrlToFilename} from "@/util";
+import {localDateTime}     from "@alttiri/util-js";
+import {fullUrlToFilename} from "@/util";
 import {getFromStoreLocal} from "@/util-ext";
 import {toJpgDataUrl}      from "@/bg/image-data";
 import {ScreenshotInfo}    from "@/types";
@@ -26,7 +27,7 @@ allImagesReady.push(new Promise(resolve => {
       <h5 class="url"  style="align-self: start; margin: 12px;">
         <a :href="url" rel="noreferrer noopener" target="_blank" >{{ url }}</a>
       </h5>
-      <div class="created" style="align-self: start; margin: 12px;">{{ created ? dateFormatter(created) : "" }}</div>
+      <div class="created" style="align-self: start; margin: 12px;">{{ created ? localDateTime(created) : "" }}</div>
     </div>
     <img :src="src" :alt="title" :title=" title || fullUrlToFilename(url)"
          @load="onImageReady" @error="onImageReady"
