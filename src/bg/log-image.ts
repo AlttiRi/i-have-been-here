@@ -44,7 +44,19 @@ async function _downloadScreenshot(tabCapture: TabCapture): Promise<void> {
 
     const {url = "", title = ""} = tabCapture.tab;
     const name = await getScreenshotFilename(url, title);
-    downloadBlob(blob, name, url);
+    const hash = await hashBlob(blob);
+    const nameWithHash = name.replace(/\.jpg$/, ` - ${hash.slice(0, 8)}.jpg`);
+    downloadBlob(blob, nameWithHash, url);
+}
+
+async function hashBlob(blob: Blob): Promise<string> {
+    try {
+        const hash = await crypto.subtle.digest("SHA-1", await blob.arrayBuffer());
+        return [...new Uint8Array(hash)].map(x => x.toString(16).padStart(2, "0")).join("");
+    } catch (e) {
+        console.error(e);
+        return "";
+    }
 }
 
 async function _logScreenshot(tabData: TabCapture): Promise<void> {
