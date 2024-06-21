@@ -9,7 +9,7 @@
         "@alttiri/util-node-js": "2.0.9",
         "@types/chrome": "0.0.142",
         "@types/node": "20.12.7",
-        "typescript": "5.4.5",
+        "typescript": "5.5.2",
         "vite": "5.2.11",
         "vue": "3.4.26",
         "@vitejs/plugin-vue": "5.0.4",
