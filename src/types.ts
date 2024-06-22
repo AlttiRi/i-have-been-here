@@ -1,5 +1,5 @@
-import {TrimConfig} from "@/bg/store/store";
 import {Base64} from "@/util";
+import {TCCompiledRules, TCRuleString} from "@/title-cleaner";
 
 export type StoreLocalBase = {
     bookmarkOpenerMode: boolean,
@@ -7,7 +7,8 @@ export type StoreLocalBase = {
     filenameLengthLimit: number,
     quickAccessUrl: string,
     quickAccessUrlOpenerMode: boolean,
-    titleTrimmerConfig: TrimConfig,
+    titleCleanerRuleStrings:   TCRuleString[],
+    titleCleanerCompiledRules: TCCompiledRules,
     version: number,
 }
 

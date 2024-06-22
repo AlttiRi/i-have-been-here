@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, watchEffect} from "vue";
 import {dlShelf, filenameLengthLimit, quickAccessUrl, urlOpenerMode} from "@/bg/store/store";
-import TitleTrimmer from "./TitleTrimmer.vue";
+import TitleCleanerConfig from "./TitleCleanerConfig.vue";
 
 
 const dlShelfBtnText = computed(() => {
@@ -52,7 +52,7 @@ watchEffect(() => {
       >
     </label>
     <hr>
-    <TitleTrimmer/>
+    <TitleCleanerConfig/>
   </div>
 </template>
 

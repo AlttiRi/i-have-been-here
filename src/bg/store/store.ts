@@ -1,36 +1,27 @@
 import {ReactiveStoreLocalValue} from "./reactive-store-local-value";
 import {isFirefox, isOpera} from "@/util";
+import {TCRuleString, TitleCleaner} from "@/title-cleaner";
 
 export const urlOpenerMode: ReactiveStoreLocalValue<"quickAccessUrlOpenerMode">
     = new ReactiveStoreLocalValue("quickAccessUrlOpenerMode", false);
 export const dlShelf: ReactiveStoreLocalValue<"downloadShelf">
     = new ReactiveStoreLocalValue("downloadShelf", true);
 
-export type TrimOptions = {
-    trimEnd?: string[],
-    trimStart?: string[],
-    trimStartEnd?: string[][],
-};
-type hostname = string;
-export type TrimConfig = {
-    [key: hostname]: TrimOptions
-};
 
-const ttConfigDefaultValue: TrimConfig = {
-    "example.com": {
-        "trimEnd": [" - example"],
-        "trimStart": ["☑", "✅"],
-        "trimStartEnd": [
-            ["[", "]"]
-        ]
-    },
-    "www.artstation.com": {
-        "trimStart": ["ArtStation - "]
-    }
-};
+const tcRSDefaultValue: TCRuleString[] = [
+    "site:example.com",
+      "trim-start: ☑ ✅ ",
+      "trim-end:: - example",
+      "trim-start-end: [ ]",
+    "site:artstation.com",
+      "trim-start:: ArtStation - ",
+];
 
-export const ttConfig: ReactiveStoreLocalValue<"titleTrimmerConfig">
-    = new ReactiveStoreLocalValue("titleTrimmerConfig", ttConfigDefaultValue);
+export const tcRuleStrings: ReactiveStoreLocalValue<"titleCleanerRuleStrings">
+    = new ReactiveStoreLocalValue("titleCleanerRuleStrings", tcRSDefaultValue);
+
+export const tcCompiledRules: ReactiveStoreLocalValue<"titleCleanerCompiledRules">
+    = new ReactiveStoreLocalValue("titleCleanerCompiledRules", TitleCleaner.compileRuleStrings(tcRSDefaultValue));
 
 
 let quickAccessUrlDefaultValue: string = "chrome://bookmarks/";

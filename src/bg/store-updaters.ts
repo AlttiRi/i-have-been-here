@@ -2,9 +2,9 @@ import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "@/util-e
 import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/types";
 import {Base64}     from "@/util";
 import {getScdId}   from "@/bg/image-data";
-import {TrimConfig} from "@/bg/store/store";
+import {TCCompiledRules, TCRuleString, TitleCleaner} from "@/title-cleaner";
 
-const lastStoreVersion = 3;
+const lastStoreVersion = 4;
 
 chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrome.runtime.InstalledDetails) {
     console.log("chrome.runtime.onInstalled", details.reason);
@@ -85,12 +85,13 @@ export async function updateStoreModel(): Promise<void> {
         version = 2;
         await setToStoreLocal("version", version);
         console.log(`Store was updated to version ${version}`);
-    }
+    } // -> 2
 
     if (version === 2) {
         // @ts-ignore
         const tcs: TrimConfig = await getFromStoreLocal("titleCutterSettings");
         if (tcs) {
+            // @ts-ignore
             await setToStoreLocal("titleTrimmerConfig", tcs);
         }
         // @ts-ignore
@@ -99,11 +100,78 @@ export async function updateStoreModel(): Promise<void> {
         version = 3;
         await setToStoreLocal("version", version);
         console.log(`Store was updated to version ${version}`);
-    }
+    } // -> 3
 
+    if (version === 3) {
+        type TrimOptions = {
+            trimEnd?: string[],
+            trimStart?: string[],
+            trimStartEnd?: string[][],
+        };
+        type hostname = string;
+        type TrimConfig = {
+            [key: hostname]: TrimOptions
+        };
+        function _getPayload(command: keyof TrimOptions, data: string[] | string[][]): string {
+            const parts = data.flat(); // expects that `trimStartEnd` has only one command
+            if (command === "trimStartEnd") {
+                if (parts.length !== 2) {
+                    return "";
+                }
+            }
+            const hasSpaces = parts.some(part => part.trim().includes(" "));
+            if (!hasSpaces) {
+                return parts.join(" ");
+            }
+            if (parts.length === 1) {
+                return ":" + parts[0];
+            }
+            const hasPipes = parts.some(part => part.includes("|"));
+            if (!hasPipes) {
+                return "|:" + parts.join(" | ");
+            }
+            return parts.join("\n");
+        }
+        function transformOldRules(oldConf: TrimConfig): TCRuleString[] {
+            const newRules: TCRuleString[] = [];
+            for (const [site, options] of Object.entries(oldConf)) {
+                newRules.push(`site:${site}`);
+                for (const [command, data] of Object.entries(options) as [keyof TrimOptions, TrimOptions[keyof TrimOptions]][]) {
+                    if (!data) { continue; }
+                    const payload = _getPayload(command, data);
+                    if (command === "trimStart") {
+                        newRules.push(`trim-start:${payload}`);
+                    } else
+                    if (command === "trimEnd") {
+                        newRules.push(`trim-end:${payload}`);
+                    } else
+                    if (command === "trimStartEnd") {
+                        newRules.push(`trim-start-end:${payload}`);
+                    }
+                }
+            }
+            return newRules;
+        }
+
+        // @ts-ignore
+        const ttc: TrimConfig = await getFromStoreLocal("titleTrimmerConfig");
+        if (ttc) {
+            const tcRuleStrings: TCRuleString[] = transformOldRules(ttc);
+            await setToStoreLocal("titleCleanerRuleStrings", tcRuleStrings);
+            const rules: TCCompiledRules = TitleCleaner.compileRuleStrings(tcRuleStrings);
+            await setToStoreLocal("titleCleanerCompiledRules", rules);
+            // @ts-ignore
+            await removeFromStoreLocal("titleTrimmerConfig");
+        }
+
+        version = 4;
+        await setToStoreLocal("version", version);
+        console.log(`Store was updated to version ${version}`);
+    } // -> 4
 }
 // [note] Do not forget to update `lastStoreVersion` above!
 
+// todo (?) handle errors/broken data
 
 /*
 // full export
