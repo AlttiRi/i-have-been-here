@@ -20,7 +20,7 @@
     "scripts": {
         "build-ext-chrome":  "node build-extension.js",
         "build-ext-firefox": "node build-extension.js --firefox",
-        "build-vue":       "vite build --config pages/vite.config.ts",
-        "build-vue-watch": "vite build --config pages/vite.config.ts --watch"
+        "build-src":       "vite build --config pages/vite.config.ts",
+        "build-src-watch": "vite build --config pages/vite.config.ts --watch"
     }
 }
