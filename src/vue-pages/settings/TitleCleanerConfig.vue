@@ -7,68 +7,79 @@ import {isString} from "@alttiri/util-js";
 
 
 const saveBtn: Ref<HTMLButtonElement | null> = ref(null);
+const saved: Ref<boolean> = ref(true);
+const valid: Ref<boolean> = ref(true);
 
+const warnText: Ref<string> = ref("");
 const editorValue: Ref<string> = ref("");
+let lastSavedEditorValue = "";
+
+const handleInputDebounced = debounce(handleInput, 220);
 tcRuleStrings.getValue()
-  .then(value => editorValue.value = formatRuleStringArray(value));
+  .then(value => {
+    editorValue.value = formatRuleStringArray(value);
+    lastSavedEditorValue = editorValue.value;
+    watch(editorValue, handleInputDebounced);
+  });
 
 async function save() {
   const btn = saveBtn.value!;
   btn.blur();
-  try {
-    let json = JSON.parse(editorValue.value);
-    if (!json) {
-      json = tcRuleStrings.defaultValue;
-    }
-    await tcRuleStrings.setValue(json as TCRuleString[]);
-    const compiledRules = TitleCleaner.compileRuleStrings(tcRuleStrings.value);
-    await tcCompiledRules.setValue(compiledRules);
-    btn.classList.add("btn-outline-success");
-  } catch {
-    btn.classList.add("btn-warning");
-    btn.classList.remove("btn-outline-primary");
-  }
+
+  const json = JSON.parse(editorValue.value);
+  await tcRuleStrings.setValue(json as TCRuleString[]);
+  const compiledRules = TitleCleaner.compileRuleStrings(tcRuleStrings.value);
+  await tcCompiledRules.setValue(compiledRules);
+  lastSavedEditorValue = editorValue.value;
+  btn.classList.add("btn-outline-success");
 
   await sleep(800);
-  btn.classList.add("btn-outline-primary");
+  saved.value = true;
   btn.classList.remove("btn-outline-success");
-  btn.classList.remove("btn-warning");
 }
 
-const handleInputDebounced = debounce(handleInput, 280);
-watch(editorValue, () => {
-  handleInputDebounced();
-});
 
 function handleInput() {
   const btn = saveBtn.value;
   if (!btn) {
     return;
   }
+  if (editorValue.value === lastSavedEditorValue) {
+    saved.value = true;
+    valid.value = true;
+    warnText.value = "";
+    return;
+  }
+  valid.value = false;
+  saved.value = false;
+
+  // if (!editorValue.value) {
+  //   editorValue.value = formatRuleStringArray(tcRuleStrings.defaultValue);
+  //   // todo add restore btn
+  // }
+
   try {
     const array: any = JSON.parse(editorValue.value);
     if (!Array.isArray(array)) {
-      btn.classList.add("disabled");
-      btn.title = "Not an array";
+      warnText.value = "Not an array";
       return;
     }
     if (array.length !== array.flat().length) {
-      btn.title = "Array is not flat";
-      return false;
-    }
-    if (!array.every(isString)) {
-      btn.title = "Array is not string one";
-      return false;
-    }
-    if (!isTCRuleStringArray(array)) {
-      btn.title = "Wrong data in the rule array";
-      btn.classList.add("disabled");
+      warnText.value = "Array is not flat";
       return;
     }
-    btn.classList.remove("disabled");
+    if (!array.every(isString)) {
+      warnText.value = "Array is not string one";
+      return;
+    }
+    if (!isTCRuleStringArray(array)) {
+      warnText.value = "Wrong data in the rule string array";
+      return;
+    }
+    valid.value = true;
+    warnText.value = "";
   } catch (e) {
-    btn.title = "Wrong JSON";
-    btn.classList.add("disabled");
+    warnText.value = "Incorrect JSON";
   }
 }
 
@@ -88,7 +99,13 @@ function formatRuleStringArray(array: TCRuleString[]): string {
               v-model="editorValue"
     ></textarea>
     <br>
-    <button ref="saveBtn" id="save" class="btn btn-outline-primary" @click="save">Save</button>
+    <button ref="saveBtn" id="save" class="btn btn-outline-primary"
+            @click="save"
+            :class="{
+              disabled: saved || !valid,
+            }"
+    >Save</button>
+    <span class="warning">{{warnText}}</span>
     <hr>
   </div>
 </template>
@@ -97,5 +114,9 @@ function formatRuleStringArray(array: TCRuleString[]): string {
 #editor {
   /*width: 540px;*/
   min-height: 400px;
+}
+.warning {
+  margin: 0 10px;
+  color: grey;
 }
 </style>
