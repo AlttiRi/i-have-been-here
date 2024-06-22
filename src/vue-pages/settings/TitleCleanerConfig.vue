@@ -83,7 +83,7 @@ function formatRuleStringArray(array: TCRuleString[]): string {
 
 <template>
   <div data-comp="TitleCleanerConfig">
-    <h4 title="String Rules based config">Title Cleaner Config</h4>
+    <h4 title="Rule String Array based config">Title Cleaner Config</h4>
     <textarea spellcheck="false" id="editor" class="form-control"
               v-model="editorValue"
     ></textarea>
