@@ -27,6 +27,6 @@
 
     "allowJs": false,
 
-    "noEmit": false
+    "noEmit": true,
   }
 }
