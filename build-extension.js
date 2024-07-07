@@ -82,14 +82,14 @@ try {
     await fs.promises.rename(folPathTemp, folPath);
     // ---
 
-    const zipPath = `./dist/ihbh-ext-${version}-${suffix}-${Math.trunc(Date.now()/1000)}.zip`;
+    const zipPath = `./dist/ihbh-ext-${suffix}-${version}-${Math.trunc(Date.now()/1000)}.zip`;
     await zipDirectory(folPath, zipPath);
 
     const hashInput = [...tempHashes.values()].reduce((acc, hash) => acc + hash, "");
     const sha1 = crypto.createHash("sha1").update(hashInput).digest("hex");
     console.log(sha1);
 
-    const newZipPath = `./dist/ihbh-ext-${version}-${suffix}-${sha1.slice(0, 10)}.zip`;
+    const newZipPath = `./dist/ihbh-ext-${suffix}-${version}-${sha1.slice(0, 10)}.zip`;
     await fs.promises.rename(zipPath, newZipPath);
 
 } catch (err) {
