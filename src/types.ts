@@ -1,5 +1,5 @@
 import {Base64} from "@/util";
-import {TCCompiledRules, TCRuleString} from "@/title-cleaner";
+import {TCCompiledRules, TCRuleString} from "@alttiri/string-magic";
 
 export type StoreLocalBase = {
     bookmarkOpenerMode: boolean,

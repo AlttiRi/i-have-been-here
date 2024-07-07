@@ -2,7 +2,7 @@
 import {ref, Ref, watch} from "vue";
 import {debounce, sleep} from "@/util";
 import {tcRuleStrings, tcCompiledRules} from "@/bg/store/store";
-import {isTCRuleStringArray, TCRuleString, TitleCleaner} from "@/title-cleaner";
+import {isTCRuleStringArray, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
 import {isString} from "@alttiri/util-js";
 
 

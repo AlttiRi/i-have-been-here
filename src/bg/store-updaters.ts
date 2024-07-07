@@ -2,7 +2,7 @@ import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "@/util-e
 import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/types";
 import {Base64}     from "@/util";
 import {getScdId}   from "@/bg/image-data";
-import {TCCompiledRules, TCRuleString, TitleCleaner} from "@/title-cleaner";
+import {TCCompiledRules, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
 
 const lastStoreVersion = 4;
 

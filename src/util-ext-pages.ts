@@ -1,6 +1,6 @@
 import {filenameLengthLimit, tcCompiledRules} from "@/bg/store/store";
 import {fullUrlToFilename} from "@/util";
-import {TitleCleaner} from "@/title-cleaner";
+import {TitleCleaner} from "@alttiri/string-magic";
 
 
 export async function getTrimmedTitle(title: string, url: string): Promise<string> {
