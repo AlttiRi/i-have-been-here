@@ -29,7 +29,7 @@ allImagesReady.value.push(new Promise(resolve => {
       </h5>
       <div class="created" style="align-self: start; margin: 12px;">{{ created ? localDateTime(created) : "" }}</div>
     </div>
-    <img :src="src" :alt="title" :title=" title || fullUrlToFilename(url)"
+    <img v-if="src" :src="src" :alt="title" :title=" title || fullUrlToFilename(url)"
          @load="onImageReady" @error="onImageReady"
     >
   </div>

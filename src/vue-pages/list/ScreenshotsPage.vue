@@ -15,7 +15,9 @@ waitMe();
 void getFromStoreLocal("screenshots").then(value => {
   screenshots.value = value?.reverse() || [];
   console.log("🖼 Screenshots:", value);
-  sleep().then(() => Promise.all(allImagesReady.value).then(iAmReady).then(() => allImagesReady.value = []));
+  sleep().then(() => Promise.all(allImagesReady.value).then(iAmReady).then(() => {
+    allImagesReady.value = [];
+  }));
 });
 </script>
 
