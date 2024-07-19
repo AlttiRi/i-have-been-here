@@ -1,7 +1,7 @@
 {
     "name": "i-have-been-here",
     "keywords": ["extension", "bookmarks", "screenshots", "visits", "typescript", "vue"],
-    "version": "1.20.3.20240707",
+    "version": "1.20.4.20240719",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {

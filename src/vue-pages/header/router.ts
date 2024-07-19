@@ -93,7 +93,9 @@ export const router = createRouter({
             }
         }
         if (savedPosition) {
+            // console.log("--- SavedPosition ---", savedPosition);
             if (_resolve === dummy) {
+                // console.log("--- Sleep 0 (Dummy's Promise) ---");
                 await sleep(0);
             }
             await promise;

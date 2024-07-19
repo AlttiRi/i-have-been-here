@@ -15,7 +15,7 @@ getFromStoreLocal(scd_id).then(base64 => src.value = toJpgDataUrl(base64));
 
 
 let onImageReady: (e: Event) => void;
-allImagesReady.push(new Promise(resolve => {
+allImagesReady.value.push(new Promise(resolve => {
   onImageReady = resolve;
 }));
 </script>
