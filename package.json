@@ -23,7 +23,7 @@
         "build-src":       "vite build --config pages/vite.config.ts",
         "build-src-watch": "vite build --config pages/vite.config.ts --watch",
 
-        "##": "Construct the extension 'dist' from the bundled files",
+        "##": "Then, construct the extension 'dist' from the bundled files",
         "build-ext-chrome":  "node build-extension.js",
         "build-ext-firefox": "node build-extension.js --firefox"
     }
