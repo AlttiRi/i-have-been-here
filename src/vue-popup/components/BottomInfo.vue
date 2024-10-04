@@ -13,6 +13,7 @@ watchEffect(() => {
 const faviconSrc   = ref("#");
 const faviconTitle = ref("");
 const titleText    = ref("");
+const titleRemoved = ref(false);
 const titleTitle   = ref("");
 const urlText      = ref("");
 const urlTitle     = ref("");
@@ -34,8 +35,12 @@ async function updateBottomHtml(tab: chrome.tabs.Tab): Promise<void> {
   }
 
   const trimmedTitle = await getTrimmedTitle(title, url);
-  titleText.value = trimmedTitle.length ? trimmedTitle : title;
-  titleTitle.value = titleText.value;
+  if (trimmedTitle === "" && title) {
+    titleRemoved.value = true;
+    titleText.value = titleTitle.value = title;
+  } else {
+    titleText.value = titleTitle.value = trimmedTitle;
+  }
   const u = new URL(url);
   if (u.protocol.startsWith("http")) {
     urlText.value = u.host.replace(/^www./, "");
@@ -51,7 +56,7 @@ async function updateBottomHtml(tab: chrome.tabs.Tab): Promise<void> {
   <div data-comp="BottomInfo" class="card bottom-part">
     <div class="card-body" style="padding: 0; margin: 0;">
       <div class="info p-3">
-        <div id="titleElem" :title="titleTitle">{{titleText || "&nbsp;"}}</div>
+        <div id="titleElem" :title="titleTitle" :class="{titleRemoved}">{{titleText || "&nbsp;"}}</div>
         <div class="bar">
           <div class="favicon-wrap">
             <img id="faviconElem" :src="faviconSrc" :title="faviconTitle" alt=""/>
@@ -97,5 +102,8 @@ img#faviconElem[src="#"] {
 }
 .card {
   border: none;
+}
+.titleRemoved {
+  color: grey;
 }
 </style>
