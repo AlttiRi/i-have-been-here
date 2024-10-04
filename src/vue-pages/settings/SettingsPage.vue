@@ -2,6 +2,7 @@
 import {computed, watchEffect} from "vue";
 import {dlShelf, filenameLengthLimit, quickAccessUrl, urlOpenerMode} from "@/bg/store/store";
 import TitleCleanerConfig from "./TitleCleanerConfig.vue";
+import {manifest} from "@/util-ext";
 
 
 const dlShelfBtnText = computed(() => {
@@ -53,9 +54,12 @@ watchEffect(() => {
     </label>
     <hr>
     <TitleCleanerConfig/>
+    <pre class="ext-version" :title="`${manifest.name}'s version`">{{manifest.version}}</pre>
   </div>
 </template>
 
 <style>
-
+.ext-version {
+  color: grey;
+}
 </style>
