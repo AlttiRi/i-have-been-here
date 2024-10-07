@@ -198,16 +198,28 @@ class LastActiveTabsQueue {
         });
     }
 
-    static async getLastActiveTabByUrl(url: string): Promise<chrome.tabs.Tab | null> { // for active window
+    static async getLastActiveTabsForCurrentWindow(): Promise<chrome.tabs.Tab[] | null> {
         const self = LastActiveTabsQueue.instance;
         const window: chrome.windows.Window = await new Promise(resolve => chrome.windows.getCurrent(resolve));
         if (window.id === undefined) {
-            console.warn("[warning][getLastActiveTabByUrl] window.id === undefined");
+            console.warn("[warning][getLastActiveTabsForCurrentWindow] window.id === undefined");
             return null;
         }
         const tabs = self.windowIdsToTabs.get(window.id);
         if (tabs === undefined) {
-            console.warn("[warning][getLastActiveTabByUrl] tabs === undefined");
+            console.warn("[warning][getLastActiveTabsForCurrentWindow] tabs === undefined");
+            return null;
+        }
+        if (tabs.length === 0) {
+            console.warn("[warning][getLastActiveTabsForCurrentWindow] tabs.length === 0");
+            return null;
+        }
+        return tabs;
+    }
+
+    static async getLastActiveTabByUrl(url: string): Promise<chrome.tabs.Tab | null> { // for active window
+        const tabs = await this.getLastActiveTabsForCurrentWindow();
+        if (tabs === null) {
             return null;
         }
         const expectedTabs = tabs.filter(tab => tab.url === url || tab.pendingUrl === url);
