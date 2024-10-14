@@ -4,6 +4,10 @@ export function queryTabs(queryInfo?: chrome.tabs.QueryInfo): Promise<chrome.tab
     return new Promise(resolve => chrome.tabs.query(queryInfo || {}, resolve));
 }
 
+export function getTab(tabId: number): Promise<chrome.tabs.Tab> {
+    return new Promise(resolve => chrome.tabs.get(tabId, resolve));
+}
+
 /** Gets the html document set as the popup for this browser action. */
 export async function getPopup(details?: chrome.browserAction.TabDetails): Promise<string> {
     if (details === undefined) {
