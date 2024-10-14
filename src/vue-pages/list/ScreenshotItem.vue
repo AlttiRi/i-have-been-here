@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {localDateTime}     from "@alttiri/util-js";
 import {fullUrlToFilename} from "@/util";
 import {getFromStoreLocal} from "@/util-ext";
-import {toJpgDataUrl}      from "@/bg/image-data";
+import {toJpgDataUrl}      from "@/bg/util-image-data";
 import {ScreenshotInfo}    from "@/types";
 import {allImagesReady}    from "./core-list";
 

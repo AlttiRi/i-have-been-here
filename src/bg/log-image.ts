@@ -1,7 +1,7 @@
 import {executeScript} from "@/util-ext-bg";
 import {logPicture, downloadBlob, JpgDataURL, Base64} from "@/util";
 import {exchangeMessageWithTab, getFromStoreLocal, setToStoreLocal} from "@/util-ext";
-import {getScdId, toStoreData} from "@/bg/image-data";
+import {getScdId, toStoreData} from "@/bg/util-image-data";
 import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/message-center";
 import {ScreenshotInfo} from "@/types";
 import {getScreenshotFilename} from "@/util-ext-pages";

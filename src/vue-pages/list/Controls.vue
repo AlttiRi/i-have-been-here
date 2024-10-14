@@ -2,7 +2,7 @@
 import {downloadBlob, fullUrlToFilename, sleep}  from "@/util";
 import {getFromStoreLocal, removeFromStoreLocal} from "@/util-ext";
 import {exportVisits, importVisits} from "@/bg/visits";
-import {toArrayBuffer}              from "@/bg/image-data";
+import {toArrayBuffer}              from "@/bg/util-image-data";
 import {ScreenshotInfo} from "@/types";
 
 

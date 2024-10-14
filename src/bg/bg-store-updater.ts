@@ -6,7 +6,7 @@ import {
     setToStoreLocal,
 }                   from "@/util-ext";
 import {Base64}     from "@/util";
-import {getScdId}   from "@/bg/image-data";
+import {getScdId}   from "@/bg/util-image-data";
 
 
 const lastStoreVersion = 4;
