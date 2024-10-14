@@ -3,7 +3,7 @@ import {emojiToImageData, sleep} from "@/util";
 import {updateIcons}  from "@/bg/tab-counter";
 import {ChangeIconPS} from "@/message-center";
 
-export function changeIconOnMessage() {
+export function initPS_ChangeIcon() {
     ChangeIconPS.addListener(blinkDownloadEmoji);
 }
 

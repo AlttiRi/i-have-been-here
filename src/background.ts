@@ -4,16 +4,16 @@ import {
     logPicture, sleep,
 } from "@/util";
 import {extensionName, inIncognitoContext} from "@/util-ext";
-import {countTabs}           from "@/bg/tab-counter"
-import {changeIconOnMessage} from "@/bg/change-icon-on-message"
-import {logImageOnMessage}   from "@/bg/log-image"
-import {registerContextMenu} from "@/bg/context-menu"
+import {countTabs}           from "@/bg/tab-counter";
+import {logImageOnMessage}   from "@/bg/log-image";
+import {registerContextMenu} from "@/bg/context-menu";
 import {enableQuickAccessUrlOpenerMode} from "@/bg/quick-access-url-opener";
 
 import {initVisitBackgroundHandler} from "@/bg/visits";
 import {updateStoreModel}           from "@/bg/store-updaters";
+import {initPS_ChangeIcon}          from "@/bg/bg-ps-change-icon";
 import {initGS_GetTabs}             from "@/bg/bg-gs-get-tabs";
-import {initGS_GetLastTabs}         from "@/bg/bg-gs-tabs";
+import {initGS_GetLastTabs}         from "@/bg/bg-gs-get-last-tabs";
 import {initES_FocusOrCreateNewTab} from "@/bg/bg-ss-create-new-tab";
 
 ;(async function main(): Promise<void> {
@@ -22,7 +22,6 @@ import {initES_FocusOrCreateNewTab} from "@/bg/bg-ss-create-new-tab";
 
     await updateStoreModel();
 
-    changeIconOnMessage();
     logImageOnMessage();
 
     void countTabs();
@@ -30,6 +29,7 @@ import {initES_FocusOrCreateNewTab} from "@/bg/bg-ss-create-new-tab";
     initVisitBackgroundHandler();
     registerContextMenu(["reload", "yandex_images", "download_shelf", "open_list"]);
 
+    initPS_ChangeIcon();
     initGS_GetTabs();
     initGS_GetLastTabs();
     initES_FocusOrCreateNewTab();
