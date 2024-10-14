@@ -1,11 +1,13 @@
 import {watch} from "vue";
-import {getPopup, getTitle, focusOrCreateNewTab, getActiveTabId} from "@/util-ext-bg";
+import {getPopup, getTitle, getActiveTabId} from "@/util-ext-bg";
 import {urlOpenerMode, quickAccessUrl} from "@/bg/store/store";
+import {FocusOrCreateNewTabES}         from "@/message-center";
 
 
 export async function openQuickAccessUrl(): Promise<chrome.tabs.Tab | undefined> {
     console.log("openQuickAccessUrl");
-    return focusOrCreateNewTab(await quickAccessUrl.getValue());
+    const url = await quickAccessUrl.getValue();
+    return FocusOrCreateNewTabES.exchange({url});
 }
 
 type State = {title: string, popup: string, saved: boolean};

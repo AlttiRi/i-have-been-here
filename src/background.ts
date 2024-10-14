@@ -11,8 +11,10 @@ import {registerContextMenu} from "@/bg/context-menu"
 import {enableQuickAccessUrlOpenerMode} from "@/bg/quick-access-url-opener";
 
 import {initVisitBackgroundHandler} from "@/bg/visits";
-import {initGetTabsListener}        from "@/bg/get-tabs";
 import {updateStoreModel}           from "@/bg/store-updaters";
+import {initGS_GetTabs}             from "@/bg/bg-gs-get-tabs";
+import {initGS_GetLastTabs}         from "@/bg/bg-gs-tabs";
+import {initES_FocusOrCreateNewTab} from "@/bg/bg-ss-create-new-tab";
 
 ;(async function main(): Promise<void> {
     console.log(`[${extensionName}] background.js loaded.`);
@@ -28,8 +30,9 @@ import {updateStoreModel}           from "@/bg/store-updaters";
     initVisitBackgroundHandler();
     registerContextMenu(["reload", "yandex_images", "download_shelf", "open_list"]);
 
-    initGetTabsListener();
-
+    initGS_GetTabs();
+    initGS_GetLastTabs();
+    initES_FocusOrCreateNewTab();
 
     chrome.runtime.onMessage.addListener(function logEverything(message, sender) {
         console.log(`[${inIncognitoContext ? "⬛" : "⬜"}][Incoming message]`, message, {from: sender});
