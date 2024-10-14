@@ -1,8 +1,13 @@
-import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "@/util-ext";
+import {TCCompiledRules, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
 import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/types";
+import {
+    getFromStoreLocal,
+    removeFromStoreLocal,
+    setToStoreLocal,
+}                   from "@/util-ext";
 import {Base64}     from "@/util";
 import {getScdId}   from "@/bg/image-data";
-import {TCCompiledRules, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
+
 
 const lastStoreVersion = 4;
 
@@ -15,6 +20,7 @@ chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrom
 chrome.runtime.onStartup.addListener(function () {
     console.log("chrome.runtime.onStartup");
 });
+
 
 export async function updateStoreModel(): Promise<void> {
     let version: number = await getFromStoreLocal("version") || 1;

@@ -9,7 +9,7 @@ import {logImageOnMessage}   from "@/bg/log-image";
 import {enableQuickAccessUrlOpenerMode} from "@/bg/quick-access-url-opener";
 
 import {initVisitBackgroundHandler} from "@/bg/visits";
-import {updateStoreModel}           from "@/bg/store-updaters";
+import {updateStoreModel}           from "@/bg/bg-store-updater";
 
 import {initContextMenu}            from "@/bg/bg-init-context-menu";
 import {initPS_ChangeIcon}          from "@/bg/bg--ps-change-icon";
@@ -23,17 +23,18 @@ import {initES_FocusOrCreateNewTab} from "@/bg/bg--ss-create-new-tab";
 
     await updateStoreModel();
 
+    initContextMenu(["reload_extension", "yandex_images", "download_shelf", "open_list"]);
+
+    initPS_ChangeIcon();
+    initGS_GetTabs();
+    initGS_GetLastTabs();
+    initES_FocusOrCreateNewTab();
+
     logImageOnMessage();
 
     void countTabs();
     void enableQuickAccessUrlOpenerMode();
     initVisitBackgroundHandler();
-
-    initContextMenu(["reload_extension", "yandex_images", "download_shelf", "open_list"]);
-    initPS_ChangeIcon();
-    initGS_GetTabs();
-    initGS_GetLastTabs();
-    initES_FocusOrCreateNewTab();
 
     chrome.runtime.onMessage.addListener(function logEverything(message, sender) {
         console.log(`[${inIncognitoContext ? "⬛" : "⬜"}][Incoming message]`, message, {from: sender});
