@@ -1,5 +1,5 @@
-import {ReactiveStoreLocalValue} from "./reactive-store-local-value";
-import {isFirefox, isOpera} from "@/util";
+import {ReactiveStoreLocalValue} from "@/bg/classes/reactive-store-local-value";
+import {isFirefox, isOpera}      from "@/util";
 import {TCRuleString, TitleCleaner} from "@alttiri/string-magic";
 
 export const urlOpenerMode: ReactiveStoreLocalValue<"quickAccessUrlOpenerMode">
