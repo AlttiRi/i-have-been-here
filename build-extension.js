@@ -5,7 +5,11 @@ import crypto from "node:crypto";
 import {pipeline} from "node:stream/promises";
 import archiver   from "archiver";
 import {exists, listFiles} from "@alttiri/util-node-js";
-import packageJson from "./package.json" assert {type: "json"};
+
+import {createRequire} from "node:module";
+const require_ex = createRequire(import.meta.url);
+
+const packageJson = require_ex("./package.json");
 const {version} = packageJson;
 
 
@@ -43,6 +47,12 @@ try {
             console.log(rel);
             return true;
         }
+    });
+
+    const contentFrom = path.join(projectDir, "src", "content");
+    const contentTo   = path.join(tmpDir,     "src", "content");
+    await fs.promises.cp(contentFrom, contentTo, {
+        recursive: true,
     });
 
     if (ff) {
