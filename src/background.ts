@@ -40,14 +40,14 @@ import {initES_FocusOrCreateNewTab} from "@/bg/bg--ss-create-new-tab";
         console.log(`[${inIncognitoContext ? "⬛" : "⬜"}][Incoming message]`, message, {from: sender});
     });
 
-    void (async function imgLogTest(){
+    void (async function imgLogTest() {
         await sleep(10);
         const url = await emojiToBlobURL("🔲");
         console.log("Test picture log:");
         logPicture(url);
         logPicture(emojiToDataURL("🔲"));
     })();
-    void (async function debugStoreLog(){
+    void (async function debugStoreLog() {
         await sleep(2000);
         chrome.storage.local.get(store => logBlue("[⚒]", "chrome.storage.local.get(console.log)", store)());
         chrome.bookmarks.getTree(tree => logBlue("[⚒]", "chrome.bookmarks.getTree(console.log)", tree)());
