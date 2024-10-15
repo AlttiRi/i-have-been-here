@@ -290,3 +290,14 @@ export function prependCss(href: string, integrity?: string): Promise<unknown> {
         }
     });
 }
+
+
+// console.log("%cHelloWorld", cssBlue);
+const cssBlue   = "color: #2196f3; font-weight: bold;";
+const cssIndigo = "color: #3f51b5; font-weight: bold;";
+export function logBlue(...args: any[]) {
+    return console.log.bind(console, "%c" + args[0], cssBlue, ...args.slice(1));
+}
+export function logIndigo(...args: any[]) {
+    return console.log.bind(console, "%c" + args[0], cssIndigo, ...args.slice(1));
+}

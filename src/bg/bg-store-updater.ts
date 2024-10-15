@@ -4,28 +4,32 @@ import {
     getFromStoreLocal,
     removeFromStoreLocal,
     setToStoreLocal,
-}                   from "@/util-ext";
-import {Base64}     from "@/util";
-import {getScdId}   from "@/bg/util-image-data";
+}                 from "@/util-ext";
+import {
+    Base64,
+    logIndigo,
+}                 from "@/util";
+import {getScdId} from "@/bg/util-image-data";
 
 
 const lastStoreVersion = 4;
 
 chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrome.runtime.InstalledDetails) {
-    console.log("chrome.runtime.onInstalled", details.reason);
+    logIndigo("chrome.runtime.onInstalled", `Reason: "${details.reason}"`)();
     if (details.reason === "install") {
+        logIndigo("[⚒]", `Set ${lastStoreVersion} store version`)();
         void setToStoreLocal("version", lastStoreVersion);
     }
 });
 chrome.runtime.onStartup.addListener(function () {
-    console.log("chrome.runtime.onStartup");
+    logIndigo("chrome.runtime.onStartup")();
 });
 
 
 export async function updateStoreModel(): Promise<void> {
     let version: number = await getFromStoreLocal("version") || 1;
     if (version === lastStoreVersion) {
-        console.log("Store is up to date");
+        logIndigo("Store is up to date")();
         return;
     }
 
@@ -90,7 +94,7 @@ export async function updateStoreModel(): Promise<void> {
 
         version = 2;
         await setToStoreLocal("version", version);
-        console.log(`Store was updated to version ${version}`);
+        logIndigo(`Store was updated to version ${version}`)();
     } // -> 2
 
     if (version === 2) {
@@ -105,7 +109,7 @@ export async function updateStoreModel(): Promise<void> {
 
         version = 3;
         await setToStoreLocal("version", version);
-        console.log(`Store was updated to version ${version}`);
+        logIndigo(`Store was updated to version ${version}`)();
     } // -> 3
 
     if (version === 3) {
@@ -172,7 +176,7 @@ export async function updateStoreModel(): Promise<void> {
 
         version = 4;
         await setToStoreLocal("version", version);
-        console.log(`Store was updated to version ${version}`);
+        logIndigo(`Store was updated to version ${version}`)();
     } // -> 4
 }
 // [note] Do not forget to update `lastStoreVersion` above!
