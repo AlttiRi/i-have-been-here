@@ -1,13 +1,13 @@
 {
     "name": "i-have-been-here",
     "keywords": ["extension", "bookmarks", "screenshots", "visits", "typescript", "vue"],
-    "version": "1.20.11.20241015",
+    "version": "1.20.12.20241017",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {
-        "@alttiri/string-magic": "0.1.0-20240707",
-        "@alttiri/util-js":     "1.10.2-20240603",
-        "@alttiri/util-node-js": "2.1.0-20240624",
+        "@alttiri/string-magic": "0.3.0-20240821",
+        "@alttiri/util-js":     "1.14.1-20240908",
+        "@alttiri/util-node-js": "2.2.0-20240821",
         "@types/chrome": "0.0.142",
         "@types/node": "20.12.12",
         "typescript": "5.5.3",
@@ -24,7 +24,7 @@
         "build-src-watch": "vite build --config pages/vite.config.ts --watch",
 
         "##": "Then, construct the extension 'dist' from the bundled files",
-        "build-ext-chrome":  "node build-extension.js",
-        "build-ext-firefox": "node build-extension.js --firefox"
+        "pack-ext-chrome":  "node build-extension.js",
+        "pack-ext-firefox": "node build-extension.js --firefox"
     }
 }
