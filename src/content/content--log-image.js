@@ -1,12 +1,14 @@
-(function inject() {
+(function() {
     const injectScriptId = "content-script__log-image";
-    console.log("injecting: " + injectScriptId);
+    console.log(`[${injectScriptId}] running`);
 
     const injected = window[injectScriptId];
     if (injected) {
+        console.log(`[${injectScriptId}] the listener is already inited`);
         return;
     }
     window[injectScriptId] = true;
+    console.log(`[${injectScriptId}] init the listener`);
 
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
