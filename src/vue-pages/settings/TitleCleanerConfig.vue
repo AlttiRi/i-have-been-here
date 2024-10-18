@@ -106,7 +106,6 @@ function formatRuleStringArray(array: TCRuleString[]): string {
             }"
     >Save</button>
     <span class="warning">{{warnText}}</span>
-    <hr>
   </div>
 </template>
 

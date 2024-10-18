@@ -70,46 +70,57 @@ watchEffect(() => {
 
 <template>
   <div data-comp="SettingsPage" id="settings" class="container">
-    <h4>Options</h4>
-    <button id="download-shelf" class="btn m-3" @click="toggleDlShelf">{{dlShelfBtnText}}</button>
-    <button id="url-opener-mode" class="btn m-3" @click="toggleUrlOpenerMode">{{urlOpenerModeBtnText}}</button>
-    <hr>
-    <label style="display: contents">
-      <h4>Filename length limit</h4>
-      <input id="filename-length-limit" class="form-control"
-             type="number"
-             v-model="filenameLengthLimit.value"
-      >
-    </label>
-    <hr>
-    <label style="display: contents">
-      <h4>Quick access URL</h4>
-      <input id="quick-url" class="form-control"
-             type="text"
-             v-model="quickAccessUrl.value"
-             :title="quickUrlInputTitle"
-      >
-    </label>
-    <hr>
-    <TitleCleanerConfig/>
-    <div v-if="lastActiveTab">
-      <h5>Title Cleaner preview (for <span :title="lastActiveTab.url">the last active tab</span>'s title)</h5>
-      <div class="original" title="original">{{lastActiveTab.title || "&nbsp;"}}</div>
-      <div class="cleaned" title="cleaned">{{lATCleanedTitle || "&nbsp;"}}</div>
-      <div class="note">
-        <div v-if="lATCleanedTitle === lastActiveTab.title">
-          <span>No changes.</span>
-        </div>
-        <div v-else-if="lastActiveTab.title && lATCleanedTitle === ''">
-          Cleaned (empty).
-        </div>
-        <div v-else>
-          <span>Cleaned.</span>
-        </div>
-      </div>
+    <div class="options">
+      <h4>Options</h4>
+      <button id="download-shelf" class="btn m-3" @click="toggleDlShelf">{{dlShelfBtnText}}</button>
+      <button id="url-opener-mode" class="btn m-3" @click="toggleUrlOpenerMode">{{urlOpenerModeBtnText}}</button>
     </div>
     <hr>
-    <pre class="ext-version" :title="`${manifest.name}'s version`">{{manifest.version}}</pre>
+    <div class="filename-length-limit">
+      <label style="display: contents">
+        <h4>Filename length limit</h4>
+        <input id="filename-length-limit" class="form-control"
+               type="number"
+               v-model="filenameLengthLimit.value"
+        >
+      </label>
+    </div>
+    <hr>
+    <div class="quick-access-url">
+      <label style="display: contents">
+        <h4>Quick access URL</h4>
+        <input id="quick-url" class="form-control"
+               type="text"
+               v-model="quickAccessUrl.value"
+               :title="quickUrlInputTitle"
+        >
+      </label>
+    </div>
+    <hr>
+    <TitleCleanerConfig/>
+    <hr>
+    <div class="title-cleaner-preview">
+      <div v-if="lastActiveTab">
+        <h5>Title Cleaner preview (for <span :title="lastActiveTab.url">the last active tab</span>'s title)</h5>
+        <div class="original" title="original">{{lastActiveTab.title || "&nbsp;"}}</div>
+        <div class="cleaned" title="cleaned">{{lATCleanedTitle || "&nbsp;"}}</div>
+        <div class="note">
+          <div v-if="lATCleanedTitle === lastActiveTab.title">
+            <span>No changes.</span>
+          </div>
+          <div v-else-if="lastActiveTab.title && lATCleanedTitle === ''">
+            Cleaned (empty).
+          </div>
+          <div v-else>
+            <span>Cleaned.</span>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+    <div class="ext-version">
+      <pre :title="`${manifest.name}'s version`">{{manifest.version}}</pre>
+    </div>
   </div>
 </template>
 
@@ -117,7 +128,7 @@ watchEffect(() => {
 .ext-version {
   color: grey;
 }
-.note {
+.title-cleaner-preview .note {
   color: grey;
   opacity: 0.5;
 }
