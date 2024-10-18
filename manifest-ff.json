@@ -4,7 +4,7 @@
     "name": "__MSG_extension_name__",
     "short_name": "__MSG_extension_name__",
     "description": "__MSG_extension_description__",
-    "version": "1.21.0.20241017",
+    "version": "1.22.0.20241018",
     "content_scripts": [
 		    {
             "matches": ["<all_urls>"],
@@ -37,7 +37,8 @@
     },
     "browser_specific_settings": {
         "gecko": {
-            "id": "gh.alttiri@i-have-been-here"
+            "id": "gh.alttiri@i-have-been-here",
+            "strict_min_version": "77.0"
         }
     }
 }

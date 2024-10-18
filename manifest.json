@@ -4,7 +4,7 @@
     "name": "__MSG_extension_name__",
     "short_name": "__MSG_extension_name__",
     "description": "__MSG_extension_description__",
-    "version": "1.21.0.20241017",
+    "version": "1.22.0.20241018",
     "content_scripts": [
 		    {
             "matches": ["<all_urls>"],
@@ -35,5 +35,6 @@
     "omnibox": {
         "keyword": "z"
     },
+    "minimum_chrome_version": "85.0",
 	  "incognito": "split"
 }
