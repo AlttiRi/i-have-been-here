@@ -4,9 +4,9 @@ import {StoreLocalModel} from "@/types";
 
 export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
 
+    private _isReady: boolean;
     private readonly keyName: K;
     private readonly _ref: Ref<StoreLocalModel[K]>;
-    private isReadyRef: Ref<boolean>; // todo remove ref
     private resolve!: (value: StoreLocalModel[K]) => void;
 
     public readonly defaultValue: StoreLocalModel[K];
@@ -17,11 +17,11 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
     constructor(keyName: K, defaultValue: StoreLocalModel[K]) {
         this.keyName = keyName;
         this.defaultValue = defaultValue;
-        this.isReadyRef = ref(false);
+        this._isReady = false;
         this.onReady = new Promise<StoreLocalModel[K]>(resolve => this.resolve = resolve);
 
         this._ref = ref(defaultValue)  as Ref<StoreLocalModel[K]>;
-        this.ref = readonly(this._ref) as Readonly<Ref<StoreLocalModel[K]>>; // todo: rename to "readonlyRef"?
+        this.ref = readonly(this._ref) as Readonly<Ref<StoreLocalModel[K]>>; // todo?: rename to "readonlyRef"
 
         chrome.runtime.onMessage.addListener(message => {
             if (message.command === `set-${this.keyName}--message`) {
@@ -38,10 +38,11 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
             value = this.defaultValue;
         }
         this._ref.value = value;
-        this.isReadyRef.value = true;
+        this._isReady = true;
         this.resolve(value);
     }
 
+    /** Get the value instantly. May return the default value if `isReady` is `false` */
     public get value(): StoreLocalModel[K] {
         return this.ref.value;
     }
@@ -50,11 +51,11 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
     }
 
     public get isReady(): boolean {
-        return this.isReadyRef.value;
+        return this._isReady;
     }
     public async getValue(): Promise<StoreLocalModel[K]> {
-        if (!this.isReady) {
-            await this.onReady; // todo use `return`
+        if (!this._isReady) {
+            return this.onReady;
         }
         return this.value;
     }
