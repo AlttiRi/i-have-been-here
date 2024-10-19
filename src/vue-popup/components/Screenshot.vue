@@ -45,7 +45,7 @@ async function updatePreview(): Promise<void> {
     return;
   }
 
-  logPicture(screenshotUrl);
+  void logPicture(screenshotUrl);
   image.value = {
     src: screenshotUrl,
     alt: "",

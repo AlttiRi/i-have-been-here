@@ -71,7 +71,7 @@ async function _logScreenshot(tabData: TabCapture): Promise<void> {
     const {tab, screenshotUrl} = tabData;
 
     // Log the picture in a background script //
-    logPicture(screenshotUrl);
+    void logPicture(screenshotUrl);
 
     // Log the picture in a tab //
     if (!tab.id) {

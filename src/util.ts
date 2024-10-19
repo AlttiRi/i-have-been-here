@@ -9,11 +9,7 @@ export const isFirefox: boolean = typeof navigator === "object" && navigator.use
 export const isOpera:   boolean = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
 
 
-export function logPicture(url: string, scale?: number): void {
-    void logPictureAsync(url, scale);
-}
-
-export async function logPictureAsync(url: string, scale: number = 0.5): Promise<void> {
+export async function logPicture(url: string, scale: number = 0.5): Promise<void> {
     let imgSrc: string;
     if (isBlobUrl(url)) {
         imgSrc = await blobUrlToDataUrl(url);
@@ -55,10 +51,11 @@ export function emojiToImageData(emoji: string, size = 64, multiplier = 1): Imag
     return context.getImageData(0, 0, size, size);
 }
 
+// very slow (~1 second)
 export function emojiToBlob(emoji: string, size?: number, multiplier?: number): Promise<Blob> {
     const {canvas} = emojiTo(emoji, size, multiplier);
     return new Promise((resolve, reject) => {
-        canvas.toBlob((blob: (Blob | null)) => {
+        canvas.toBlob((blob: (Blob | null)) => { // this is slow
             if (blob) {
                 resolve(blob);
             } else {

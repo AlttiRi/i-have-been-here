@@ -14,23 +14,24 @@ import {getScdId} from "@/bg/util-image-data";
 
 const lastStoreVersion = 4;
 
-chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrome.runtime.InstalledDetails) {
-    logIndigo("chrome.runtime.onInstalled", `Reason: "${details.reason}"`)();
-    if (details.reason === "install") {
-        logIndigo("[⚒]", `Set ${lastStoreVersion} store version`)();
-        void setToStoreLocal("version", lastStoreVersion);
-     // void setToStoreLocal("jsonName", "ihbh-extension-storage"); // todo
-    }
-});
-chrome.runtime.onStartup.addListener(function () {
-    logIndigo("chrome.runtime.onStartup")();
-});
-
+export function initStartupListeners() {
+    chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrome.runtime.InstalledDetails) {
+        logIndigo("[⚒]", "Installed", `(reason: "${details.reason}")`)();
+        if (details.reason === "install") {
+            logIndigo("[⚒]", `Set ${lastStoreVersion} store version`)();
+            void setToStoreLocal("version", lastStoreVersion);
+            // void setToStoreLocal("jsonName", "ihbh-extension-storage"); // todo
+        }
+    });
+    chrome.runtime.onStartup.addListener(() => {
+        logIndigo("[⚒]", "Startup")();
+    });
+}
 
 export async function updateStoreModel(): Promise<void> {
     let version: number = await getFromStoreLocal("version") || 1;
     if (version === lastStoreVersion) {
-        logIndigo("Store is up to date")();
+        logIndigo("[⚒]", "Store is up to date")();
         return;
     }
 
