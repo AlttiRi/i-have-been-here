@@ -49,7 +49,7 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
 
     /** Get the value instantly. May return the default value if `isReady` is `false`. Reactive. */
     public get value(): StoreLocalModel[K] {
-        return this.ref.value;
+        return this._ref.value;
     }
     public set value(newValue: StoreLocalModel[K]) {
         void this.setValue(newValue);
