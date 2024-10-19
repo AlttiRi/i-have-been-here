@@ -1,5 +1,7 @@
 import {downloadBlob}  from "@alttiri/util-js";
-import {logPicture, JpgDataURL, Base64} from "@/util";
+import {
+    logPicture, JpgDataURL, Base64
+} from "@/util";
 import {
     exchangeMessageWithTab,
     getFromStoreLocal,

@@ -1,15 +1,14 @@
+import {watch} from "vue";
+import {queryTabs}                 from "@/util-ext-bg";
+import {visitedIconDataIfRequired} from "@/bg/visits";
+import {urlOpenerMode}             from "@/bg/store/store";
+
 // Count tabs with separation for incognito and normal mode
 // + changes icon
 
-import {queryTabs} from "@/util-ext-bg";
-import {visitedIconDataIfRequired} from "@/bg/visits";
-
-import {urlOpenerMode} from "@/bg/store/store";
-import {watch} from "vue";
-
 
 const tabsArray: chrome.tabs.Tab[] = [];
-const imgFilename = chrome.extension.inIncognitoContext ? "images/2.png" : "images/1.png";
+const imgFilename = chrome.extension.inIncognitoContext ? "images/black.png" : "images/white.png";
 const imgPath: string = chrome.runtime.getURL(imgFilename);
 
 export async function countTabs() {

@@ -18,7 +18,7 @@ export async function visitedIconDataIfRequired(tab: chrome.tabs.Tab) {
     if (visit) {
         return {
             // imageData: emojiToImageData("✅"),
-            path: chrome.runtime.getURL("images/mark.png")
+            path: chrome.runtime.getURL("images/green-mark.png")
         };
     }
     return null;
