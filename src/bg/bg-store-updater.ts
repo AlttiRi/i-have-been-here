@@ -13,23 +13,39 @@ import {getScdId} from "@/bg/util-image-data";
 
 
 const lastStoreVersion = 4;
+let wasInstalled = false;
 
+/**
+ `onStartup` triggers on the browser start only.
+ `onInstalled` with `reason === update` on extension reloading.
+ `onInstalled` with `reason === install` on extension first loading (installing). One time.
+ Toggling the extension does not trigger the listeners above.
+ */
 export function initStartupListeners() {
-    chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrome.runtime.InstalledDetails) {
-        logIndigo("[⚒]", "Installed", `(reason: "${details.reason}")`)();
+    chrome.runtime.onInstalled.addListener(async function setInitialVersion(details: chrome.runtime.InstalledDetails) {
         if (details.reason === "install") {
-            logIndigo("[⚒]", `Set ${lastStoreVersion} store version`)();
-            void setToStoreLocal("version", lastStoreVersion);
+            logIndigo("[⚒]", "The extension was installed")();
+            wasInstalled = true;
+            await setToStoreLocal("version", lastStoreVersion);
+            logIndigo("[⚒]", "Set", lastStoreVersion, "store version")();
             // void setToStoreLocal("jsonName", "ihbh-extension-storage"); // todo
+        } else if (details.reason === "update") {
+            logIndigo("[⚒]", "The extension was reloaded")();
+        } else {
+            logIndigo("[⚒]", `Installed (reason: "${details.reason}")`)();
         }
     });
     chrome.runtime.onStartup.addListener(() => {
-        logIndigo("[⚒]", "Startup")();
+        logIndigo("[⚒]", "Browser startup")();
     });
 }
 
 export async function updateStoreModel(): Promise<void> {
-    let version: number = await getFromStoreLocal("version") || 1;
+    let version: number = await getFromStoreLocal("version");
+    if (version === undefined && wasInstalled) {
+        logIndigo("[⚒]", "Skip store updating")();
+        return;
+    }
     if (version === lastStoreVersion) {
         logIndigo("[⚒]", "Store is up to date")();
         return;
