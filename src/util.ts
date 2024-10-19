@@ -9,32 +9,6 @@ export const isFirefox: boolean = typeof navigator === "object" && navigator.use
 export const isOpera:   boolean = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
 
 
-export function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-export function downloadBlob(blob: Blob, name: string, url?: string): void {
-    const anchor = document.createElement("a");
-    anchor.setAttribute("download", name || "");
-    const blobUrl = URL.createObjectURL(blob);
-    anchor.href = blobUrl + (url ? ("#" + url) : "");
-    anchor.click();
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
-}
-
-export function debounce(runnable: Function, ms = 50) {
-    let timerId: number;
-    return function(this: any): void {
-        if (timerId) {
-            clearTimeout(timerId);
-        }
-        timerId = window.setTimeout(() => {
-            runnable.apply(this, arguments);
-            timerId = -1;
-        }, ms);
-    }
-}
-
 export function logPicture(url: string, scale?: number): void {
     void logPictureAsync(url, scale);
 }

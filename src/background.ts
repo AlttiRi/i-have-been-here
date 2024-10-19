@@ -1,6 +1,7 @@
+import {sleep} from "@alttiri/util-js";
 import {
     emojiToDataURL, emojiToBlobURL,
-    logPicture, logBlue, sleep,
+    logPicture, logBlue,
 } from "@/util";
 import {extensionName, inIncognitoContext} from "@/util-ext";
 import {countTabs}           from "@/bg/tab-counter";

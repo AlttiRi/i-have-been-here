@@ -13,10 +13,14 @@ export type StoreLocalBase = {
 }
 
 export type StoreLocalModel = {
-    bookmarks: Array<BookmarkURL | BookmarkFolder> | undefined,
-    visits: Visit[] | undefined,
-    screenshots: ScreenshotInfo[] | undefined,
-    [sc_id: ScreenshotDataId]: Base64,
+ // jsonName: "ihbh-extension-storage" // todo // use this value to mark the storage JSON
+    bookmarks: Array<BookmarkURL | BookmarkFolder> | undefined
+    visits: Visit[] | undefined
+    screenshots: ScreenshotInfo[] | undefined
+    commonSettings: {
+        browserName: string
+    }
+    [sc_id: ScreenshotDataId]: Base64
 } & StoreLocalBase;
 
 export type ScreenshotEntry = [ScreenshotDataId, StoreLocalModel[ScreenshotDataId]];

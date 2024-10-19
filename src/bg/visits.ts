@@ -1,8 +1,7 @@
-import {localDate}    from "@alttiri/util-js";
-import {getActiveTab} from "@/util-ext-bg";
-import {updateIcons}  from "@/bg/tab-counter";
+import {downloadBlob, localDate} from "@alttiri/util-js";
 import {getFromStoreLocal, setToStoreLocal} from "@/util-ext";
-import {downloadBlob} from "@/util";
+import {getActiveTab}                       from "@/util-ext-bg";
+import {updateIcons}            from "@/bg/tab-counter";
 import {AddVisitGS, GetVisitGS} from "@/message-center";
 import {Visit} from "@/types";
 

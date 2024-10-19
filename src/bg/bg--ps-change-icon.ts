@@ -1,7 +1,8 @@
-import {getActiveTab}            from "@/util-ext-bg";
-import {emojiToImageData, sleep} from "@/util";
-import {updateIcons}  from "@/bg/tab-counter";
-import {ChangeIconPS} from "@/message-center";
+import {sleep} from "@alttiri/util-js";
+import {emojiToImageData} from "@/util";
+import {getActiveTab}     from "@/util-ext-bg";
+import {updateIcons}      from "@/bg/tab-counter";
+import {ChangeIconPS}     from "@/message-center";
 
 export function initPS_ChangeIcon() {
     ChangeIconPS.addListener(blinkDownloadEmoji);

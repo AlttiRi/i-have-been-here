@@ -6,21 +6,22 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
 
     private readonly keyName: K;
     private readonly _ref: Ref<StoreLocalModel[K]>;
-    private isReadyRef: Ref<boolean>;
-    private resolve!: Function;
+    private isReadyRef: Ref<boolean>; // todo remove ref
+    private resolve!: (value: StoreLocalModel[K]) => void;
 
     public readonly defaultValue: StoreLocalModel[K];
+    /** READONLY. To change the value use `setValue`. */
     public readonly ref: Readonly<Ref<StoreLocalModel[K]>>;
-    public readonly onReady: Promise<void>;
+    public readonly onReady: Promise<StoreLocalModel[K]>;
 
     constructor(keyName: K, defaultValue: StoreLocalModel[K]) {
         this.keyName = keyName;
         this.defaultValue = defaultValue;
         this.isReadyRef = ref(false);
-        this.onReady = new Promise(resolve => this.resolve = resolve);
+        this.onReady = new Promise<StoreLocalModel[K]>(resolve => this.resolve = resolve);
 
         this._ref = ref(defaultValue)  as Ref<StoreLocalModel[K]>;
-        this.ref = readonly(this._ref) as Readonly<Ref<StoreLocalModel[K]>>;
+        this.ref = readonly(this._ref) as Readonly<Ref<StoreLocalModel[K]>>; // todo: rename to "readonlyRef"?
 
         chrome.runtime.onMessage.addListener(message => {
             if (message.command === `set-${this.keyName}--message`) {
@@ -38,7 +39,7 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
         }
         this._ref.value = value;
         this.isReadyRef.value = true;
-        this.resolve();
+        this.resolve(value);
     }
 
     public get value(): StoreLocalModel[K] {
@@ -53,13 +54,14 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
     }
     public async getValue(): Promise<StoreLocalModel[K]> {
         if (!this.isReady) {
-            await this.onReady;
+            await this.onReady; // todo use `return`
         }
         return this.value;
     }
     public setValue(newValue: StoreLocalModel[K]): Promise<void> {
         return this._setValue(newValue);
     }
+    // todo setValueDebounced
     private async _setValue(newValue: StoreLocalModel[K], isSyncMessage: boolean = false): Promise<void> {
         if (newValue === this._ref.value) {
             return;

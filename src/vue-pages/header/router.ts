@@ -1,3 +1,4 @@
+import {sleep} from "@alttiri/util-js";
 import {
     createRouter,
     createWebHashHistory,
@@ -5,8 +6,6 @@ import {
     NavigationFailure,
     NavigationFailureType,
 } from "vue-router";
-import {sleep} from "@alttiri/util-js";
-
 
 const routes = [
     {

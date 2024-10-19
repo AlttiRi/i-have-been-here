@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {ref, Ref, watch} from "vue";
-import {debounce, sleep} from "@/util";
-import {tcRuleStrings, tcCompiledRules} from "@/bg/store/store";
+import {debounce, isString, sleep}                       from "@alttiri/util-js";
 import {isTCRuleStringArray, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
-import {isString} from "@alttiri/util-js";
+import {ref, Ref, watch} from "vue";
+import {tcRuleStrings, tcCompiledRules} from "@/bg/store/store";
 
 
 const saveBtn: Ref<HTMLButtonElement | null> = ref(null);

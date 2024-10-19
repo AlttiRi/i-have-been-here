@@ -1,14 +1,14 @@
 import {TCCompiledRules, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
 import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/types";
 import {
+    Base64,
+    logIndigo,
+}                 from "@/util";
+import {
     getFromStoreLocal,
     removeFromStoreLocal,
     setToStoreLocal,
 }                 from "@/util-ext";
-import {
-    Base64,
-    logIndigo,
-}                 from "@/util";
 import {getScdId} from "@/bg/util-image-data";
 
 
@@ -19,6 +19,7 @@ chrome.runtime.onInstalled.addListener(function setInitialVersion(details: chrom
     if (details.reason === "install") {
         logIndigo("[⚒]", `Set ${lastStoreVersion} store version`)();
         void setToStoreLocal("version", lastStoreVersion);
+     // void setToStoreLocal("jsonName", "ihbh-extension-storage"); // todo
     }
 });
 chrome.runtime.onStartup.addListener(function () {
@@ -182,51 +183,3 @@ export async function updateStoreModel(): Promise<void> {
 // [note] Do not forget to update `lastStoreVersion` above!
 
 // todo (?) handle errors/broken data
-
-/*
-// full export
-chrome.storage.local.get(o => {
-    const text = JSON.stringify(o, null, 2);
-    // @ts-ignore
-    downloadBlob(new Blob([text]), `[ihbh] full export ${Date.now()}.json`);
-    // @ts-ignore
-    function downloadBlob(blob, name, url) {
-        const anchor = document.createElement("a");
-        anchor.setAttribute("download", name || "");
-        const blobUrl = URL.createObjectURL(blob);
-        anchor.href = blobUrl + (url ? ("#" + url) : "");
-        anchor.click();
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-    }
-});
-
-// to wipe storage (before full import)
-chrome.storage.local.get(null, obj => {
-    Object.keys(obj).forEach(key => {
-        chrome.storage.local.remove(key);
-    });
-});
-
-// to import the full export
-const input = document.createElement("input");
-input.type = "file";
-input.accept = "application/json";
-document.body.prepend(input);
-input.addEventListener("change", async event => {
-    // @ts-ignore
-    const json = JSON.parse(await input.files[0].text());
-    if (!("version" in json)) {
-        json.version = 1;
-    }
-
-    console.log("json", json);
-    // @ts-ignore
-    globalThis.json = json;
-    chrome.storage.local.set(json, () => {
-        chrome.runtime.reload();
-    });
-});
-
- */
-
-

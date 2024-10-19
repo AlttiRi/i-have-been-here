@@ -37,3 +37,8 @@ export const quickAccessUrl: ReactiveStoreLocalValue<"quickAccessUrl">
 export const filenameLengthLimit: ReactiveStoreLocalValue<"filenameLengthLimit">
     = new ReactiveStoreLocalValue("filenameLengthLimit", 220);
 
+
+export const commonSettings: ReactiveStoreLocalValue<"commonSettings">
+    = new ReactiveStoreLocalValue("commonSettings", {
+        browserName: "", // todo use the browser name
+    });

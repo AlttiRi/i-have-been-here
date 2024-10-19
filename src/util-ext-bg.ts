@@ -1,4 +1,6 @@
-import {JpgDataURL, sleep} from "@/util";
+import {sleep} from "@alttiri/util-js";
+import {JpgDataURL} from "@/util";
+
 
 export function queryTabs(queryInfo?: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {
     return new Promise(resolve => chrome.tabs.query(queryInfo || {}, resolve));

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {downloadBlob, fullUrlToFilename, sleep}  from "@/util";
+import {downloadBlob, sleep} from "@alttiri/util-js";
+import {fullUrlToFilename}                       from "@/util";
 import {getFromStoreLocal, removeFromStoreLocal} from "@/util-ext";
 import {exportVisits, importVisits} from "@/bg/visits";
 import {toArrayBuffer}              from "@/bg/util-image-data";
