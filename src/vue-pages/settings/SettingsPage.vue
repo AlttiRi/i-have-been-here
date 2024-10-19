@@ -162,7 +162,9 @@ const safeStorage = ref(true); // todo? make persistent
               title="WARNING: it will delete the extension's all data"
       >Wipe Store</button>
       <span class="safe-storage">
-        <label class="form-check-label btn btn-light" tabindex="-1">
+        <label class="form-check-label btn btn-light" tabindex="-1"
+               title="Allows to import / wipe the storage only after exporting"
+        >
           <input type="checkbox"
                  class="form-check-input"
                  v-model="safeStorage"
