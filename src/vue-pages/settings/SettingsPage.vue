@@ -1,4 +1,4 @@
-<script setup lang="ts" xmlns="http://www.w3.org/1999/html">
+<script setup lang="ts">
 import {computed, onBeforeUnmount, onMounted, ref, watch, watchEffect} from "vue";
 import {TitleCleaner} from "@alttiri/string-magic";
 import TitleCleanerConfig from "./TitleCleanerConfig.vue";
@@ -60,13 +60,18 @@ onBeforeUnmount(() => {
   window.removeEventListener("focus", getLastActiveTab);
 })
 
+const cleaner = ref<TitleCleaner>();
 watchEffect(() => {
-  if (!tcCompiledRules.ref.value) { // seems no need
-    console.warn("!tcCompiledRules.ref.value");
+  if (!tcCompiledRules.isReady) {
     return;
   }
-  const cleaner = TitleCleaner.fromRuleRecords(tcCompiledRules.ref.value);
-  lATCleanedTitle.value = cleaner.clean(lastActiveTab.value?.url || "", lastActiveTab.value?.title || "");
+  cleaner.value = TitleCleaner.fromRuleRecords(tcCompiledRules.value);
+});
+watchEffect(() => {
+  if (!cleaner.value) {
+    return;
+  }
+  lATCleanedTitle.value = cleaner.value.clean(lastActiveTab.value?.url || "", lastActiveTab.value?.title || "");
 });
 
 const browserName = ref("");

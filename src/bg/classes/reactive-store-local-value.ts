@@ -4,20 +4,25 @@ import {StoreLocalModel} from "@/types";
 
 export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
 
-    private _isReady: boolean;
     private readonly keyName: K;
     private readonly _ref: Ref<StoreLocalModel[K]>;
+    /** Makes `isReady` getter reactive. */
+    private isReadyRef: Ref<boolean>;
     private resolve!: (value: StoreLocalModel[K]) => void;
 
     public readonly defaultValue: StoreLocalModel[K];
-    /** READONLY. To change the value use `setValue`. */
+    /**
+     * READONLY. Use only for `watch`ing.
+     * For reading use `value` getter, or `getValue`.
+     * To change the value use `value` setter, or `setValue`.
+     */
     public readonly ref: Readonly<Ref<StoreLocalModel[K]>>;
     public readonly onReady: Promise<StoreLocalModel[K]>;
 
     constructor(keyName: K, defaultValue: StoreLocalModel[K]) {
         this.keyName = keyName;
         this.defaultValue = defaultValue;
-        this._isReady = false;
+        this.isReadyRef = ref(false);
         this.onReady = new Promise<StoreLocalModel[K]>(resolve => this.resolve = resolve);
 
         this._ref = ref(defaultValue)  as Ref<StoreLocalModel[K]>;
@@ -38,11 +43,11 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
             value = this.defaultValue;
         }
         this._ref.value = value;
-        this._isReady = true;
+        this.isReadyRef.value = true;
         this.resolve(value);
     }
 
-    /** Get the value instantly. May return the default value if `isReady` is `false` */
+    /** Get the value instantly. May return the default value if `isReady` is `false`. Reactive. */
     public get value(): StoreLocalModel[K] {
         return this.ref.value;
     }
@@ -50,11 +55,13 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
         void this.setValue(newValue);
     }
 
+    /** Is `value` ready, or it's still have the default value. Reactive. */
     public get isReady(): boolean {
-        return this._isReady;
+        return this.isReadyRef.value;
     }
+    /** To get the finished value. (Does not return the default value.)*/
     public async getValue(): Promise<StoreLocalModel[K]> {
-        if (!this._isReady) {
+        if (!this.isReady) {
             return this.onReady;
         }
         return this.value;
