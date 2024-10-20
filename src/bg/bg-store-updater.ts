@@ -9,7 +9,7 @@ import {
     removeFromStoreLocal,
     setToStoreLocal,
 }                 from "@/util-ext";
-import {getScdId} from "@/bg/util-image-data";
+import {getScdId} from "@/util-ext-image-data";
 
 
 const lastStoreVersion = 4;

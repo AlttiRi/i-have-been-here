@@ -13,10 +13,10 @@ import {initPS_ChangeIcon}          from "@/bg/bg--ps-change-icon";
 import {initGS_GetTabs}             from "@/bg/bg--gs-get-tabs";
 import {initGS_GetLastTabs}         from "@/bg/bg--gs-get-last-tabs";
 import {initES_FocusOrCreateNewTab} from "@/bg/bg--ss-create-new-tab";
+import {initMH_Visit}               from "@/bg/bg--mh-visit";
 
 import {countTabs}                      from "@/bg/tab-counter";
 import {logImageOnMessage}              from "@/bg/log-image";
-import {initVisitBackgroundHandler}     from "@/bg/visits";
 import {enableQuickAccessUrlOpenerMode} from "@/bg/quick-access-url-opener";
 
 
@@ -34,12 +34,12 @@ void (async function main(): Promise<void> {
     initGS_GetTabs();
     initGS_GetLastTabs();
     initES_FocusOrCreateNewTab();
+    initMH_Visit();
 
     logImageOnMessage();
 
     void countTabs();
     void enableQuickAccessUrlOpenerMode();
-    initVisitBackgroundHandler();
 })();
 
 void (async function tests(): Promise<void> {

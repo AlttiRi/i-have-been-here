@@ -8,7 +8,7 @@ import {
     setToStoreLocal,
 } from "@/util-ext";
 import {executeScript}         from "@/util-ext-bg";
-import {getScdId, toStoreData} from "@/bg/util-image-data";
+import {getScdId, toStoreData} from "@/util-ext-image-data";
 import {getScreenshotFilename} from "@/util-ext-pages";
 import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/message-center";
 import {ScreenshotInfo} from "@/types";

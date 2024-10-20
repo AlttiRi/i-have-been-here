@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {ref}       from "vue";
-import {getVisits} from "@/bg/visits";
-import {Visit}     from "@/types";
 import Controls    from "./Controls.vue";
 import VisitItem   from "./VisitItem.vue";
 import {iAmReady, waitMe} from "@/vue-pages/header/router";
+import {getVisits} from "@/bg/store/visits";
+import {Visit}     from "@/types";
 
 
 const hrHidden = ref(true);

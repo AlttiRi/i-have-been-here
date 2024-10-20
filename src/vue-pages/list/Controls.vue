@@ -2,8 +2,8 @@
 import {downloadBlob, sleep} from "@alttiri/util-js";
 import {fullUrlToFilename}                       from "@/util";
 import {getFromStoreLocal, removeFromStoreLocal} from "@/util-ext";
-import {exportVisits, importVisits} from "@/bg/visits";
-import {toArrayBuffer}              from "@/bg/util-image-data";
+import {exportVisits, importVisits} from "@/bg/store/visits";
+import {toArrayBuffer}              from "@/util-ext-image-data";
 import {ScreenshotInfo} from "@/types";
 
 

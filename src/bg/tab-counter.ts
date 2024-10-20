@@ -1,7 +1,8 @@
 import {watch} from "vue";
-import {queryTabs}                 from "@/util-ext-bg";
-import {visitedIconDataIfRequired} from "@/bg/visits";
-import {urlOpenerMode}             from "@/bg/store/store";
+import {queryTabs}     from "@/util-ext-bg";
+import {urlOpenerMode} from "@/bg/store/store";
+import {getVisit}      from "@/bg/store/visits";
+import {Visit}         from "@/types";
 
 // Count tabs with separation for incognito and normal mode
 // + changes icon
@@ -85,13 +86,18 @@ export function updateIcons(tabs: chrome.tabs.Tab[]): void {
             await urlOpenerMode.onReady;
         }
         let tabCounterIconData = {path: imgPath};
-        let other = null;
+        let tabIconDetailExtra: {path: string} | null = null;
 
-        if (!urlOpenerMode.value) {
-            other = await visitedIconDataIfRequired(tab);
+        if (!urlOpenerMode.value && tab.url) {
+            const visit: Visit | null = await getVisit(tab.url);
+            if (visit) {
+                tabIconDetailExtra = {
+                    path: chrome.runtime.getURL("images/green-mark.png")
+                };
+            }
         }
         chrome.browserAction.setIcon({
-            ...(other || tabCounterIconData),
+            ...(tabIconDetailExtra || tabCounterIconData),
             tabId: tab.id
         }, () => {
             if (chrome.runtime.lastError) {
