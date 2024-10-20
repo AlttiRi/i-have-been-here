@@ -49,11 +49,16 @@ try {
         }
     });
 
-    const contentFrom = path.join(projectDir, "src", "content");
-    const contentTo   = path.join(tmpDir,     "src", "content");
-    await fs.promises.cp(contentFrom, contentTo, {
-        recursive: true,
-    });
+    for (const pathParts of [
+        ["src", "content"],
+        ["web_accessible_resources"],
+    ]) {
+        const contentFrom = path.join(projectDir, ...pathParts);
+        const contentTo   = path.join(tmpDir,     ...pathParts);
+        await fs.promises.cp(contentFrom, contentTo, {
+            recursive: true,
+        });
+    }
 
     if (ff) {
         await fs.promises.rename(

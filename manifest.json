@@ -4,7 +4,7 @@
     "name": "__MSG_extension_name__",
     "short_name": "__MSG_extension_short_name__",
     "description": "__MSG_extension_description__",
-    "version": "1.30.2.20241020",
+    "version": "1.30.3.20241020",
     "content_scripts": [
 		    {
             "matches": ["<all_urls>"],
@@ -27,8 +27,7 @@
         "open_in_tab": true
     },
     "web_accessible_resources": [
-        "src/web_accessible_resources/*",
-        "src/content/content-*"
+        "web_accessible_resources/*"
     ],
     "omnibox": {
         "keyword": "z"
