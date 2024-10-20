@@ -28,9 +28,7 @@
     },
     "web_accessible_resources": [
         "src/web_accessible_resources/*",
-        "src/content/content-*",
-        "src/util-ext.js",
-        "src/util.js"
+        "src/content/content-*"
     ],
     "omnibox": {
         "keyword": "z"
