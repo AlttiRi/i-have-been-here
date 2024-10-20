@@ -12,7 +12,7 @@ import {
   quickAccessUrl,
   tcCompiledRules,
   urlOpenerMode,
-} from "@/bg/store/store";
+} from "@/bg/shared/store";
 import {exportStore, importStore, wipeStore} from "./storage-backup";
 
 

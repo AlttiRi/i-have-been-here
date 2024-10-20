@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {Ref, ref, watchEffect} from "vue";
 import {localDateTime}         from "@alttiri/util-js";
-import {quickAccessUrl}     from "@/bg/store/store";
-import {openQuickAccessUrl} from "@/bg/shared";
+import {quickAccessUrl}     from "@/bg/shared/store";
+import {openQuickAccessUrl} from "@/bg/shared/common";
 import {AddVisitGS, GetVisitGS}  from "@/message-center";
 import {createBackgroundTab}     from "@/util-ext-bg";
 import {Visit}     from "@/types";

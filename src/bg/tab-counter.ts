@@ -1,7 +1,7 @@
 import {watch} from "vue";
 import {queryTabs}     from "@/util-ext-bg";
-import {urlOpenerMode} from "@/bg/store/store";
-import {getVisit}      from "@/bg/store/visits";
+import {urlOpenerMode} from "@/bg/shared/store";
+import {getVisit}      from "@/bg/shared/visits";
 import {Visit}         from "@/types";
 
 // Count tabs with separation for incognito and normal mode

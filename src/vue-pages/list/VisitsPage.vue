@@ -3,7 +3,7 @@ import {ref}       from "vue";
 import Controls    from "./Controls.vue";
 import VisitItem   from "./VisitItem.vue";
 import {iAmReady, waitMe} from "@/vue-pages/header/router";
-import {getVisits} from "@/bg/store/visits";
+import {getVisits} from "@/bg/shared/visits";
 import {Visit}     from "@/types";
 
 

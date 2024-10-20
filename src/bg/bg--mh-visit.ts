@@ -1,7 +1,7 @@
 import {getActiveTab}           from "@/util-ext-bg";
-import {addVisit, getVisit}     from "@/bg/store/visits";
-import {updateIcons}            from "@/bg/tab-counter";
 import {AddVisitGS, GetVisitGS} from "@/message-center";
+import {addVisit, getVisit}     from "@/bg/shared/visits";
+import {updateIcons}            from "@/bg/tab-counter";
 import {Visit} from "@/types";
 
 /** Init `Visit` message handlers */

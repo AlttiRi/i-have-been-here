@@ -1,4 +1,4 @@
-import {filenameLengthLimit, tcCompiledRules} from "@/bg/store/store";
+import {filenameLengthLimit, tcCompiledRules} from "@/bg/shared/store";
 import {fullUrlToFilename} from "@/util";
 import {TitleCleaner} from "@alttiri/string-magic";
 

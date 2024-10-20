@@ -1,8 +1,8 @@
 import {watchEffect} from "vue";
 import {createBackgroundTab} from "@/util-ext-bg";
-import {dlShelf}   from "@/bg/store/store";
 import {isFirefox} from "@/util";
 import {PagePaths} from "@/page-paths";
+import {dlShelf}   from "@/bg/shared/store";
 
 
 type ContextMenuFeature = "reload_extension" | "yandex_images" | "download_shelf" | "open_list";
