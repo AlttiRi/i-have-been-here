@@ -1,14 +1,8 @@
 import {watch} from "vue";
 import {getPopup, getTitle, getActiveTabId} from "@/util-ext-bg";
 import {urlOpenerMode, quickAccessUrl} from "@/bg/store/store";
-import {FocusOrCreateNewTabES}         from "@/message-center";
+import {openQuickAccessUrl}            from "@/bg/shared";
 
-
-export async function openQuickAccessUrl(): Promise<chrome.tabs.Tab | undefined> {
-    console.log("openQuickAccessUrl");
-    const url = await quickAccessUrl.getValue();
-    return FocusOrCreateNewTabES.exchange({url});
-}
 
 type State = {title: string, popup: string, saved: boolean};
 const state: State = {popup: "", title: "", saved: false};
@@ -25,7 +19,11 @@ function restoreState() {
     state.saved = false;
 }
 
-export async function enableQuickAccessUrlOpenerMode() {
+/**
+ * Enable the feature to open the "quick access url" by clicking of the extension's icon instead of opening the popup.
+ * Can be toggled in settings as well as in the extension's icon's context menu.
+ */
+export async function initQuickAccessUrlOpenerMode() {
     const checked: boolean = await urlOpenerMode.getValue();
     const id = "quick_access_url_opener";
     chrome.contextMenus.create({
@@ -58,4 +56,3 @@ export async function enableQuickAccessUrlOpenerMode() {
         immediate: true
     });
 }
-

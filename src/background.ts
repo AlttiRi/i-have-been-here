@@ -15,9 +15,10 @@ import {initGS_GetLastTabs}         from "@/bg/bg--gs-get-last-tabs";
 import {initES_FocusOrCreateNewTab} from "@/bg/bg--ss-create-new-tab";
 import {initMH_Visit}               from "@/bg/bg--mh-visit";
 
-import {countTabs}                      from "@/bg/tab-counter";
-import {logImageOnMessage}              from "@/bg/log-image";
-import {enableQuickAccessUrlOpenerMode} from "@/bg/quick-access-url-opener";
+import {initQuickAccessUrlOpenerMode} from "@/bg/bg-init-quick-access-url-opener";
+
+import {countTabs}                    from "@/bg/tab-counter";
+import {logImageOnMessage}            from "@/bg/log-image";
 
 
 void (async function main(): Promise<void> {
@@ -36,10 +37,11 @@ void (async function main(): Promise<void> {
     initES_FocusOrCreateNewTab();
     initMH_Visit();
 
+    void initQuickAccessUrlOpenerMode();
+
     logImageOnMessage();
 
     void countTabs();
-    void enableQuickAccessUrlOpenerMode();
 })();
 
 void (async function tests(): Promise<void> {

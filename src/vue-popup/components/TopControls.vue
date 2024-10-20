@@ -2,7 +2,7 @@
 import {Ref, ref, watchEffect} from "vue";
 import {localDateTime}         from "@alttiri/util-js";
 import {quickAccessUrl}     from "@/bg/store/store";
-import {openQuickAccessUrl} from "@/bg/quick-access-url-opener";
+import {openQuickAccessUrl} from "@/bg/shared";
 import {AddVisitGS, GetVisitGS}  from "@/message-center";
 import {createBackgroundTab}     from "@/util-ext-bg";
 import {Visit}     from "@/types";
