@@ -272,3 +272,14 @@ export function logBlue(...args: any[]) {
 export function logIndigo(...args: any[]) {
     return console.log.bind(console, "%c" + args[0], cssIndigo, ...args.slice(1));
 }
+
+
+export async function hashBlob(blob: Blob): Promise<string> {
+    try {
+        const hash = await crypto.subtle.digest("SHA-1", await blob.arrayBuffer());
+        return [...new Uint8Array(hash)].map(x => x.toString(16).padStart(2, "0")).join("");
+    } catch (e) {
+        console.error(e);
+        return "";
+    }
+}

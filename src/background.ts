@@ -18,7 +18,7 @@ import {initMH_Visit}               from "@/bg/bg--mh-visit";
 import {initQuickAccessUrlOpenerMode} from "@/bg/bg-init-quick-access-url-opener";
 
 import {countTabs}                    from "@/bg/tab-counter";
-import {logImageOnMessage}            from "@/bg/log-image";
+import {initMH_Screenshot}            from "@/bg/bg--mh-screenshot";
 
 
 void (async function main(): Promise<void> {
@@ -39,7 +39,7 @@ void (async function main(): Promise<void> {
 
     void initQuickAccessUrlOpenerMode();
 
-    logImageOnMessage();
+    initMH_Screenshot();
 
     void countTabs();
 })();

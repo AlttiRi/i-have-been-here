@@ -1,5 +1,5 @@
-import {Base64} from "@/util";
 import {TCCompiledRules, TCRuleString} from "@alttiri/string-magic";
+import {Base64, JpgDataURL} from "@/util";
 
 export type StoreLocalBase = {
     bookmarkOpenerMode: boolean,
@@ -42,6 +42,13 @@ export type ScreenshotInfo = {
     url: URLString,
     title: string,
     created: number,
+};
+
+/** A captured screenshot data */
+export type TabCapture = {
+    tab: chrome.tabs.Tab/* & {url: string} */,
+    screenshotUrl: JpgDataURL,
+    date: number,
 };
 
 /**

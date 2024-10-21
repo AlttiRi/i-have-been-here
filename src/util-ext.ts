@@ -1,7 +1,7 @@
 import {StoreLocalModel} from "@/types";
 
 export const extensionName = chrome.i18n.getMessage("extension_name");
-export const extensionId = chrome.runtime.id;
+export const extensionId   = chrome.runtime.id;
 export const extensionUUID = chrome.i18n.getMessage("@@extension_id");
 export const inIncognitoContext = chrome.extension.inIncognitoContext;
 
@@ -99,7 +99,7 @@ export function getFromStoreLocal<K extends keyof StoreLocalModel>(key?: K): Pro
         });
     });
 }
-export function removeFromStoreLocal<K extends keyof StoreLocalModel>(key: K): Promise<void> {
+export function removeFromStoreLocal<K extends keyof StoreLocalModel>(key: K): Promise<void> { // todo: not use in vue
     return new Promise((resolve, reject) => {
         chrome.storage.local.remove([key], () => {
             if (chrome.runtime.lastError) {

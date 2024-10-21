@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import {downloadBlob, sleep} from "@alttiri/util-js";
-import {fullUrlToFilename}                       from "@/util";
-import {getFromStoreLocal, removeFromStoreLocal} from "@/util-ext";
-import {exportVisits, importVisits} from "@/bg/shared/visits";
-import {toArrayBuffer}              from "@/util-ext-image-data";
-import {ScreenshotInfo} from "@/types";
+import {exportVisits, importVisits}           from "@/bg/shared/visits";
+import {exportScreenshots, deleteScreenshots} from "@/bg/shared/screenshots";
 
 
 defineProps<{
@@ -22,31 +18,12 @@ async function importVisitsListener(event: Event) {
 async function deleteImages(event: MouseEvent) {
   const button = event.currentTarget as HTMLButtonElement;
   button.setAttribute("disabled", "");
-  await removeImages();
+  await deleteScreenshots();
   button.removeAttribute("disabled");
 }
 
-async function removeImages(): Promise<void> {
-  const screenshots: ScreenshotInfo[] = await getFromStoreLocal("screenshots") || [];
-  const promises: Promise<unknown>[] = [];
-  for (const screenshot of screenshots) {
-    promises.push(removeFromStoreLocal(screenshot.scd_id));
-  }
-  await Promise.all(promises);
-}
-
 async function exportImages() {
-  const screenshots: ScreenshotInfo[] = await getFromStoreLocal("screenshots") || [];
-  for (const screenshot of screenshots) {
-    const base64 = await getFromStoreLocal(screenshot.scd_id);
-    const ab = toArrayBuffer(base64);
-    const blob = new Blob([ab], {type: "image/jpeg"});
-    const urlFilename = fullUrlToFilename(screenshot.url);
-    const name = `[ihbh]${urlFilename}.jpg`;
-    downloadBlob(blob, name, screenshot.url);
-    await sleep(125);
-    console.log(name, screenshot.url);
-  }
+  await exportScreenshots();
 }
 </script>
 

@@ -3,7 +3,7 @@ import {sleep} from "@alttiri/util-js";
 import {ref} from "vue";
 import {JpgDataURL, logPicture}          from "@/util";
 import {captureVisibleTab, getActiveTab} from "@/util-ext-bg";
-import {TabCapture} from "@/bg/log-image";
+import {TabCapture} from "@/types";
 import {
   ChangeIconPS,
   DownloadScreenshotSS,
