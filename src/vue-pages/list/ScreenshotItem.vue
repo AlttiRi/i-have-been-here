@@ -2,17 +2,16 @@
 import {ref} from "vue";
 import {localDateTime} from "@alttiri/util-js";
 import {fullUrlToFilename} from "@/util";
-import {toJpgDataUrl}      from "@/util-ext-image-data";
+import {getScreenshotDataUrl} from "@/bg/shared/screenshots";
 import {ScreenshotInfo}    from "@/types";
-import {getScreenshot}     from "@/bg/shared/screenshots";
 import {allImagesReady}    from "./core-list";
 
 const props = defineProps<{screenshot: ScreenshotInfo}>();
 
 const {url, created, title, scd_id} = props.screenshot;
 const src = ref();
-getScreenshot(scd_id)
-  .then(base64 => src.value = toJpgDataUrl(base64));
+void getScreenshotDataUrl(scd_id)
+  .then(dataUrl => src.value = dataUrl);
 
 
 let onImageReady: (e: Event) => void;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref}   from "vue";
 import {sleep} from "@alttiri/util-js";
-import {getScreenshots}   from "@/bg/shared/screenshots";
+import {getScreenshotsInfos}   from "@/bg/shared/screenshots";
 import {ScreenshotInfo}   from "@/types";
 import {waitMe, iAmReady} from "@/vue-pages/header/router";
 import Controls         from "./Controls.vue";
@@ -12,7 +12,7 @@ import {allImagesReady} from "./core-list";
 const screenshots = ref<ScreenshotInfo[]>([]);
 
 waitMe();
-void getScreenshots().then(value => {
+void getScreenshotsInfos().then(value => {
   screenshots.value = value.reverse();
   console.log("🖼 Screenshots:", value);
   sleep().then(() => Promise.all(allImagesReady.value).then(iAmReady).then(() => {
