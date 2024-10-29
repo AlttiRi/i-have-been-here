@@ -15,6 +15,11 @@ document.querySelector("body")
 
 /*
      "web_accessible_resources": [
-         "web_accessible_resources/*"
+         "web_accessible_resources/*",
+         "src/content/*"
      ],
+
+     "src/content/*" is to prevent:
+     Denying load of chrome-extension://ljjoafkhpecgfpppmbkenhojmcilpmgp/src/content/content--log-ext-name.js.
+     Resources must be listed in the web_accessible_resources manifest key in order to be loaded by pages outside the extension.
 */

@@ -1,7 +1,7 @@
 import {getActiveTab}           from "@/util-ext-bg";
 import {AddVisitGS, GetVisitGS} from "@/message-center";
 import {addVisit, getVisit}     from "@/bg/shared/visits";
-import {updateIcons}            from "@/bg/tab-counter";
+import {updateIconByTabId}      from "@/bg/tab-counter";
 import {Visit} from "@/types";
 
 /** Init `Visit` message handlers */
@@ -26,6 +26,7 @@ async function getVisitForActiveTabIfExists(): Promise<Visit | null> {
 }
 
 async function addVisitForActiveTab(_data: undefined, sender: chrome.runtime.MessageSender): Promise<Visit | null> {
+    console.log("addVisitForActiveTab");
     const date = Date.now();
     const tab = await getActiveTab();
     if (tab === undefined) {
@@ -42,8 +43,9 @@ async function addVisitForActiveTab(_data: undefined, sender: chrome.runtime.Mes
         title: tab.title || "",
         date,
     });
-    if (visit.lastVisited === undefined) { // if just was created
-        updateIcons([tab]);
+    const visitJustWasCreated = visit.lastVisited === undefined;
+    if (visitJustWasCreated) {
+        void updateIconByTabId(tab.id!); // ts ! // todo for all tabs with same url
     }
     return visit;
 }

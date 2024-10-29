@@ -1,5 +1,6 @@
 import {watchEffect} from "vue";
 import {createBackgroundTab} from "@/util-ext-bg";
+import {manifest}  from "@/util-ext";
 import {isFirefox} from "@/util";
 import {PagePaths} from "@/page-paths";
 import {dlShelf}   from "@/bg/shared/store";
@@ -8,7 +9,6 @@ import {dlShelf}   from "@/bg/shared/store";
 type ContextMenuFeature = "reload_extension" | "yandex_images" | "download_shelf" | "open_list";
 
 export function initContextMenu(features: ContextMenuFeature[] = ["reload_extension"]): void {
-    const manifest: chrome.runtime.Manifest = chrome.runtime.getManifest();
     if (!manifest.permissions?.includes("contextMenus")) {
         console.log(`[warning] No "contextMenus" permission!`);
         return;

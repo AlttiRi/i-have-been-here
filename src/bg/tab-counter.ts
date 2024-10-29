@@ -1,122 +1,188 @@
 import {watch} from "vue";
+import {getSelfDebounced, logGreen, logOrange, logTeal} from "@/util";
+import {inIncognitoContext, setBadgeText, setIcon}      from "@/util-ext";
 import {queryTabs}     from "@/util-ext-bg";
 import {urlOpenerMode} from "@/bg/shared/store";
 import {getVisit}      from "@/bg/shared/visits";
 import {Visit}         from "@/types";
 
+
+const imgFilename = inIncognitoContext ? "images/black.png" : "images/white.png";
+const imgPath:       string = chrome.runtime.getURL(imgFilename);
+const greenMarkPath: string = chrome.runtime.getURL("images/green-mark.png");
+
+const openedTabs: Map<number, chrome.tabs.Tab> = new Map();
+
+
 // Count tabs with separation for incognito and normal mode
 // + changes icon
+export async function initBadgesAndIcons() {
+    logTeal("[initBadgesAndIcons]", "init")(); // todo: rename the file "bg-init-badges-icons"
 
-
-const tabsArray: chrome.tabs.Tab[] = [];
-const imgFilename = chrome.extension.inIncognitoContext ? "images/black.png" : "images/white.png";
-const imgPath: string = chrome.runtime.getURL(imgFilename);
-
-export async function countTabs() {
-    console.log("[countTabs] onStart");
+    void setDefaultIcon(imgPath);
 
     const tabs = await queryTabs();
-    tabsArray.push(...tabs);
+    for (const tab of tabs) {
+        if (tab.id === undefined) {
+            console.warn("[initBadgesAndIcons] tab.id === undefined");
+            continue;
+        }
+        openedTabs.set(tab.id, tab);
+    }
 
-    setDefaultIcon(imgPath);
-    updateIcons(tabsArray);
-    updateBadgesText(tabsArray);
+    if (!urlOpenerMode.isReady) {
+        await urlOpenerMode.onReady;
+    }
+
+    watch(urlOpenerMode.ref, () => {
+        console.log("--- watch ---");
+        updateIconsForAllTabs();
+    });
+
+    updateIconsForAllTabs();
+    updateBadgeTextForAllTabs();
 
     addListeners();
 }
 
 function addListeners() {
+    /**
+     * Increase the tab count (badge text) for all tabs
+     */
+    chrome.tabs.onCreated.addListener(tabOnCreated);
+    /**
+     * `changeInfo.status === "loading"`
+     * - may be triggered multiple time while loading
+     * - may be triggered before tab is closed (before `onRemoved`)
+     */
+    chrome.tabs.onUpdated.addListener(tabOnUpdated);
+    chrome.tabs.onRemoved.addListener(tabOnRemoved);
+    chrome.windows.onFocusChanged.addListener(windowOnFocusChanged);
 
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-        console.log("[onUpdated]", tabId, changeInfo, tab);
-        if (changeInfo.status) {
-            updateIcons([tab]);
-            updateBadgesText([tab]);
-        }
-    });
-
-    chrome.tabs.onCreated.addListener(tab => {
-        console.log("[onCreated]", tab);
-        tabsArray.push(tab);
-        updateBadgesText(tabsArray);
-    });
-
-    // todo if closed multiple tabs? upd: it looks working
-    chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-        console.log("onRemoved", tabId, removeInfo);
-        const tab = tabsArray.find(tab => tab.id === tabId);
-        if (tab === undefined) {
-            console.warn("[warning][onRemoved] tabs === undefined");
+    function tabOnCreated(tab: chrome.tabs.Tab) {
+        logGreen("[tabOnCreated]", tab)();
+        if (tab.id === undefined) {
+            console.warn("[tabOnCreated] tab.id === undefined");
             return;
         }
-        const index = tabsArray.indexOf(tab);
-        if (index !== -1) {
-            tabsArray.splice(index, 1);
-            updateBadgesText(tabsArray);
+        openedTabs.set(tab.id, tab);
+        updateBadgeTextForAllTabs();
+    }
+
+    function tabOnUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) {
+        logGreen("[tabOnUpdated]", tabId, changeInfo, tab)();
+        openedTabs.set(tabId, tab);
+        if (changeInfo.status === "loading") {
+            void updateIconByTabId(tabId);
+            void updateBadgeTextByTabId(tabId);
+        }
+    }
+
+    const selfDebounced = getSelfDebounced(16); // multiple tabs closing fix
+    function tabOnRemoved(tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) {
+        logGreen("[tabOnRemoved]", tabId, removeInfo)();
+        if (openedTabs.has(tabId)) {
+            openedTabs.delete(tabId);
+            selfDebounced().then((debounced) => {
+                if (debounced) {
+                    return;
+                }
+                updateBadgeTextForAllTabs();
+            });
         } else {
             console.warn(`[warning][onRemoved] tab.id ${tabId} is not found`);
         }
-    });
+    }
 
-    chrome.windows.onFocusChanged.addListener((windowId, filters) => {
-        console.log("onFocusChanged", windowId);
-        // Does not seem to be required any more
+
+    function windowOnFocusChanged(windowId: number, _filters?: chrome.windows.WindowEventFilter) {
+        logGreen("[windowOnFocusChanged]", windowId)();
+        // Does not seem to be required anymore
         // if (windowId !== chrome.windows.WINDOW_ID_NONE) { // incognito, devtools
         //     setDefaultIcon(imgPath);
         // }
-    });
+    }
 }
 
 
 /** Ignores tabs with an icon set with `tabId` parameter */
-function setDefaultIcon(path: string) {
-    chrome.browserAction.setIcon({
+function setDefaultIcon(path: string): Promise<void> {
+    return setIcon({
         path,
     });
 }
 
-watch(urlOpenerMode.ref, async () => {
-    updateIcons(await queryTabs());
-});
+/** Sets the icons for the tabs of the passed tab ID array, or for all the opened tabs. */
+function updateIconsForAllTabs(): void {
+    const tabIds = [...openedTabs.keys()];
+    logTeal("[updateIcons]", tabIds.length, tabIds)();
 
-export function updateIcons(tabs: chrome.tabs.Tab[]): void {
-    console.log("setIcons", tabs);
-    tabs.forEach(async tab => {
-        if (!urlOpenerMode.isReady) {
-            await urlOpenerMode.onReady;
-        }
-        let tabCounterIconData = {path: imgPath};
-        let tabIconDetailExtra: {path: string} | null = null;
-
-        if (!urlOpenerMode.value && tab.url) {
-            const visit: Visit | null = await getVisit(tab.url);
-            if (visit) {
-                tabIconDetailExtra = {
-                    path: chrome.runtime.getURL("images/green-mark.png")
-                };
-            }
-        }
-        chrome.browserAction.setIcon({
-            ...(tabIconDetailExtra || tabCounterIconData),
-            tabId: tab.id
-        }, () => {
-            if (chrome.runtime.lastError) {
-                console.warn("[error][updateIcons]", chrome.runtime.lastError.message);
-            }
-        });
-    });
+    for (const tabId of tabIds) {
+        void updateIconByTabId(tabId);
+    }
 }
 
-function updateBadgesText(tabs: chrome.tabs.Tab[]): void {
-    console.log("[updateBadgesText]", tabs);
-    tabs.forEach(tab => {
-        chrome.browserAction.setBadgeText({
-            text: (tabsArray.length).toString(),
-            tabId: tab.id
-        }, () => {
-            if (chrome.runtime.lastError) { // if tab does not exists // todo debounce onclose event
-                console.warn("[error][updateBadgesText]", chrome.runtime.lastError.message);
-            }
+let i = 0;
+export async function updateIconByTabId(tabId: number): Promise<void> { // todo for any other tabs with same url
+    const k = i++;
+    const tab = openedTabs.get(tabId);
+    if (tab === undefined) {
+        console.warn("[error][updateIconByTabId]", "tab === undefined");
+        return;
+    }
+    const url: string | undefined = tab.url;
+    if (url === undefined) {
+        console.warn("[error][updateIconByTabId]", "url === undefined");
+        return;
+    }
+
+    let tabCounterIconData = {path: imgPath};
+    if (!urlOpenerMode.value) {
+        const visit: Visit | null = await getVisit(url); // todo cache
+        if (visit) {
+            tabCounterIconData.path = greenMarkPath;
+        }
+    }
+
+    if (!openedTabs.has(tabId)) {
+        logOrange("[updateIconByTabId] tab was already removed", tabId)(); // 1 //
+        return;
+    }
+    try {
+        // todo: use monitor by tabId
+        if (openedTabs.get(tabId)?.url === url) {
+            await setIcon({
+                ...tabCounterIconData,
+                tabId,
+            });
+        } else {
+            // else the tab's url was updated while async operations, do nothing in this call
+            logOrange("[updateIconByTabId] tab's url was updated", tabId)();
+        }
+    } catch (error) {
+        // expected, when multiple tab was closed // I don't want to add delays (icon blinking)
+        logOrange("[updateIconByTabId]", error)(); // 2 //
+    }
+    logTeal("[updateIconByTabId] done", tabId, k)();
+}
+
+/** Sets the count of the opened tabs as the badge text */
+function updateBadgeTextForAllTabs(): void {
+    const tabIds = [...openedTabs.keys()];
+    logTeal("[updateBadgeTextForAllTabs]", tabIds.length, tabIds)();
+
+    for (const tabId of tabIds) {
+        void updateBadgeTextByTabId(tabId);
+    }
+}
+async function updateBadgeTextByTabId(tabId: number): Promise<void> {
+    logTeal("[updateBadgeTextByTabId]",tabId)();
+    try {
+        await setBadgeText({
+            text: openedTabs.size.toString(),
+            tabId: tabId
         });
-    });
+    } catch (error) {
+        console.warn("[error][updateBadgeTextByTabId]", error, tabId);
+    }
 }

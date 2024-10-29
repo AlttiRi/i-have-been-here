@@ -1,24 +1,25 @@
 import {sleep} from "@alttiri/util-js";
-import {emojiToImageData} from "@/util";
-import {getActiveTab}     from "@/util-ext-bg";
-import {ChangeIconPS}     from "@/message-center";
-import {updateIcons}      from "@/bg/tab-counter";
+import {emojiToImageData}  from "@/util";
+import {setIcon}           from "@/util-ext";
+import {getActiveTab}      from "@/util-ext-bg";
+import {ChangeIconPS}      from "@/message-center";
+import {updateIconByTabId} from "@/bg/tab-counter";
 
 export function initPS_ChangeIcon() {
     ChangeIconPS.addListener(blinkDownloadEmoji);
 }
 
-async function blinkDownloadEmoji(_data: undefined, sender: chrome.runtime.MessageSender) {
+async function blinkDownloadEmoji(_data: undefined, _sender: chrome.runtime.MessageSender) {
     const tab = await getActiveTab();
-    if (!tab) {
+    if (!tab || !tab.id) {
         return;
     }
     const imageData = emojiToImageData("💾");
-    chrome.browserAction.setIcon({
+    await setIcon({
         imageData,
         tabId: tab.id
     });
 
     await sleep(500);
-    updateIcons([tab]); // Restore icon
+    void updateIconByTabId(tab.id); // Restore the icon
 }

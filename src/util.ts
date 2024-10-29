@@ -266,11 +266,27 @@ export function prependCss(href: string, integrity?: string): Promise<unknown> {
 // console.log("%cHelloWorld", cssBlue);
 const cssBlue   = "color: #2196f3; font-weight: bold;";
 const cssIndigo = "color: #3f51b5; font-weight: bold;";
+const cssTeal   = "color: #009688; font-weight: bold;";
+const cssPurple = "color: #8E24AA; font-weight: bold;"; // 600
+const cssGreen  = "color: #43A047; font-weight: bold;"; // 600
+const cssOrange = "color: #F57C00; font-weight: bold;"; // 600
 export function logBlue(...args: any[]) {
     return console.log.bind(console, "%c" + args[0], cssBlue, ...args.slice(1));
 }
 export function logIndigo(...args: any[]) {
     return console.log.bind(console, "%c" + args[0], cssIndigo, ...args.slice(1));
+}
+export function logTeal(...args: any[]) {
+    return console.log.bind(console, "%c" + args[0], cssTeal, ...args.slice(1));
+}
+export function logPurple(...args: any[]) {
+    return console.log.bind(console, "%c" + args[0], cssPurple, ...args.slice(1));
+}
+export function logGreen(...args: any[]) {
+    return console.log.bind(console, "%c" + args[0], cssGreen, ...args.slice(1));
+}
+export function logOrange(...args: any[]) {
+    return console.log.bind(console, "%c" + args[0], cssOrange, ...args.slice(1));
 }
 
 
@@ -281,5 +297,39 @@ export async function hashBlob(blob: Blob): Promise<string> {
     } catch (e) {
         console.error(e);
         return "";
+    }
+}
+
+/**
+ * @example
+ * const selfDebounced = getSelfDebounced(300);
+ *
+ * // prints "99" after ~1300 ms
+ * for (let i = 0; i < 100; i++) {
+ *     selfDebounced().then((debounced) => {
+ *         if (debounced) {
+ *             return;
+ *         }
+ *         console.log(i);
+ *     });
+ *     await sleep(10);
+ * }
+ */
+export function getSelfDebounced(ms: number = 250) {
+    let timerId: ReturnType<typeof setTimeout> | undefined;
+    let resolve: ((value: boolean) => void)    | undefined;
+    return async function selfDebounced() {
+        if (resolve) {
+            if (timerId !== undefined) {
+                clearTimeout(timerId);
+            }
+            resolve(true);
+        }
+        timerId = setTimeout(() => {
+            resolve!(false);
+        }, ms);
+        return new Promise<boolean>(_resolve => {
+            resolve = _resolve;
+        });
     }
 }

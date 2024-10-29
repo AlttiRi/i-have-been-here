@@ -49,7 +49,7 @@ export function exchangeMessage(message: any): Promise<any> {
         chrome.runtime.sendMessage(message, response => {
             console.log("[sendMessage][received]", response);
             if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError.message);
+                return reject(chrome.runtime.lastError.message);
             }
             resolve(response);
         });
@@ -64,10 +64,10 @@ export function exchangeMessage(message: any): Promise<any> {
 export function exchangeMessageWithTab(tabId: number, message: any): Promise<any> {
     return new Promise((resolve, reject) => {
         chrome.tabs.sendMessage(tabId, message, function responseCallback(response) {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError.message);
-            }
             console.log(`[exchangeMessageWithTab] Tab's (${tabId}) response:`, response);
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError.message);
+            }
             resolve(response);
         });
     });
@@ -80,7 +80,7 @@ export function setToStoreLocal<K extends keyof StoreLocalModel>(key: K, value: 
     return new Promise((resolve, reject) => {
         chrome.storage.local.set({[key]: value}, () => {
             if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError.message);
+                return reject(chrome.runtime.lastError.message);
             }
             resolve();
         });
@@ -93,19 +93,53 @@ export function getFromStoreLocal<K extends keyof StoreLocalModel>(key?: K): Pro
     return new Promise((resolve, reject) => {
         chrome.storage.local.get(key ? [key] : null, object => {
             if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError.message);
+                return reject(chrome.runtime.lastError.message);
             }
             resolve(key ? object[key] : object);
         });
     });
 }
-export function removeFromStoreLocal<K extends keyof StoreLocalModel>(key: K): Promise<void> { // todo: not use in vue
+export function removeFromStoreLocal<K extends keyof StoreLocalModel>(key: K): Promise<void> {
     return new Promise((resolve, reject) => {
         chrome.storage.local.remove([key], () => {
             if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError.message);
+                return reject(chrome.runtime.lastError.message);
             }
             resolve();
+        });
+    });
+}
+
+
+export function setIcon(details: chrome.browserAction.TabIconDetails): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        chrome.browserAction.setIcon(details, () => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError.message);
+            }
+            resolve();
+        });
+    });
+}
+
+export function setBadgeText(details: chrome.browserAction.BadgeTextDetails): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        chrome.browserAction.setBadgeText(details, () => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError.message);
+            }
+            resolve();
+        });
+    });
+}
+
+export function getBadgeText(details: chrome.browserAction.BadgeTextDetails): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        chrome.browserAction.getBadgeText(details, (result: string) => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError.message);
+            }
+            resolve(result);
         });
     });
 }
