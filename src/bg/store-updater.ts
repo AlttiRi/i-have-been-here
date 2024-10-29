@@ -1,15 +1,15 @@
 import {TCCompiledRules, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
-import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/types";
+import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/common/types";
 import {
     Base64,
     logIndigo,
-}                 from "@/util";
+}                 from "@/utils/util";
 import {
     getFromStoreLocal,
     removeFromStoreLocal,
     setToStoreLocal,
-}                 from "@/util-ext";
-import {getScdId} from "@/util-ext-image-data";
+}                 from "@/utils/util-ext";
+import {getScdId} from "@/common/image-data";
 
 
 const lastStoreVersion = 4;

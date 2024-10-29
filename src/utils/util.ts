@@ -6,10 +6,10 @@ declare global {
     }
     function logPicture(url: string, scale: number): void
 }
+globalThis.logPicture = logPicture;
 
 export const isFirefox: boolean = typeof navigator === "object" && navigator.userAgent.includes("Firefox");
 export const isOpera:   boolean = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
-
 
 export async function logPicture(url: string, scale: number = 0.5): Promise<void> {
     let imgSrc: string;
@@ -31,7 +31,6 @@ export async function logPicture(url: string, scale: number = 0.5): Promise<void
        font-size: 0;
     `);
 }
-globalThis.logPicture = logPicture;
 
 async function blobUrlToDataUrl(blobUrl: BlobURL): Promise<DataURL> {
     const response = await fetch(blobUrl);
@@ -302,6 +301,11 @@ export async function hashBlob(blob: Blob): Promise<string> {
     }
 }
 
+export function isPromise(value: any): value is Promise<unknown> {
+    return Boolean(typeof value?.then === "function");
+}
+
+
 /**
  * @example
  * const selfDebounced = getSelfDebounced(300);
@@ -335,7 +339,6 @@ export function getSelfDebounced(ms: number = 250) {
         });
     }
 }
-
 
 export class Monitor<T> {
     map!: Map<T, Semaphore>;

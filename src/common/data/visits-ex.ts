@@ -1,7 +1,7 @@
 import {Semaphore} from "@alttiri/util-js";
-import {logPurple}       from "@/util";
-import {setToStoreLocal} from "@/util-ext";
-import {Visit}           from "@/types";
+import {logPurple}       from "@/utils/util";
+import {setToStoreLocal} from "@/utils/util-ext";
+import {Visit}           from "@/common/types";
 import {getVisits} from "./visits";
 
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {GetTabsGS} from "@/message-center";
+import {GetTabsGS} from "@/common/message-center";
 import {logTabs}   from "./core-tabs";
 import {iAmReady, waitMe} from "@/vue-pages/header/router";
 

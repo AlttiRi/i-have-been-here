@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import {sleep} from "@alttiri/util-js";
 import {ref} from "vue";
-import {JpgDataURL, logPicture}          from "@/util";
-import {captureVisibleTab, getActiveTab} from "@/util-ext-bg";
-import {TabCapture} from "@/types";
+import {JpgDataURL, logPicture}          from "@/utils/util";
+import {getActiveTab}      from "@/utils/util-ext";
+import {captureVisibleTab} from "@/utils/util-ext-extra";
+import {TabCapture} from "@/common/types";
 import {
   ChangeIconPS,
   DownloadScreenshotSS,
   LogScreenshotSS,
   SaveScreenshotES,
-} from "@/message-center";
+} from "@/common/message-center";
 import {core} from "./core-popup";
 
 

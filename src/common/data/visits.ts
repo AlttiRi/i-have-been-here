@@ -1,6 +1,6 @@
 import {downloadBlob, localDate} from "@alttiri/util-js";
-import {getFromStoreLocal, setToStoreLocal} from "@/util-ext";
-import {Visit} from "@/types";
+import {getFromStoreLocal, setToStoreLocal} from "@/utils/util-ext";
+import {Visit} from "@/common/types";
 
 
 export async function getVisits(): Promise<Visit[]> {

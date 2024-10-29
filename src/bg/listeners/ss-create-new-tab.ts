@@ -1,6 +1,7 @@
-import {queryTabs}             from "@/util-ext-bg";
-import {FocusOrCreateNewTabES} from "@/message-center";
-import {LastActiveTabsQueue}   from "@/bg/classes/bg-last-active-tabs-queue";
+import {queryTabs}             from "@/utils/util-ext";
+import {FocusOrCreateNewTabES} from "@/common/message-center";
+import {LastActiveTabsQueue}   from "@/bg/classes/last-active-tabs-queue";
+import {NewTabInfo} from "@/common/types";
 
 
 export function initES_FocusOrCreateNewTab() {
@@ -22,9 +23,6 @@ async function focusOrCreateNewTab({url, reload = false}: NewTabInfo): Promise<c
     });
 }
 
-type NewTabInfo = {
-    url: string, reload?: boolean
-};
 
 // The simple implementation
 async function focusOrCreateNewTabSimple(url: string, reload = false) {

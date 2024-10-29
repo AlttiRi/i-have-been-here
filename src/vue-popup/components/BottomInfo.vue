@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, watchEffect} from "vue";
-import {getTrimmedTitle} from "@/util-ext-pages";
+import {getTrimmedTitle} from "@/common/titles";
 import {core} from "./core-popup";
 
 

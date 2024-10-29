@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {ref}   from "vue";
 import {sleep} from "@alttiri/util-js";
-import {getScreenshotsInfos}   from "@/bg/shared/screenshots";
-import {ScreenshotInfo}   from "@/types";
+import {getScreenshotsInfos}   from "@/common/data/screenshots";
+import {ScreenshotInfo}   from "@/common/types";
 import {waitMe, iAmReady} from "@/vue-pages/header/router";
 import Controls         from "./Controls.vue";
 import ScreenshotItem   from "./ScreenshotItem.vue";

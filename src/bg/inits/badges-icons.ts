@@ -1,10 +1,9 @@
 import {watch} from "vue";
-import {getSelfDebounced, logGreen, logOrange, logTeal, Monitor} from "@/util";
-import {inIncognitoContext, setBadgeText, setIcon}               from "@/util-ext";
-import {queryTabs}     from "@/util-ext-bg";
-import {urlOpenerMode} from "@/bg/shared/store";
-import {getVisit}      from "@/bg/shared/visits-ex";
-import {Visit}         from "@/types";
+import {getSelfDebounced, logGreen, logOrange, logTeal, Monitor} from "@/utils/util";
+import {inIncognitoContext, setBadgeText, setIcon, queryTabs}    from "@/utils/util-ext";
+import {urlOpenerMode} from "@/common/reactive-store";
+import {getVisit}      from "@/common/data/visits-ex";
+import {Visit}         from "@/common/types";
 
 
 const imgFilename = inIncognitoContext ? "images/black.png" : "images/white.png";
@@ -14,7 +13,7 @@ const greenMarkPath: string = chrome.runtime.getURL("images/green-mark.png");
 const openedTabs: Map<number, chrome.tabs.Tab> = new Map();
 const updateMonitor = new Monitor();
 
-type UpdateIconOpts = {url: string, } | {tabId: number};
+type UpdateIconOpts = {url: string} | {tabId: number};
 
 /** BG only */
 export function updateIconBy(opt: UpdateIconOpts): Promise<void> {

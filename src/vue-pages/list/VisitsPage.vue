@@ -3,8 +3,8 @@ import {ref}       from "vue";
 import Controls    from "./Controls.vue";
 import VisitItem   from "./VisitItem.vue";
 import {iAmReady, waitMe} from "@/vue-pages/header/router";
-import {getVisits} from "@/bg/shared/visits";
-import {Visit}     from "@/types";
+import {getVisits} from "@/common/data/visits";
+import {Visit}     from "@/common/types";
 
 
 const hrHidden = ref(true);

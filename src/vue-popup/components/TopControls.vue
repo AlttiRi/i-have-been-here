@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {Ref, ref, watchEffect} from "vue";
 import {localDateTime}         from "@alttiri/util-js";
-import {quickAccessUrl}     from "@/bg/shared/store";
-import {openQuickAccessUrl} from "@/bg/shared/common";
-import {AddVisitGS, GetVisitGS}  from "@/message-center";
-import {createBackgroundTab}     from "@/util-ext-bg";
-import {Visit}     from "@/types";
-import {PagePaths} from "@/page-paths";
+import {createBackgroundTab}     from "@/utils/util-ext";
+import {AddVisitGS, GetVisitGS}  from "@/common/message-center";
+import {quickAccessUrl}     from "@/common/reactive-store";
+import {openQuickAccessUrl} from "@/common/common";
+import {Visit}     from "@/common/types";
+import {PagePaths} from "@/common/page-paths";
 
 import SvgOpenInNewTab from "./SvgOpenInNewTab.vue";
 import SvgReload       from "./SvgReload.vue";

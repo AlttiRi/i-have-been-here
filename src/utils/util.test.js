@@ -1,5 +1,5 @@
 import {Tester} from "@alttiri/util-node-js";
-import {fullUrlToFilename} from "./util.js";
+import {fullUrlToFilename} from "./util.ts";
 
 const {eq, report} = new Tester().destructible();
 

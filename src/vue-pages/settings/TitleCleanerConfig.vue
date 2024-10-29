@@ -2,7 +2,7 @@
 import {debounce, isString, sleep}                       from "@alttiri/util-js";
 import {isTCRuleStringArray, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
 import {ref, Ref, watch} from "vue";
-import {tcRuleStrings, tcCompiledRules} from "@/bg/shared/store";
+import {tcRuleStrings, tcCompiledRules} from "@/common/reactive-store";
 
 
 const saveBtn: Ref<HTMLButtonElement | null> = ref(null);

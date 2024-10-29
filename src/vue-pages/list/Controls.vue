@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {exportVisits, importVisits}           from "@/bg/shared/visits";
-import {exportScreenshots, deleteScreenshots} from "@/bg/shared/screenshots";
+import {exportVisits, importVisits}           from "@/common/data/visits";
+import {exportScreenshots, deleteScreenshots} from "@/common/data/screenshots";
 
 
 defineProps<{

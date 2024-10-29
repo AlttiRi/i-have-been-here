@@ -1,3 +1,5 @@
+import {isPromise} from "@/utils/util";
+
 type Command = `${string}--message`;
 type CommandExchange = `${Command}-exchange`;
 type Message<T> = {
@@ -97,8 +99,4 @@ export class GetService<R> extends ExchangeService<undefined, R> {
     get(): Promise<R> {
         return super.exchange(undefined);
     }
-}
-
-function isPromise(value: any): value is Promise<unknown> {
-    return Boolean(typeof value?.then === "function");
 }

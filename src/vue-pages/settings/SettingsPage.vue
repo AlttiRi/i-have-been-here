@@ -2,9 +2,8 @@
 import {computed, onBeforeUnmount, onMounted, ref, watch, watchEffect} from "vue";
 import {TitleCleaner} from "@alttiri/string-magic";
 import TitleCleanerConfig from "./TitleCleanerConfig.vue";
-import {manifest} from "@/util-ext";
-import {getTab}   from "@/util-ext-bg";
-import {GetLastTabsGS} from "@/message-center";
+import {getTab, manifest} from "@/utils/util-ext";
+import {GetLastTabsGS}    from "@/common/message-center";
 import {
   commonSettings,
   dlShelf,
@@ -12,7 +11,7 @@ import {
   quickAccessUrl,
   tcCompiledRules,
   urlOpenerMode,
-} from "@/bg/shared/store";
+} from "@/common/reactive-store";
 import {exportStore, importStore, wipeStore} from "./storage-backup";
 
 

@@ -1,8 +1,8 @@
 import {downloadBlob, sleep} from "@alttiri/util-js";
-import {Base64, fullUrlToFilename, JpgDataURL} from "@/util";
-import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "@/util-ext";
-import {getScdId, toArrayBuffer, toJpgDataUrl, toStoreData} from "@/util-ext-image-data";
-import {ScreenshotDataId, ScreenshotInfo, TabCapture} from "@/types";
+import {Base64, fullUrlToFilename, JpgDataURL} from "@/utils/util";
+import {getFromStoreLocal, removeFromStoreLocal, setToStoreLocal} from "@/utils/util-ext";
+import {getScdId, toArrayBuffer, toJpgDataUrl, toStoreData} from "@/common/image-data";
+import {ScreenshotDataId, ScreenshotInfo, TabCapture} from "@/common/types";
 
 
 export async function getScreenshotsInfos(): Promise<ScreenshotInfo[]> {

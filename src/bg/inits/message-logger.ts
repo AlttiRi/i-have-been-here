@@ -1,4 +1,4 @@
-import {inIncognitoContext} from "@/util-ext";
+import {inIncognitoContext} from "@/utils/util-ext";
 
 
 export function initLogEverything(): void {

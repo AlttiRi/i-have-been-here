@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import {defineAsyncComponent} from "vue";
-import {prependCss} from "@/util";
+import {prependCss} from "@/utils/util";
 
 
 const cssReady = prependCss("/libs/bootstrap.css");

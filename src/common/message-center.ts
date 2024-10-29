@@ -1,5 +1,5 @@
-import {ExchangeService, SendService, PingService, GetService} from "@/util-ext-messages";
-import {Visit, TabCapture} from "@/types";
+import {ExchangeService, SendService, PingService, GetService} from "@/common/classes/messages";
+import {Visit, TabCapture, NewTabInfo} from "@/common/types";
 
 const enum COMMANDS {
     logScreenshot       = "log-screenshot",
@@ -29,9 +29,3 @@ export const GetTabsGS:     GetService<chrome.tabs.Tab[]> = new GetService(COMMA
 export const GetLastTabsGS: GetService<chrome.tabs.Tab[]> = new GetService(COMMANDS.getLastTabs);
 
 export const ChangeIconPS:  PingService = new PingService(COMMANDS.changeIcon);
-
-
-type NewTabInfo = {
-    url: string,
-    reload?: boolean,
-};

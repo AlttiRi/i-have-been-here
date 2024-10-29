@@ -1,5 +1,5 @@
 import {TCCompiledRules, TCRuleString} from "@alttiri/string-magic";
-import {Base64, JpgDataURL} from "@/util";
+import {Base64, JpgDataURL} from "@/utils/util";
 
 export type StoreLocalBase = {
     bookmarkOpenerMode: boolean,
@@ -82,3 +82,9 @@ export type BookmarkFolder = {
     type: "folder",
     name: string,
 } & Bookmark;
+
+
+export type NewTabInfo = {
+    url: string,
+    reload?: boolean,
+};

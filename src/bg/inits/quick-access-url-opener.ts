@@ -1,7 +1,7 @@
 import {watch} from "vue";
-import {getPopup, getTitle, getActiveTabId} from "@/util-ext-bg";
-import {urlOpenerMode, quickAccessUrl} from "@/bg/shared/store";
-import {openQuickAccessUrl}            from "@/bg/shared/common";
+import {getPopup, getTitle, getActiveTabId} from "@/utils/util-ext";
+import {urlOpenerMode, quickAccessUrl} from "@/common/reactive-store";
+import {openQuickAccessUrl}            from "@/common/common";
 
 
 type State = {title: string, popup: string, saved: boolean};

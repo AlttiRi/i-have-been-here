@@ -1,6 +1,6 @@
 import {readonly, ref, Ref} from "vue";
-import {getFromStoreLocal, setToStoreLocal} from "@/util-ext";
-import {StoreLocalModel} from "@/types";
+import {getFromStoreLocal, setToStoreLocal} from "@/utils/util-ext";
+import {StoreLocalModel} from "@/common/types";
 
 export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
 

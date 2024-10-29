@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import {GetTabsGS}  from "@/message-center";
+import {GetTabsGS}  from "@/common/message-center";
 import {getHash, iAmReady, waitMe} from "@/vue-pages/header/router";
 import {defaultIgnore, filterUrls, ignoreFilter, logTabs, onlyFilter, updateHash} from "./core-tabs";
 import Filters from "./Filters.vue";

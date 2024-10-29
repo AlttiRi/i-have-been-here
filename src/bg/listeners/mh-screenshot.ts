@@ -1,12 +1,12 @@
 import {downloadBlob}  from "@alttiri/util-js";
-import {logPicture, hashBlob}   from "@/util";
-import {exchangeMessageWithTab} from "@/util-ext";
-import {executeScript}          from "@/util-ext-bg";
-import {getScreenshotFilename}  from "@/util-ext-pages";
-import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/message-center";
-import {addScreenshot} from "@/bg/shared/screenshots";
-import {TabCapture} from "@/types";
-import {PagePaths}  from "@/page-paths";
+import {logPicture, hashBlob}   from "@/utils/util";
+import {exchangeMessageWithTab} from "@/utils/util-ext";
+import {executeScript}          from "@/utils/util-ext-extra";
+import {getScreenshotFilename}  from "@/common/titles";
+import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/common/message-center";
+import {addScreenshot} from "@/common/data/screenshots";
+import {TabCapture}    from "@/common/types";
+import {PagePaths}     from "@/common/page-paths";
 
 
 /** Init `Screenshot` message handlers */

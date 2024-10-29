@@ -1,4 +1,5 @@
-import {StoreLocalModel} from "@/types";
+import {StoreLocalModel} from "@/common/types";
+
 
 export const extensionName = chrome.i18n.getMessage("extension_name");
 export const extensionId   = chrome.runtime.id;
@@ -9,7 +10,6 @@ export const manifest     = chrome.runtime.getManifest();
 export const defaultIcon  = manifest.browser_action!.default_icon;
 export const defaultTitle = manifest.browser_action!.default_title;
 export const defaultPopup = manifest.browser_action!.default_popup;
-
 
 
 
@@ -40,8 +40,8 @@ export const defaultPopup = manifest.browser_action!.default_popup;
  * BTW, `sender` has no `sender.tab` property if the message is from the bg script.
  * ```
  * @deprecated Use `ExchangeService`.
- * @see {import("./util-ext-messages.js").ExchangeService}
- * @see {import("./util-ext.js").exchangeMessageWithTab}
+ * @see {import("../common/classes/messages").ExchangeService}
+ * @see {import("./util-ext").exchangeMessageWithTab}
  */
 export function exchangeMessage(message: any): Promise<any> {
     console.log("[sendMessage][send]", message);
@@ -58,8 +58,8 @@ export function exchangeMessage(message: any): Promise<any> {
 
 /**
  * Send a message from the background script to a tab's content script and get the response back.
- * @see {import("./util-ext.js").SendResponse}
- * @see {import("./util-ext.js").exchangeMessage}
+ * @see {import("./util-ext").SendResponse}
+ * @see {import("./util-ext").exchangeMessage}
  */
 export function exchangeMessageWithTab(tabId: number, message: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -142,4 +142,66 @@ export function getBadgeText(details: chrome.browserAction.BadgeTextDetails): Pr
             resolve(result);
         });
     });
+}
+
+
+/** Gets the html document set as the popup for this browser action. */
+export async function getPopup(details?: chrome.browserAction.TabDetails): Promise<string> {
+    if (details === undefined) {
+        return getPopup({tabId: await getActiveTabId()});
+    }
+    return new Promise(resolve => chrome.browserAction.getPopup(details, resolve));
+}
+
+/** Gets the title of the browser action. */
+export async function getTitle(details?: chrome.browserAction.TabDetails): Promise<string> {
+    if (details === undefined) {
+        return getTitle({tabId: await getActiveTabId()});
+    }
+    return new Promise(resolve => chrome.browserAction.getTitle(details, resolve));
+}
+
+
+export function queryTabs(queryInfo?: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {
+    return new Promise(resolve => chrome.tabs.query(queryInfo || {}, resolve));
+}
+
+export function getTab(tabId: number): Promise<chrome.tabs.Tab> {
+    return new Promise(resolve => chrome.tabs.get(tabId, resolve));
+}
+
+
+export async function getActiveTabId(currentWindow: boolean = true) {
+    return (await getActiveTab(currentWindow))?.id;
+}
+
+/** Returns `null` when the last focused window is DevTools */
+export async function getActiveTab(currentWindow: boolean = true): Promise<chrome.tabs.Tab | undefined> {
+    const tabs: chrome.tabs.Tab[] = await queryTabs({
+        active: true,
+        currentWindow
+    });
+    if (tabs.length === 0) {
+        console.warn("[warning][getActiveTab] tabs.length === 0");
+        return;
+    }
+    return tabs[0];
+}
+
+
+export function createBackgroundTab(url: string): void {
+    chrome.tabs.create({
+        url,
+        active: false
+    });
+}
+
+export function openOptions(old = true) {
+    if (old) {
+        chrome.tabs.create({
+            url: "chrome://extensions/?options=" + chrome.runtime.id
+        });
+    } else {
+        chrome.runtime.openOptionsPage();
+    }
 }

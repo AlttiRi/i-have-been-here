@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {localDateTime} from "@alttiri/util-js";
-import {fullUrlToFilename} from "@/util";
-import {getScreenshotDataUrl} from "@/bg/shared/screenshots";
-import {ScreenshotInfo}    from "@/types";
+import {fullUrlToFilename} from "@/utils/util";
+import {getScreenshotDataUrl} from "@/common/data/screenshots";
+import {ScreenshotInfo}    from "@/common/types";
 import {allImagesReady}    from "./core-list";
 
 const props = defineProps<{screenshot: ScreenshotInfo}>();

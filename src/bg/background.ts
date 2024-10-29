@@ -2,21 +2,21 @@ import {sleep} from "@alttiri/util-js";
 import {
     emojiToDataURL, emojiToBlobURL,
     logPicture, logBlue,
-} from "@/util";
+} from "@/utils/util";
 import {
     extensionName, inIncognitoContext
-} from "@/util-ext";
-import {initStartupListeners, updateStoreModel} from "@/bg/bg-store-updater";
-import {initLogEverything}            from "@/bg/bg-init-message-logger";
-import {initBadgesAndIcons}           from "@/bg/bg-init-badges-icons";
-import {initContextMenu}              from "@/bg/bg-init-context-menu";
-import {initQuickAccessUrlOpenerMode} from "@/bg/bg-init-quick-access-url-opener";
-import {initPS_ChangeIcon}          from "@/bg/bg--ps-change-icon";
-import {initGS_GetTabs}             from "@/bg/bg--gs-get-tabs";
-import {initGS_GetLastTabs}         from "@/bg/bg--gs-get-last-tabs";
-import {initES_FocusOrCreateNewTab} from "@/bg/bg--ss-create-new-tab";
-import {initMH_Visit}               from "@/bg/bg--mh-visit";
-import {initMH_Screenshot}          from "@/bg/bg--mh-screenshot";
+} from "@/utils/util-ext";
+import {initStartupListeners, updateStoreModel} from "@/bg/store-updater";
+import {initLogEverything}            from "@/bg/inits/message-logger";
+import {initBadgesAndIcons}           from "@/bg/inits/badges-icons";
+import {initContextMenu}              from "@/bg/inits/context-menu";
+import {initQuickAccessUrlOpenerMode} from "@/bg/inits/quick-access-url-opener";
+import {initPS_ChangeIcon}          from "@/bg/listeners/ps-change-icon";
+import {initGS_GetTabs}             from "@/bg/listeners/gs-get-tabs";
+import {initGS_GetLastTabs}         from "@/bg/listeners/gs-get-last-tabs";
+import {initES_FocusOrCreateNewTab} from "@/bg/listeners/ss-create-new-tab";
+import {initMH_Visit}               from "@/bg/listeners/mh-visit";
+import {initMH_Screenshot}          from "@/bg/listeners/mh-screenshot";
 
 
 void (async function mainBG(): Promise<void> {

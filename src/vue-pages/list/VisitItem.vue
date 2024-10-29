@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {localDateTime}       from "@alttiri/util-js";
-import {createBackgroundTab} from "@/util-ext-bg";
+import {createBackgroundTab} from "@/utils/util-ext";
 import {getHash, setHash}    from "@/vue-pages/header/router";
-import {Visit}               from "@/types";
+import {Visit}               from "@/common/types";
 
 
 const props = defineProps<{visit: Visit}>();

@@ -1,5 +1,5 @@
-import {GetLastTabsGS}       from "@/message-center";
-import {LastActiveTabsQueue} from "@/bg/classes/bg-last-active-tabs-queue";
+import {GetLastTabsGS}       from "@/common/message-center";
+import {LastActiveTabsQueue} from "@/bg/classes/last-active-tabs-queue";
 
 export function initGS_GetLastTabs() {
     GetLastTabsGS.addListener(async () => {

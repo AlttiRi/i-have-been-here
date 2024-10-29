@@ -18,7 +18,7 @@
         logPicture(dataUrl);
 
         /** Required, since the message is sent from `exchangeMessageWithTab` function
-         *  @see {import("src/util-ext.js").exchangeMessageWithTab} */
+         *  @see {import("src/utils/util-ext.ts").exchangeMessageWithTab} */
         sendResponse("[content script]: image logged");
     });
 

@@ -1,5 +1,5 @@
-import {FocusOrCreateNewTabES} from "@/message-center";
-import {quickAccessUrl}        from "@/bg/shared/store";
+import {FocusOrCreateNewTabES} from "@/common/message-center";
+import {quickAccessUrl}        from "@/common/reactive-store";
 
 
 export async function openQuickAccessUrl(): Promise<chrome.tabs.Tab | undefined> {
