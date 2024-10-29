@@ -16,20 +16,26 @@ const registry = new FinalizationRegistry((heldValue) => {
 });
 const mutex = new Semaphore(1);
 
+
+let cacheId = 0;
 // bg only
 export async function getVisit(url: string): Promise<Visit | null> {
     await mutex.acquire();
     let visits: Visit[] | undefined;
     if (visitsCache) {
         visits = visitsCache.deref();
+        if (!visits) {
+            logPurple("[visits] ❔ Cache miss")();
+        }
     }
     if (!visits) {
         visits = await getVisits();
         visitsCache = new WeakRef<Visit[]>(visits);
-        registry.register(visitsCache, "Cache: visits");
-        logPurple("[visits] 💾 Cached")();
+        cacheId++;
+        registry.register(visits, `Cache (${cacheId})`);
+        logPurple(`[visits] 💾 Cached (${cacheId})`)();
     } else {
-        logPurple("[visits] ♻️ Cache used")();
+        logPurple(`[visits] ♻️ Cache use (${cacheId})`)();
     }
     mutex.release();
     const visit = visits.find(visit => visit.url === url);
@@ -52,7 +58,10 @@ export async function addVisit({url, date, title}: {url: string, date: number, t
         visit.lastVisited = date;
         await setToStoreLocal("visits", visits);
     }
+
     visitsCache = null;
+    logPurple("[visits] ❕ Cache reset")();
+
     return visit;
 }
 

@@ -3,7 +3,7 @@ import {emojiToImageData}  from "@/util";
 import {setIcon}           from "@/util-ext";
 import {getActiveTab}      from "@/util-ext-bg";
 import {ChangeIconPS}      from "@/message-center";
-import {updateIconByTabId} from "@/bg/bg-init-badges-icons";
+import {updateIconBy}      from "@/bg/bg-init-badges-icons";
 
 export function initPS_ChangeIcon() {
     ChangeIconPS.addListener(blinkDownloadEmoji);
@@ -21,5 +21,5 @@ async function blinkDownloadEmoji(_data: undefined, _sender: chrome.runtime.Mess
     });
 
     await sleep(500);
-    void updateIconByTabId(tab.id); // Restore the icon
+    void updateIconBy({tabId: tab.id}); // Restore the icon
 }

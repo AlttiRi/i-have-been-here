@@ -14,6 +14,15 @@ const greenMarkPath: string = chrome.runtime.getURL("images/green-mark.png");
 const openedTabs: Map<number, chrome.tabs.Tab> = new Map();
 const updateMonitor = new Monitor();
 
+type UpdateIconOpts = {url: string, } | {tabId: number};
+
+/** BG only */
+export function updateIconBy(opt: UpdateIconOpts): Promise<void> {
+    if ("url" in opt) {
+        return updateIconByUrl(opt.url);
+    }
+    return updateIconByTabId(opt.tabId);
+}
 
 // Count tabs with separation for incognito and normal mode
 // + changes icon
@@ -123,9 +132,17 @@ function updateIconsForAllTabs(): void {
         void updateIconByTabId(tabId);
     }
 }
-
-
-export async function updateIconByTabId(tabId: number): Promise<void> { // todo for any other tabs with same url
+async function updateIconByUrl(url: string): Promise<void> {
+    const tabIds = [...openedTabs.entries()].filter(([k, v]) => {
+        if (v.url === url) {
+            return true;
+        }
+    }).map(([k, v]) => k);
+    for (const tabId of tabIds) {
+        void updateIconByTabId(tabId);
+    }
+}
+async function updateIconByTabId(tabId: number): Promise<void> {
     const monitor = updateMonitor.get(tabId);
 
     const tab = openedTabs.get(tabId);

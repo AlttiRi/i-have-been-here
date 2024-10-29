@@ -1,7 +1,7 @@
 import {getActiveTab}           from "@/util-ext-bg";
 import {AddVisitGS, GetVisitGS} from "@/message-center";
 import {addVisit, getVisit}     from "@/bg/shared/visits";
-import {updateIconByTabId}      from "@/bg/bg-init-badges-icons";
+import {updateIconBy}           from "@/bg/bg-init-badges-icons";
 import {Visit} from "@/types";
 
 /** Init `Visit` message handlers */
@@ -45,7 +45,7 @@ async function addVisitForActiveTab(_data: undefined, sender: chrome.runtime.Mes
     });
     const visitJustWasCreated = visit.lastVisited === undefined;
     if (visitJustWasCreated) {
-        void updateIconByTabId(tab.id!); // ts ! // todo for all tabs with same url
+        void updateIconBy({url: tab.url});
     }
     return visit;
 }
