@@ -1,5 +1,5 @@
 import {sleep} from "@alttiri/util-js";
-import {JpgDataURL} from "@/util";
+import {JpgDataURL, logOrange} from "@/util";
 
 
 export function queryTabs(queryInfo?: chrome.tabs.QueryInfo): Promise<chrome.tabs.Tab[]> {
@@ -48,7 +48,7 @@ export async function executeScript(details: chrome.tabs.InjectDetails, tab?: ch
     }
 
     if (!allowedProtocols.includes(new URL(tabUrl).protocol)) {
-        console.warn("[warning][executeScript] Not allowed protocol for injection.", tabUrl, tab);
+        logOrange("[warning][executeScript] Not allowed protocol for injection.", tabUrl, tab)();
         return false;
     }
 
