@@ -1,6 +1,6 @@
 import {watch} from "vue";
 import {getSelfDebounced, logGreen, logOrange, logTeal, Monitor} from "@/util";
-import {inIncognitoContext, setBadgeText, setIcon}      from "@/util-ext";
+import {inIncognitoContext, setBadgeText, setIcon}               from "@/util-ext";
 import {queryTabs}     from "@/util-ext-bg";
 import {urlOpenerMode} from "@/bg/shared/store";
 import {getVisit}      from "@/bg/shared/visits";
@@ -18,7 +18,7 @@ const updateMonitor = new Monitor();
 // Count tabs with separation for incognito and normal mode
 // + changes icon
 export async function initBadgesAndIcons() {
-    logTeal("[initBadgesAndIcons]", "init")(); // todo: rename the file "bg-init-badges-icons"
+    logTeal("[initBadgesAndIcons]", "init")();
 
     void setDefaultIcon(imgPath);
 

@@ -8,7 +8,7 @@ import {
 } from "@/util-ext";
 import {initStartupListeners, updateStoreModel} from "@/bg/bg-store-updater";
 import {initLogEverything}            from "@/bg/bg-init-message-logger";
-import {initBadgesAndIcons}           from "@/bg/tab-counter";
+import {initBadgesAndIcons}           from "@/bg/bg-init-badges-icons";
 import {initContextMenu}              from "@/bg/bg-init-context-menu";
 import {initQuickAccessUrlOpenerMode} from "@/bg/bg-init-quick-access-url-opener";
 import {initPS_ChangeIcon}          from "@/bg/bg--ps-change-icon";

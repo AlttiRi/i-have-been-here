@@ -3,7 +3,7 @@ import {emojiToImageData}  from "@/util";
 import {setIcon}           from "@/util-ext";
 import {getActiveTab}      from "@/util-ext-bg";
 import {ChangeIconPS}      from "@/message-center";
-import {updateIconByTabId} from "@/bg/tab-counter";
+import {updateIconByTabId} from "@/bg/bg-init-badges-icons";
 
 export function initPS_ChangeIcon() {
     ChangeIconPS.addListener(blinkDownloadEmoji);
