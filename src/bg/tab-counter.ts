@@ -1,5 +1,5 @@
 import {watch} from "vue";
-import {getSelfDebounced, logGreen, logOrange, logTeal} from "@/util";
+import {getSelfDebounced, logGreen, logOrange, logTeal, Monitor} from "@/util";
 import {inIncognitoContext, setBadgeText, setIcon}      from "@/util-ext";
 import {queryTabs}     from "@/util-ext-bg";
 import {urlOpenerMode} from "@/bg/shared/store";
@@ -12,6 +12,7 @@ const imgPath:       string = chrome.runtime.getURL(imgFilename);
 const greenMarkPath: string = chrome.runtime.getURL("images/green-mark.png");
 
 const openedTabs: Map<number, chrome.tabs.Tab> = new Map();
+const updateMonitor = new Monitor();
 
 
 // Count tabs with separation for incognito and normal mode
@@ -92,6 +93,7 @@ function addListeners() {
         } else {
             console.warn(`[warning][onRemoved] tab.id ${tabId} is not found`);
         }
+        updateMonitor.clear(tabId);
     }
 
 
@@ -122,9 +124,10 @@ function updateIconsForAllTabs(): void {
     }
 }
 
-let i = 0;
+
 export async function updateIconByTabId(tabId: number): Promise<void> { // todo for any other tabs with same url
-    const k = i++;
+    const monitor = updateMonitor.get(tabId);
+
     const tab = openedTabs.get(tabId);
     if (tab === undefined) {
         console.warn("[error][updateIconByTabId]", "tab === undefined");
@@ -149,8 +152,9 @@ export async function updateIconByTabId(tabId: number): Promise<void> { // todo 
         return;
     }
     try {
-        // todo: use monitor by tabId
-        if (openedTabs.get(tabId)?.url === url) {
+        const urlStillNotChanged = openedTabs.get(tabId)?.url === url;
+        if (urlStillNotChanged) {
+            await monitor.acquire();
             await setIcon({
                 ...tabCounterIconData,
                 tabId,
@@ -160,10 +164,11 @@ export async function updateIconByTabId(tabId: number): Promise<void> { // todo 
             logOrange("[updateIconByTabId] tab's url was updated", tabId)();
         }
     } catch (error) {
-        // expected, when multiple tab was closed // I don't want to add delays (icon blinking)
+        // expected, when multiple tab was closed // I don't want to add delays (extra icon blinking)
         logOrange("[updateIconByTabId]", error)(); // 2 //
+    } finally {
+        monitor.release();
     }
-    logTeal("[updateIconByTabId] done", tabId, k)();
 }
 
 /** Sets the count of the opened tabs as the badge text */

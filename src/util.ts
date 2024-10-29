@@ -1,3 +1,5 @@
+import {Semaphore} from "@alttiri/util-js";
+
 declare global {
     interface Window {
         opr: undefined | object;
@@ -331,5 +333,30 @@ export function getSelfDebounced(ms: number = 250) {
         return new Promise<boolean>(_resolve => {
             resolve = _resolve;
         });
+    }
+}
+
+
+export class Monitor<T> {
+    map!: Map<T, Semaphore>;
+    constructor() {
+        this.map = new Map<T, Semaphore>();
+    }
+    get(value: T) {
+        const semaphore = this.map.get(value);
+        if (semaphore) {
+            return semaphore;
+        }
+        const mutex = new Semaphore(1);
+        this.map.set(value, mutex);
+        return mutex;
+    }
+    async acquired(value: T) {
+        const semaphore = this.get(value);
+        await semaphore.acquire();
+        return semaphore;
+    }
+    clear(value: T): void {
+        this.map.delete(value);
     }
 }
