@@ -4,9 +4,10 @@ import {exchangeMessageWithTab} from "@/utils/util-ext";
 import {executeScript}          from "@/utils/util-ext-extra";
 import {getScreenshotFilename}  from "@/common/titles";
 import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/common/message-center";
-import {addScreenshot} from "@/common/data/screenshots";
-import {TabCapture}    from "@/common/types";
-import {PagePaths}     from "@/common/page-paths";
+import {addScreenshot}  from "@/common/data/screenshots";
+import {TabCapture}     from "@/common/types";
+import {PagePaths}      from "@/common/page-paths";
+import {commonSettings} from "@/common/reactive-store";
 
 
 /** Init `Screenshot` message handlers */
@@ -41,6 +42,9 @@ async function logScreenshot(tc: TabCapture): Promise<void> {
     void logPicture(screenshotUrl);
 
     // Log the picture in a tab //
+    if (!commonSettings.value.contentLogScreenshot) {
+        return;
+    }
     if (!tab.id) {
         return;
     }

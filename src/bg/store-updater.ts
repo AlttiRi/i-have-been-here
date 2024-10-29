@@ -10,9 +10,10 @@ import {
     setToStoreLocal,
 }                 from "@/utils/util-ext";
 import {getScdId} from "@/common/image-data";
+import {commonSettingsDefault} from "@/common/reactive-store";
 
 
-const lastStoreVersion = 4;
+const lastStoreVersion = 5;
 let wasInstalled = false;
 
 /**
@@ -49,6 +50,12 @@ export async function updateStoreModel(): Promise<void> {
     if (version === lastStoreVersion) {
         logIndigo("[⚒]", "Store is up to date")();
         return;
+    }
+
+    async function bumpVersion() {
+        await setToStoreLocal("version", version);
+        logIndigo(`Store was updated to version ${version}`)();
+        version = version + 1;
     }
 
     if (version === 1) {
@@ -110,10 +117,8 @@ export async function updateStoreModel(): Promise<void> {
             await setToStoreLocal("screenshots", screenshots);
         })();
 
-        version = 2;
-        await setToStoreLocal("version", version);
-        logIndigo(`Store was updated to version ${version}`)();
-    } // -> 2
+        await bumpVersion(); // -> 2
+    }
 
     if (version === 2) {
         // @ts-ignore
@@ -125,10 +130,8 @@ export async function updateStoreModel(): Promise<void> {
         // @ts-ignore
         await removeFromStoreLocal("titleCutterSettings");
 
-        version = 3;
-        await setToStoreLocal("version", version);
-        logIndigo(`Store was updated to version ${version}`)();
-    } // -> 3
+        await bumpVersion(); // -> 3
+    }
 
     if (version === 3) {
         type TrimOptions = {
@@ -192,11 +195,22 @@ export async function updateStoreModel(): Promise<void> {
             await removeFromStoreLocal("titleTrimmerConfig");
         }
 
-        version = 4;
-        await setToStoreLocal("version", version);
-        logIndigo(`Store was updated to version ${version}`)();
-    } // -> 4
+        await bumpVersion(); // -> 4
+    }
+
+    if (version === 4) { // +2 new properties in "commonSettings"
+        const cs = await getFromStoreLocal("commonSettings");
+        if (cs.contentLogExtName === undefined) {
+            cs.contentLogExtName = commonSettingsDefault.contentLogExtName;
+        }
+        if (cs.contentLogScreenshot === undefined) {
+            cs.contentLogScreenshot = commonSettingsDefault.contentLogScreenshot;
+        }
+        await setToStoreLocal("commonSettings", cs);
+
+        await bumpVersion(); // -> 5
+    }
 }
-// [note] Do not forget to update `lastStoreVersion` above!
+// [note] Do not forget to update `lastStoreVersion` above! And use `bumpVersion()`.
 
 // todo (?) handle errors/broken data

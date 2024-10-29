@@ -142,6 +142,7 @@ async function updateIconByUrl(url: string): Promise<void> {
     }
 }
 async function updateIconByTabId(tabId: number): Promise<void> {
+    logTeal("[updateIconByTabId]",tabId)();
     const monitor = updateMonitor.get(tabId);
 
     const tab = openedTabs.get(tabId);

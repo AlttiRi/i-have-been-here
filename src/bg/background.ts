@@ -58,7 +58,8 @@ void (async function tests(): Promise<void> {
 
         // chrome.downloads.setShelfEnabled(false);
     })();
-}); //(); // uncomment to enable
+}) // () /* un/comment `()` to en/dis-able */
+;
 
 // @ts-ignore
 globalThis.reload = chrome.runtime.reload;

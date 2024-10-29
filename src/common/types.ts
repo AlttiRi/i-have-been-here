@@ -18,7 +18,9 @@ export type StoreLocalModel = {
     visits: Visit[] | undefined
     screenshots: ScreenshotInfo[] | undefined
     commonSettings: {
-        browserName: string
+        browserName: string,
+        contentLogExtName:    boolean,
+        contentLogScreenshot: boolean,
     }
     [sc_id: ScreenshotDataId]: Base64
 } & StoreLocalBase;

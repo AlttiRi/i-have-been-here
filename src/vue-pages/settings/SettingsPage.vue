@@ -57,7 +57,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   window.removeEventListener("focus", getLastActiveTab);
-})
+});
 
 const cleaner = ref<TitleCleaner>();
 watchEffect(() => {
@@ -73,6 +73,7 @@ watchEffect(() => {
   lATCleanedTitle.value = cleaner.value.clean(lastActiveTab.value?.url || "", lastActiveTab.value?.title || "");
 });
 
+
 const browserName = ref("");
 commonSettings.onReady.then((cs) => {
   browserName.value = cs.browserName;
@@ -86,6 +87,26 @@ commonSettings.onReady.then((cs) => {
 
 const exported    = ref(false);
 const safeStorage = ref(true); // todo? make persistent
+
+
+const contentLogExtName = computed(() => {
+  return "Content: Log Extension Name " + (commonSettings.value.contentLogExtName ? "✅" : "⬜");
+});
+function toggleContentLogExtName() {
+  return commonSettings.setValue({
+    ...commonSettings.value,
+    contentLogExtName: !commonSettings.value.contentLogExtName,
+  });
+}
+const contentLogScreenshotText = computed(() => {
+  return "Content: Log Screenshot " + (commonSettings.value.contentLogScreenshot ? "✅" : "⬜");
+});
+function toggleContentLogScreenshot() {
+  return commonSettings.setValue({
+    ...commonSettings.value,
+    contentLogScreenshot: !commonSettings.value.contentLogScreenshot,
+  });
+}
 </script>
 
 <template>
@@ -172,6 +193,13 @@ const safeStorage = ref(true); // todo? make persistent
           Safe
         </label>
       </span>
+    </div>
+    <hr>
+
+    <div class="extra-options">
+      <h4>Extra Options</h4>
+      <button class="btn m-3" @click="toggleContentLogExtName">{{contentLogExtName}}</button>
+      <button class="btn m-3" @click="toggleContentLogScreenshot">{{contentLogScreenshotText}}</button>
     </div>
     <hr>
 
