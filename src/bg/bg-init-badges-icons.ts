@@ -3,7 +3,7 @@ import {getSelfDebounced, logGreen, logOrange, logTeal, Monitor} from "@/util";
 import {inIncognitoContext, setBadgeText, setIcon}               from "@/util-ext";
 import {queryTabs}     from "@/util-ext-bg";
 import {urlOpenerMode} from "@/bg/shared/store";
-import {getVisit}      from "@/bg/shared/visits";
+import {getVisit}      from "@/bg/shared/visits-ex";
 import {Visit}         from "@/types";
 
 

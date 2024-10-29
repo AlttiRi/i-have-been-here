@@ -1,6 +1,6 @@
 import {getActiveTab}           from "@/util-ext-bg";
 import {AddVisitGS, GetVisitGS} from "@/message-center";
-import {addVisit, getVisit}     from "@/bg/shared/visits";
+import {addVisit, getVisit}     from "@/bg/shared/visits-ex";
 import {updateIconBy}           from "@/bg/bg-init-badges-icons";
 import {Visit} from "@/types";
 
