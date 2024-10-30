@@ -9,6 +9,9 @@ import {getVisits} from "./visits";
 
 // Simple cache implementation only for `getVisit`, not `getVisits`.
 let visitsCache: WeakRef<Visit[]> | null = null;
+// Extra cache for `getVisit`.
+let visitMapCache: WeakRef<Map<string, Visit | null>> | null = null;
+
 const registry = new FinalizationRegistry((heldValue) => {
     logPurple(`[visits] 🗑️ ${heldValue} was GC'ed`)();
 });
@@ -18,6 +21,22 @@ const mutex = new Semaphore(1);
 let cacheId = 0;
 export async function getVisit(url: string): Promise<Visit | null> {
     await mutex.acquire();
+
+    let visitMap: Map<string, Visit | null> | undefined;
+    if (visitMapCache) {
+        visitMap = visitMapCache.deref();
+        if (!visitMap) {
+            logPurple("[visits][map] ❔ Cache miss")();
+        } else {
+            const visit = visitMap.get(url);
+            if (visit !== undefined) {
+                logPurple("[visits][map] ♻️ Cache use", Object.fromEntries(visitMap))();
+                mutex.release();
+                return visit;
+            }
+        }
+    }
+
     let visits: Visit[] | undefined;
     if (visitsCache) {
         visits = visitsCache.deref();
@@ -34,9 +53,18 @@ export async function getVisit(url: string): Promise<Visit | null> {
     } else {
         logPurple(`[visits] ♻️ Cache use (${cacheId})`)();
     }
+
+    const visit = visits.find(visit => visit.url === url) || null;
+    if (!visitMap) {
+        visitMap = new Map<string, Visit>();
+        visitMapCache = new WeakRef(visitMap);
+        registry.register(visitMap, `Cache (map)`);
+    }
+    visitMap.set(url, visit);
+    logPurple("[visits][map] 💾 Cached")();
+
     mutex.release();
-    const visit = visits.find(visit => visit.url === url);
-    return visit || null;
+    return visit;
 }
 
 export async function addVisit({url, date, title}: {url: string, date: number, title: string}): Promise<Visit> {
@@ -55,7 +83,8 @@ export async function addVisit({url, date, title}: {url: string, date: number, t
         await setToStoreLocal("visits", visits);
     }
 
-    visitsCache = null;
+    visitsCache   = null;
+    visitMapCache = null;
     logPurple("[visits] ❕ Cache reset")();
 
     return visit;
