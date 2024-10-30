@@ -158,31 +158,33 @@ async function updateIconByTabId(tabId: number): Promise<void> {
 
     let tabCounterIconData = {path: imgPath};
     if (!urlOpenerMode.value) {
-        const visit: Visit | null = await getVisit(url); // todo cache
+        const visit: Visit | null = await getVisit(url); // todo: cache
         if (visit) {
             tabCounterIconData.path = greenMarkPath;
         }
     }
 
-    if (!openedTabs.has(tabId)) {
-        logOrange("[updateIconByTabId] tab was already removed", tabId)(); // 1 //
+    // Let's recheck after some time passed (after the async operation above).
+    // I don't want to add delays (extra icon blinking).
+    const tab2 = openedTabs.get(tabId);
+    if (tab2 === undefined) { // when multiple tab were closed
+        logOrange("[updateIconByTabId][warn] tab was already removed", tabId)(); // [1]
         return;
     }
+    if (tab2.url !== url) { // multiple "loading" tab events
+        logOrange("[updateIconByTabId][warn] tab's url was updated", tabId)();
+        return;
+    }
+
     try {
-        const urlStillNotChanged = openedTabs.get(tabId)?.url === url;
-        if (urlStillNotChanged) {
-            await monitor.acquire();
-            await setIcon({
-                ...tabCounterIconData,
-                tabId,
-            });
-        } else {
-            // else the tab's url was updated while async operations, do nothing in this call
-            logOrange("[updateIconByTabId] tab's url was updated", tabId)();
-        }
+        await monitor.acquire();
+        await setIcon({
+            ...tabCounterIconData,
+            tabId,
+        });
     } catch (error) {
-        // expected, when multiple tab was closed // I don't want to add delays (extra icon blinking)
-        logOrange("[updateIconByTabId]", error)(); // 2 //
+        // Same as [1]. // It prints "No tab with id: 123" error
+        logOrange("[updateIconByTabId][warn]", error)();
     } finally {
         monitor.release();
     }

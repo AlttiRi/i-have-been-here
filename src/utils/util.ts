@@ -341,7 +341,7 @@ export function getSelfDebounced(ms: number = 250) {
 }
 
 export class Monitor<T> {
-    map!: Map<T, Semaphore>;
+    map: Map<T, Semaphore>;
     constructor() {
         this.map = new Map<T, Semaphore>();
     }
