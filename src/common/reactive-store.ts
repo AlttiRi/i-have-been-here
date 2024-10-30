@@ -41,10 +41,19 @@ export const filenameLengthLimit: ReactiveStoreLocalValue<"filenameLengthLimit">
 
 
 export const commonSettingsDefault: StoreLocalBase["commonSettings"] = {
-    browserName: "", // todo add the default browser name
+    browserName:          "",  // todo: add the default browser name
     contentLogExtName:    true,
     contentLogScreenshot: true,
-}
+};
 
 export const commonSettings: ReactiveStoreLocalValue<"commonSettings">
     = new ReactiveStoreLocalValue("commonSettings", commonSettingsDefault);
+
+// todo: 'stateVersions'
+// export const stateVersionsDefault: StoreLocalBase["stateVersions"] = {
+//     visits:      0,
+//     screenshots: 0,
+// };
+//
+// export const stateVersions: ReactiveStoreLocalValue<"stateVersions">
+//     = new ReactiveStoreLocalValue("stateVersions", stateVersionsDefault);

@@ -15,7 +15,7 @@ export type StoreLocalBase = {
     }
     titleCleanerRuleStrings:   TCRuleString[]
     titleCleanerCompiledRules: TCCompiledRules
-    // stateVersions: { // todo
+    // stateVersions: { // todo: 'stateVersions'
     //     visits:      number
     //     screenshots: number
     // }
