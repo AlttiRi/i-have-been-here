@@ -1,7 +1,7 @@
 import {TCRuleString, TitleCleaner} from "@alttiri/string-magic";
 import {isFirefox, isOpera}      from "@/utils/util";
 import {ReactiveStoreLocalValue} from "@/common/classes/reactive-store-local-value";
-import {StoreLocalModel}         from "@/common/types";
+import {StoreLocalBase}          from "@/common/types";
 
 
 export const urlOpenerMode: ReactiveStoreLocalValue<"quickAccessUrlOpenerMode">
@@ -40,7 +40,7 @@ export const filenameLengthLimit: ReactiveStoreLocalValue<"filenameLengthLimit">
     = new ReactiveStoreLocalValue("filenameLengthLimit", 220);
 
 
-export const commonSettingsDefault: StoreLocalModel["commonSettings"] = {
+export const commonSettingsDefault: StoreLocalBase["commonSettings"] = {
     browserName: "", // todo add the default browser name
     contentLogExtName:    true,
     contentLogScreenshot: true,

@@ -1,28 +1,34 @@
 import {TCCompiledRules, TCRuleString} from "@alttiri/string-magic";
 import {Base64, JpgDataURL} from "@/utils/util";
 
+// Can be used with `ReactiveStoreLocalValue` instance
 export type StoreLocalBase = {
-    bookmarkOpenerMode: boolean,
-    downloadShelf: boolean,
-    filenameLengthLimit: number,
-    quickAccessUrl: string,
-    quickAccessUrlOpenerMode: boolean,
-    titleCleanerRuleStrings:   TCRuleString[],
-    titleCleanerCompiledRules: TCCompiledRules,
-    version: number,
+    bookmarkOpenerMode:  boolean
+    downloadShelf:       boolean
+    filenameLengthLimit: number
+    quickAccessUrl:      string
+    quickAccessUrlOpenerMode: boolean
+    commonSettings: {
+        browserName:          string
+        contentLogExtName:    boolean
+        contentLogScreenshot: boolean
+    }
+    titleCleanerRuleStrings:   TCRuleString[]
+    titleCleanerCompiledRules: TCCompiledRules
+    // stateVersions: { // todo
+    //     visits:      number
+    //     screenshots: number
+    // }
 }
 
+// Use `getFromStoreLocal`, `setToStoreLocal` to work with them.
 export type StoreLocalModel = {
- // jsonName: "ihbh-extension-storage" // todo // use this value to mark the storage JSON
+    version: number // store version
     bookmarks: Array<BookmarkURL | BookmarkFolder> | undefined
     visits: Visit[] | undefined
     screenshots: ScreenshotInfo[] | undefined
-    commonSettings: {
-        browserName: string,
-        contentLogExtName:    boolean,
-        contentLogScreenshot: boolean,
-    }
     [sc_id: ScreenshotDataId]: Base64
+ // __json_name: "ihbh-extension-storage" // todo: use this value to mark the storage JSON
 } & StoreLocalBase;
 
 export type ScreenshotEntry = [ScreenshotDataId, StoreLocalModel[ScreenshotDataId]];
