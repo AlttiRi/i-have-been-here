@@ -21,9 +21,9 @@ import {initPP_PongFromBG}          from "@/bg/listeners/pp-pong-from-bg";
 
 
 void (async function mainBG(): Promise<void> {
+    const start = Date.now();
     logBlue("[background.js]", `"${extensionName}" is loading`)();
     logBlue("[background.js]", `Incognito: "${inIncognitoContext}"`)();
-    const start = Date.now();
     void setToStoreLocal("bgLoadingStartTime", start);
 
     initStartupListeners();
