@@ -17,7 +17,9 @@ export const onBgReady = new Promise<void>(_resolve => {
         await sleep(10);
     }
     console.log("BG is ready.");
-    document.title = title;
+    if (document.title === "Loading...") {
+        document.title = title;
+    }
     isReady = true;
     resolve!();
 })();
