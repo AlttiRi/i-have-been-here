@@ -62,7 +62,7 @@ export async function updateStoreModel(): Promise<void> {
         type ScreenshotDataId_V1 = `screenshot:${URLString}`;
         type ScreenshotEntry_V1 = [ScreenshotDataId_V1, Base64];
         type StoreLocalModel_V1 = {
-            [sc_id: ScreenshotDataId_V1]: Base64,
+            [scd_id: ScreenshotDataId_V1]: Base64,
             visits: Visit_V1[],
         } & StoreLocalBase;
         type Visit_V1 = {

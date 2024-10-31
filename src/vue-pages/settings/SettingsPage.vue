@@ -3,7 +3,7 @@ import {computed, onBeforeUnmount, onMounted, ref, watch, watchEffect} from "vue
 import {TitleCleaner} from "@alttiri/string-magic";
 import TitleCleanerConfig from "./TitleCleanerConfig.vue";
 import {getTab, manifest} from "@/utils/util-ext";
-import {GetLastTabsGS}    from "@/common/message-center";
+import {LastTabsGetting}  from "@/common/message-center";
 import {
   commonSettings,
   dlShelf,
@@ -43,7 +43,7 @@ const lastActiveTab   = ref<chrome.tabs.Tab | null>(null);
 const lATCleanedTitle = ref<string>("");
 
 async function getLastActiveTab() {
-  const tabs = await GetLastTabsGS.get();
+  const tabs = await LastTabsGetting.get();
   lastActiveTab.value = tabs[tabs.length - 2];
   if (!lastActiveTab.value || !lastActiveTab.value.id) {
     return;

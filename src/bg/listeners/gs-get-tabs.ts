@@ -1,8 +1,8 @@
-import {queryTabs} from "@/utils/util-ext";
-import {GetTabsGS} from "@/common/message-center";
+import {queryTabs}   from "@/utils/util-ext";
+import {TabsGetting} from "@/common/message-center";
 
 export function initGS_GetTabs(): void {
-    GetTabsGS.addListener(function getTabsHandler(): Promise<chrome.tabs.Tab[]> {
+    TabsGetting.addListener(function getTabsHandler(): Promise<chrome.tabs.Tab[]> {
         return queryTabs({});
     });
 }

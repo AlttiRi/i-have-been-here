@@ -6,10 +6,10 @@ import {getActiveTab}      from "@/utils/util-ext";
 import {captureVisibleTab} from "@/utils/util-ext-extra";
 import {TabCapture} from "@/common/types";
 import {
-  ChangeIconPS,
-  DownloadScreenshotSS,
-  LogScreenshotSS,
-  SaveScreenshotES,
+  IconBlinking,
+  ScreenshotDownloading,
+  ScreenshotLogging,
+  ScreenshotSaving,
 } from "@/common/message-center";
 import {core} from "./core-popup";
 
@@ -71,7 +71,7 @@ async function updateScreenshot(event: PointerEvent) {
   if (!tabCapture) {
     return;
   }
-  LogScreenshotSS.send(tabCapture); // just to log the image in bg
+  ScreenshotLogging.send(tabCapture); // just to log the image in bg
 }
 
 const downloadSuccess      = ref(false);
@@ -81,9 +81,9 @@ async function downloadScreenshot() {
   if (!tabCapture) {
     return;
   }
-  DownloadScreenshotSS.send(tabCapture);
+  ScreenshotDownloading.send(tabCapture);
   downloadSuccess.value = true;
-  ChangeIconPS.ping();
+  IconBlinking.ping();
   await sleep(500);
   downloadSuccess.value = false;
 }
@@ -92,8 +92,8 @@ async function addScreenshot() {
   if (!tabCapture) {
     return;
   }
-  const response: string = await SaveScreenshotES.exchange(tabCapture);
-  console.log("saveScreenshot response:", response);
+  const response = await ScreenshotSaving.send(tabCapture);
+  console.log("Saved Screenshot Data ID:", response.scd_id);
   addScreenshotSuccess.value = true;
 }
 

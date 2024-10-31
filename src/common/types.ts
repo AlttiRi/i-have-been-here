@@ -29,7 +29,7 @@ export type StoreLocalModel = {
     bookmarks: Array<BookmarkURL | BookmarkFolder> | undefined
     visits: Visit[] | undefined
     screenshots: ScreenshotInfo[] | undefined
-    [sc_id: ScreenshotDataId]: Base64
+    [scd_id: ScreenshotDataId]: Base64
  // __json_name: "ihbh-extension-storage" // todo: use this value to mark the storage JSON
 } & StoreLocalBase;
 
@@ -59,6 +59,9 @@ export type TabCapture = {
     tab: chrome.tabs.Tab/* & {url: string} */,
     screenshotUrl: JpgDataURL,
     date: number,
+};
+export type TabCaptureResponse = {
+    scd_id: ScreenshotDataId
 };
 
 /**

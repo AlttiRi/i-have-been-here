@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
-import {GetTabsGS}  from "@/common/message-center";
+import {ref, toRaw, watch} from "vue";
+import {TabsGetting}  from "@/common/message-center";
 import {getHash, iAmReady, waitMe} from "@/vue-pages/header/router";
 import {defaultIgnore, filterUrls, ignoreFilter, logTabs, onlyFilter, updateHash} from "./core-tabs";
 import Filters from "./Filters.vue";
@@ -15,7 +15,7 @@ void updateHash();
 const tabs = ref<chrome.tabs.Tab[]>();
 watch([onlyFilter, ignoreFilter], update);
 async function update() {
-  const _tabs = await GetTabsGS.get();
+  const _tabs = await TabsGetting.get();
   const _tabs_filtered = _tabs.filter(tab => {
     return tab.url && filterUrls([tab.url]).length;
   });
@@ -53,9 +53,9 @@ function addClicked(event: MouseEvent) {
   }
 }
 function removeClicked(event: MouseEvent) {
-  const LEFT_BUTTON = 0;
+  const LEFT_BUTTON   = 0;
   const MIDDLE_BUTTON = 1;
-  const RIGHT_BUTTON = 2;
+  const RIGHT_BUTTON  = 2;
   if (event.button !== MIDDLE_BUTTON) {
     return;
   }

@@ -1,5 +1,5 @@
 import {ExchangeService, SendService, PingService, GetService, PingPongService} from "@/common/classes/messages";
-import {Visit, TabCapture, NewTabInfo} from "@/common/types";
+import {Visit, TabCapture, NewTabInfo, TabCaptureResponse} from "@/common/types";
 
 const enum COMMANDS {
     logScreenshot       = "log-screenshot",
@@ -8,26 +8,26 @@ const enum COMMANDS {
     downloadScreenshot  = "download-screenshot",
     focusOrCreateNewTab = "focus-or-create-new-tab",
 
-    addVisit    = "add-visit",
-    getVisit    = "get-visit",
+    addVisit    = "create-new-visit-for-active-tab-or-update",
+    getVisit    = "get-visit-for-active-tab",
     getTabs     = "get-tabs",
-    getLastTabs = "get-last-tabs",
+    getLastTabs = "get-tabs-ordered-by-last-activity",
 
-    changeIcon  = "change-icon",
-    pingPongBG  = "ping-pong-background",
+    blinkIcon   = "blink-icon-for-active-tab-with-download-image",
+    pingPongBG  = "ping-pong-background-script",
 }
 
-export const LogScreenshotSS:       SendService<TabCapture> = new SendService(COMMANDS.logScreenshot);
-export const DownloadScreenshotSS:  SendService<TabCapture> = new SendService(COMMANDS.downloadScreenshot);
 
-export const SaveScreenshotES: ExchangeService<TabCapture, string> = new ExchangeService(COMMANDS.saveScreenshot);
-export const FocusOrCreateNewTabES: ExchangeService<NewTabInfo, chrome.tabs.Tab | undefined> = new ExchangeService(COMMANDS.focusOrCreateNewTab);
+export const ScreenshotLogging     = new SendService<TabCapture>(COMMANDS.logScreenshot);
+export const ScreenshotDownloading = new SendService<TabCapture>(COMMANDS.downloadScreenshot);
 
+export const ScreenshotSaving      = new ExchangeService<TabCapture, TabCaptureResponse>(COMMANDS.saveScreenshot);
+export const TabCreatingOrFocusing = new ExchangeService<NewTabInfo, chrome.tabs.Tab | void>(COMMANDS.focusOrCreateNewTab);
 
-export const AddVisitGS:    GetService<Visit | null>      = new GetService(COMMANDS.addVisit);
-export const GetVisitGS:    GetService<Visit | null>      = new GetService(COMMANDS.getVisit);
-export const GetTabsGS:     GetService<chrome.tabs.Tab[]> = new GetService(COMMANDS.getTabs);
-export const GetLastTabsGS: GetService<chrome.tabs.Tab[]> = new GetService(COMMANDS.getLastTabs);
+export const VisitCreating:   GetService<Visit | null>      = new GetService(COMMANDS.addVisit);
+export const VisitGetting:    GetService<Visit | null>      = new GetService(COMMANDS.getVisit);
+export const TabsGetting:     GetService<chrome.tabs.Tab[]> = new GetService(COMMANDS.getTabs);
+export const LastTabsGetting: GetService<chrome.tabs.Tab[]> = new GetService(COMMANDS.getLastTabs);
 
-export const ChangeIconPS:  PingService     = new PingService(COMMANDS.changeIcon);
-export const PingPongBG:    PingPongService = new PingPongService(COMMANDS.pingPongBG);
+export const IconBlinking:  PingService     = new PingService(COMMANDS.blinkIcon);
+export const PingPonging:   PingPongService = new PingPongService(COMMANDS.pingPongBG);

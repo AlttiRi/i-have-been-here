@@ -14,6 +14,7 @@ type MessageHandler<T>     = (data: T, sender: chrome.runtime.MessageSender) => 
 type ExchangeHandler<T, R> = (data: T, sender: chrome.runtime.MessageSender) => R    | Promise<R>;
 type SendResponse<R> = (response: R) => void;
 
+
 class Service<C extends string> {
     protected readonly command: C;
     /** Just logs a warning if `false` and there are multiple listeners */
@@ -30,6 +31,7 @@ class Service<C extends string> {
         }
     }
 }
+
 export class SendService<D> extends Service<Command> {
     constructor(name: string, multiple = false) {
         super(`${name}--message`, multiple);
@@ -51,16 +53,12 @@ export class SendService<D> extends Service<Command> {
         });
     }
 }
-export class PingService extends SendService<undefined> {
-    ping() {
-        super.send(undefined);
-    }
-}
+
 export class ExchangeService<D, R> extends Service<CommandExchange> {
     constructor(name: string, multiple = false) {
         super(`${name}--message-exchange`, multiple);
     }
-    exchange(data: D): Promise<R> {
+    send(data: D): Promise<R> {
         const message: MessageExchange<D> = {
             command: this.command,
             data,
@@ -95,15 +93,24 @@ export class ExchangeService<D, R> extends Service<CommandExchange> {
         });
     }
 }
-export class GetService<R> extends ExchangeService<undefined, R> {
+
+
+export class GetService<R> extends ExchangeService<void, R> {
     get(): Promise<R> {
-        return super.exchange(undefined);
+        return super.send();
     }
 }
-export class PingPongService extends ExchangeService<undefined, boolean> {
+
+export class PingService extends SendService<void> {
+    ping() {
+        super.send();
+    }
+}
+
+export class PingPongService extends GetService<boolean> {
     async ping(): Promise<boolean> {
         try {
-            await super.exchange(undefined);
+            await super.get();
             return true;
         } catch (error) { // When BG is not loaded yet
             // "Could not establish connection. Receiving end does not exist."

@@ -1,14 +1,14 @@
 import {sleep} from "@alttiri/util-js";
 import {emojiToImageData}      from "@/utils/util";
 import {getActiveTab, setIcon} from "@/utils/util-ext";
-import {ChangeIconPS}      from "@/common/message-center";
+import {IconBlinking}      from "@/common/message-center";
 import {updateIconBy}      from "@/bg/inits/badges-icons";
 
 export function initPS_ChangeIcon() {
-    ChangeIconPS.addListener(blinkDownloadEmoji);
+    IconBlinking.addListener(blinkDownloadEmoji);
 }
 
-async function blinkDownloadEmoji(_data: undefined, _sender: chrome.runtime.MessageSender) {
+async function blinkDownloadEmoji(_data: void, _sender: chrome.runtime.MessageSender) {
     const tab = await getActiveTab();
     if (!tab || !tab.id) {
         return;

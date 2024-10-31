@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {GetTabsGS} from "@/common/message-center";
-import {logTabs}   from "./core-tabs";
+import {TabsGetting} from "@/common/message-center";
+import {logTabs}     from "./core-tabs";
 import {iAmReady, waitMe} from "@/vue-pages/header/router";
 
 const tabs = ref<chrome.tabs.Tab[]>();
 async function update() {
-  tabs.value = await GetTabsGS.get();
+  tabs.value = await TabsGetting.get();
   logTabs(tabs.value);
 }
 

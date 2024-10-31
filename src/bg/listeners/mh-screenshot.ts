@@ -3,18 +3,18 @@ import {logPicture, hashBlob}   from "@/utils/util";
 import {exchangeMessageWithTab} from "@/utils/util-ext";
 import {executeScript}          from "@/utils/util-ext-extra";
 import {getScreenshotFilename}  from "@/common/titles";
-import {DownloadScreenshotSS, LogScreenshotSS, SaveScreenshotES} from "@/common/message-center";
+import {ScreenshotDownloading, ScreenshotLogging, ScreenshotSaving} from "@/common/message-center";
 import {addScreenshot}  from "@/common/data/screenshots";
-import {TabCapture}     from "@/common/types";
+import {TabCapture, TabCaptureResponse} from "@/common/types";
 import {PagePaths}      from "@/common/page-paths";
 import {commonSettings} from "@/common/reactive-store";
 
 
 /** Init `Screenshot` message handlers */
 export function initMH_Screenshot(): void {
-    DownloadScreenshotSS.addListener(downloadScreenshot);
-    SaveScreenshotES.addListener(saveScreenshot);
-    LogScreenshotSS.addListener(logScreenshot);
+    ScreenshotDownloading.addListener(downloadScreenshot);
+    ScreenshotSaving.addListener(saveScreenshot);
+    ScreenshotLogging.addListener(logScreenshot);
 }
 
 
@@ -29,9 +29,9 @@ async function downloadScreenshot(tc: TabCapture): Promise<void> {
     downloadBlob(blob, nameWithHash, url);
 }
 
-async function saveScreenshot(tc: TabCapture): Promise<string> {
+async function saveScreenshot(tc: TabCapture): Promise<TabCaptureResponse> {
     const sci = await addScreenshot(tc);
-    return `[handler]: screenshot is stored (${sci.scd_id})`; // todo: return object
+    return {scd_id: sci.scd_id};
 }
 
 // todo: make it optional in settings

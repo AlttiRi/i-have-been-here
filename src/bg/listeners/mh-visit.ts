@@ -1,13 +1,13 @@
 import {getActiveTab}           from "@/utils/util-ext";
-import {AddVisitGS, GetVisitGS} from "@/common/message-center";
+import {VisitCreating, VisitGetting} from "@/common/message-center";
 import {addVisit, getVisit}     from "@/common/data/visits-ex";
 import {updateIconBy}           from "@/bg/inits/badges-icons";
 import {Visit} from "@/common/types";
 
 /** Init `Visit` message handlers */
 export function initMH_Visit(): void {
-    AddVisitGS.addListener(addVisitForActiveTab);
-    GetVisitGS.addListener(getVisitForActiveTabIfExists); // todo?: for any url (not only active tab's url)
+    VisitCreating.addListener(addVisitForActiveTab);
+    VisitGetting.addListener(getVisitForActiveTabIfExists); // todo?: for any url (not only active tab's url)
 }
 
 
@@ -25,7 +25,7 @@ async function getVisitForActiveTabIfExists(): Promise<Visit | null> {
     return getVisit(tab.url);
 }
 
-async function addVisitForActiveTab(_data: undefined, sender: chrome.runtime.MessageSender): Promise<Visit | null> {
+async function addVisitForActiveTab(_data: void, sender: chrome.runtime.MessageSender): Promise<Visit | null> {
     console.log("addVisitForActiveTab");
     const date = Date.now();
     const tab = await getActiveTab();

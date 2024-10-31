@@ -2,7 +2,7 @@
 import {Ref, ref, watchEffect} from "vue";
 import {localDateTime}         from "@alttiri/util-js";
 import {createBackgroundTab}     from "@/utils/util-ext";
-import {AddVisitGS, GetVisitGS}  from "@/common/message-center";
+import {VisitCreating, VisitGetting}  from "@/common/message-center";
 import {quickAccessUrl}     from "@/common/reactive-store";
 import {openQuickAccessUrl} from "@/common/common";
 import {Visit}     from "@/common/types";
@@ -24,9 +24,9 @@ watchEffect(() => {
 });
 
 const visit: Ref<Visit | null> = ref(null);
-GetVisitGS.get().then(value => visit.value = value);
+VisitGetting.get().then(value => visit.value = value);
 async function addVisit()  {
-  visit.value = await AddVisitGS.get();
+  visit.value = await VisitCreating.get();
 }
 
 function openVisits() {

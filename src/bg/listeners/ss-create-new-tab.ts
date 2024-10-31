@@ -1,14 +1,14 @@
 import {queryTabs}             from "@/utils/util-ext";
-import {FocusOrCreateNewTabES} from "@/common/message-center";
+import {TabCreatingOrFocusing} from "@/common/message-center";
 import {LastActiveTabsQueue}   from "@/bg/classes/last-active-tabs-queue";
 import {NewTabInfo} from "@/common/types";
 
 
 export function initES_FocusOrCreateNewTab() {
-    FocusOrCreateNewTabES.addListener(focusOrCreateNewTab);
+    TabCreatingOrFocusing.addListener(focusOrCreateNewTab);
 }
 
-async function focusOrCreateNewTab({url, reload = false}: NewTabInfo): Promise<chrome.tabs.Tab | undefined> {
+async function focusOrCreateNewTab({url, reload = false}: NewTabInfo): Promise<chrome.tabs.Tab | void> {
     console.log("focusOrCreateNewTab");
     const lastSelectedTab = await LastActiveTabsQueue.getLastActiveTabByUrl(url);
     return new Promise(resolve => {
