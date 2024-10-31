@@ -5,7 +5,7 @@ const enum COMMANDS {
     logScreenshot       = "log-screenshot",
     saveScreenshot      = "save-screenshot",
 
-    downloadScreenshot = "download-screenshot",
+    downloadScreenshot  = "download-screenshot",
     focusOrCreateNewTab = "focus-or-create-new-tab",
 
     addVisit    = "add-visit",
