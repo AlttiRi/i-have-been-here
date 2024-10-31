@@ -53,9 +53,9 @@ export async function updateStoreModel(): Promise<void> {
     }
 
     async function bumpVersion() {
+        version = version + 1;
         await setToStoreLocal("version", version);
         logIndigo(`Store was updated to version ${version}`)();
-        version = version + 1;
     }
 
     if (version === 1) {

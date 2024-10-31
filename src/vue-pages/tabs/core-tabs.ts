@@ -17,8 +17,8 @@ export const ignoreFilter = ref("");
 export function updateHash() {
     return setHash(decodeURIComponent(state.toString()));
 }
-// todo add to settings
-export const defaultIgnore = "extension://"; // moz-extension:// chrome-extension://
+// todo: add to settings
+export const defaultIgnore = "extension:// chrome://"; // moz-extension:// chrome-extension://
 
 watch(onlyFilter, () => {
     void saveState("only", onlyFilter.value);
