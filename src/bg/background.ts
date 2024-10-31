@@ -4,7 +4,7 @@ import {
     logPicture, logBlue,
 } from "@/utils/util";
 import {
-    extensionName, inIncognitoContext
+    extensionName, inIncognitoContext, setToStoreLocal
 } from "@/utils/util-ext";
 import {initStartupListeners, updateStoreModel} from "@/bg/store-updater";
 import {initLogEverything}            from "@/bg/inits/message-logger";
@@ -17,11 +17,14 @@ import {initGS_GetLastTabs}         from "@/bg/listeners/gs-get-last-tabs";
 import {initES_FocusOrCreateNewTab} from "@/bg/listeners/ss-create-new-tab";
 import {initMH_Visit}               from "@/bg/listeners/mh-visit";
 import {initMH_Screenshot}          from "@/bg/listeners/mh-screenshot";
+import {initPP_PongFromBG}          from "@/bg/listeners/pp-pong-from-bg";
 
 
 void (async function mainBG(): Promise<void> {
     logBlue("[background.js]", `"${extensionName}" is loading`)();
     logBlue("[background.js]", `Incognito: "${inIncognitoContext}"`)();
+    const start = Date.now();
+    void setToStoreLocal("bgLoadingStartTime", start);
 
     initStartupListeners();
     await updateStoreModel();
@@ -37,9 +40,17 @@ void (async function mainBG(): Promise<void> {
     initES_FocusOrCreateNewTab();
     initMH_Visit();
     initMH_Screenshot();
-})();
+    initPP_PongFromBG();
 
-void (async function tests(): Promise<void> {
+    const end = Date.now();
+    void setToStoreLocal("bgLoadingEndTime", end);
+    logBlue("[background.js]", "loading time", end - start)();
+})().then(() => {
+    // void tests(); /* un/comment to en/dis-able */
+});
+
+// just some experiments
+async function tests(): Promise<void> {
     await sleep(2000);
     logBlue("[⚒]", "imgLogTest")();
     await (async function imgLogTest() {
@@ -58,8 +69,7 @@ void (async function tests(): Promise<void> {
 
         // chrome.downloads.setShelfEnabled(false);
     })();
-}) // () /* un/comment `()` to en/dis-able */
-;
+}
 
 // @ts-ignore
 globalThis.reload = chrome.runtime.reload;

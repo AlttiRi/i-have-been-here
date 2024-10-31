@@ -24,6 +24,8 @@ export type StoreLocalBase = {
 // Use `getFromStoreLocal`, `setToStoreLocal` to work with them.
 export type StoreLocalModel = {
     version: number // store version
+    bgLoadingStartTime: number
+    bgLoadingEndTime:   number
     bookmarks: Array<BookmarkURL | BookmarkFolder> | undefined
     visits: Visit[] | undefined
     screenshots: ScreenshotInfo[] | undefined

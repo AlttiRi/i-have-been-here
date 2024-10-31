@@ -1,4 +1,4 @@
-import {isPromise} from "@/utils/util";
+import {isPromise, logOrange} from "@/utils/util";
 
 type Command = `${string}--message`;
 type CommandExchange = `${Command}-exchange`;
@@ -98,5 +98,18 @@ export class ExchangeService<D, R> extends Service<CommandExchange> {
 export class GetService<R> extends ExchangeService<undefined, R> {
     get(): Promise<R> {
         return super.exchange(undefined);
+    }
+}
+export class PingPongService extends ExchangeService<undefined, boolean> {
+    async ping(): Promise<boolean> {
+        try {
+            await super.exchange(undefined);
+            return true;
+        } catch (error) { // When BG is not loaded yet
+            // "Could not establish connection. Receiving end does not exist."
+            // "The message port closed before a response was received."
+            logOrange(error)();
+            return false;
+        }
     }
 }
