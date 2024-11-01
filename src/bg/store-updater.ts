@@ -13,7 +13,7 @@ import {getScdId} from "@/common/image-data";
 import {commonSettingsDefault} from "@/common/reactive-store";
 
 
-const lastStoreVersion = 6;
+const lastStoreVersion = getLastVersion();
 let wasInstalled = false;
 
 /**
@@ -28,7 +28,7 @@ export function initStartupListeners() {
             logIndigo("[⚒]", "The extension was installed")();
             wasInstalled = true;
             await setToStoreLocal("__json_name", "ihbh-extension-storage");
-            await setToStoreLocal("version", lastStoreVersion); // todo: rename to __version
+            await setToStoreLocal("__version", lastStoreVersion);
             logIndigo("[⚒]", "Set", lastStoreVersion, "store version")();
         } else if (details.reason === "update") {
             logIndigo("[⚒]", "The extension was reloaded")();
@@ -42,19 +42,23 @@ export function initStartupListeners() {
 }
 
 export async function updateStoreModel(): Promise<void> {
-    let version: number = await getFromStoreLocal("version");
+    let version: number = await getFromStoreLocal("__version");
+    if (version === undefined) {
+        // @ts-ignore
+        version = await getFromStoreLocal("version");
+    }
     if (version === undefined && wasInstalled) {
         logIndigo("[⚒]", "Skip store updating")();
         return;
     }
     if (version === lastStoreVersion) {
-        logIndigo("[⚒]", "Store is up to date")();
+        logIndigo("[⚒]", "Store is up to date", lastStoreVersion)();
         return;
     }
 
     async function bumpVersion() {
         version = version + 1;
-        await setToStoreLocal("version", version);
+        await setToStoreLocal("__version", version);
         logIndigo(`Store was updated to version ${version}`)();
     }
 
@@ -215,7 +219,17 @@ export async function updateStoreModel(): Promise<void> {
         await setToStoreLocal("__json_name", "ihbh-extension-storage");
         await bumpVersion(); // -> 6
     }
+
+    if (version === 6) {
+        // @ts-ignore
+        await removeFromStoreLocal("version");
+        await setToStoreLocal("__version", 7);
+        await bumpVersion(); // -> 7
+    }
 }
-// [note] Do not forget to update `lastStoreVersion` above! And use `bumpVersion()`.
+// [note] Do not forget to update `getLastVersion` below! And use `bumpVersion()`.
+function getLastVersion() {
+    return 7;
+}
 
 // todo?: handle errors/broken data

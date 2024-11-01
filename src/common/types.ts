@@ -23,14 +23,14 @@ export type StoreLocalBase = {
 
 // Use `getFromStoreLocal`, `setToStoreLocal` to work with them.
 export type StoreLocalModel = {
-    version: number // store version
+    __version:   number
+    __json_name: "ihbh-extension-storage"
     bgLoadingStartTime: number
     bgLoadingEndTime:   number
     bookmarks: Array<BookmarkURL | BookmarkFolder> | undefined
     visits: Visit[] | undefined
     screenshots: ScreenshotInfo[] | undefined
     [scd_id: ScreenshotDataId]: Base64
-    __json_name: "ihbh-extension-storage"
 } & StoreLocalBase;
 
 export type ScreenshotEntry = [ScreenshotDataId, StoreLocalModel[ScreenshotDataId]];
