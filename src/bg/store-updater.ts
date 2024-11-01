@@ -1,5 +1,5 @@
 import {TCCompiledRules, TCRuleString, TitleCleaner} from "@alttiri/string-magic";
-import {ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/common/types";
+import {ScreenshotDataId, ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/common/types";
 import {
     Base64,
     logIndigo,
@@ -52,7 +52,7 @@ export async function updateStoreModel(): Promise<void> {
         return;
     }
     if (version === lastStoreVersion) {
-        logIndigo("[⚒]", "Store is up to date", lastStoreVersion)();
+        logIndigo("[⚒]", `Store is up to date (${lastStoreVersion})`)();
         return;
     }
 
@@ -226,10 +226,32 @@ export async function updateStoreModel(): Promise<void> {
         await setToStoreLocal("__version", 7);
         await bumpVersion(); // -> 7
     }
+
+    if (version === 7) {
+        type ScreenshotDataIdOld =  `scd:${Lowercase<string>}`;
+        type ScreenshotDataIdNew = `~scd:${Lowercase<string>}`;
+        const scs: ScreenshotInfo[] | undefined  = await getFromStoreLocal("screenshots");
+        if (scs) {
+            for (const sci of scs) {
+                const scd_id = sci.scd_id;
+                if (scd_id.startsWith("~")) {
+                    continue;
+                }
+                const scd = await getFromStoreLocal(scd_id);
+                const updatedScDataId: ScreenshotDataId = "~" + scd_id as ScreenshotDataId;
+                await setToStoreLocal(updatedScDataId, scd);
+                sci.scd_id = updatedScDataId;
+                await setToStoreLocal("screenshots", scs); // just in case do it on each iter
+                await removeFromStoreLocal(scd_id);
+            }
+
+            await bumpVersion(); // -> 8
+        }
+    }
 }
 // [note] Do not forget to update `getLastVersion` below! And use `bumpVersion()`.
 function getLastVersion() {
-    return 7;
+    return 8;
 }
 
 // todo?: handle errors/broken data

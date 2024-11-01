@@ -37,11 +37,12 @@ export type ScreenshotEntry = [ScreenshotDataId, StoreLocalModel[ScreenshotDataI
 
 
 /**
- * "scd:" is just a prefix to group all properties.
- * An example of ScreenshotDataId is "scd:da39a3ee5e6b".
+ * "~scd:" is just a prefix to group all properties.
+ * An example of ScreenshotDataId is "~scd:da39a3ee5e6b".
  * Here `da39a3ee5e6b` is an ID — a hash of the jpg file (the first 12 chars of SHA-1).
+ * "~" is used for the store object key sorting purpose.
  */
-export type ScreenshotDataId = `scd:${Lowercase<string>}`;
+export type ScreenshotDataId = `~scd:${Lowercase<string>}`;
 
 /** Any URL string. For example: "https://example.com/" */
 export type URLString = string; // `${string}://${string}`;

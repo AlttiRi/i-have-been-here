@@ -21,5 +21,5 @@ export async function getScdId(base64: Base64): Promise<ScreenshotDataId> {
     const jpgUI8A: Uint8Array = toArrayBuffer(base64);
     const hashAB: ArrayBuffer = await crypto.subtle.digest("SHA-1", jpgUI8A);
     const hash: Lowercase<string> = toHex(hashAB).slice(0, 12) as Lowercase<string>;
-    return `scd:${hash}`;
+    return `~scd:${hash}`;
 }
