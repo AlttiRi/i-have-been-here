@@ -252,9 +252,8 @@ export async function updateStoreModel(): Promise<void> {
                 await setToStoreLocal("screenshots", scs); // just in case do it on each iter
                 await removeFromStoreLocal(scd_id);
             }
-
-            await bumpVersion(); // -> 8
         }
+        await bumpVersion(); // -> 8
     }
 }
 // [note] Do not forget to update `getLastVersion` below! And use `bumpVersion()`.
