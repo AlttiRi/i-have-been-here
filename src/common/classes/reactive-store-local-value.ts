@@ -8,7 +8,7 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
     private readonly _ref: Ref<StoreLocalModel[K]>;
     /** Makes `isReady` getter reactive. */
     private isReadyRef: Ref<boolean>;
-    private resolve!: (value: StoreLocalModel[K]) => void;
+    private resolve!: () => void;
 
     public readonly defaultValue: StoreLocalModel[K];
     /**
@@ -17,16 +17,16 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
      * To change the value use `value` setter, or `setValue`.
      */
     public readonly ref: Readonly<Ref<StoreLocalModel[K]>>;
-    public readonly onReady: Promise<StoreLocalModel[K]>;
+    public readonly onReady: Promise<void>; // `void` since Promise may have the outdated value
 
     constructor(keyName: K, defaultValue: StoreLocalModel[K]) {
         this.keyName = keyName;
         this.defaultValue = defaultValue;
         this.isReadyRef = ref(false);
-        this.onReady = new Promise<StoreLocalModel[K]>(resolve => this.resolve = resolve);
+        this.onReady = new Promise<void>(resolve => this.resolve = resolve);
 
         this._ref = ref(defaultValue)  as Ref<StoreLocalModel[K]>;
-        this.ref = readonly(this._ref) as Readonly<Ref<StoreLocalModel[K]>>; // todo?: rename to "readonlyRef"
+        this.ref = readonly(this._ref) as Readonly<Ref<StoreLocalModel[K]>>; // todo?: rename to "readonlyRef" / "watchable"
 
         chrome.runtime.onMessage.addListener(message => {
             if (message.command === `set-${this.keyName}--message`) {
@@ -44,7 +44,7 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
         }
         this._ref.value = value;
         this.isReadyRef.value = true;
-        this.resolve(value);
+        this.resolve();
     }
 
     /** Get the value instantly. May return the default value if `isReady` is `false`. Reactive. */
@@ -62,14 +62,14 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
     /** To get the finished value. (Does not return the default value.)*/
     public async getValue(): Promise<StoreLocalModel[K]> {
         if (!this.isReady) {
-            return this.onReady;
+            await this.onReady;
         }
         return this.value;
     }
     public setValue(newValue: StoreLocalModel[K]): Promise<void> {
         return this._setValue(newValue);
     }
-    // todo setValueDebounced
+    // todo: setValueDebounced
     private async _setValue(newValue: StoreLocalModel[K], isSyncMessage: boolean = false): Promise<void> {
         if (newValue === this._ref.value) {
             return;
@@ -80,7 +80,7 @@ export class ReactiveStoreLocalValue<K extends keyof StoreLocalModel> {
         }
         await setToStoreLocal(this.keyName, newValue);
         this._ref.value = newValue;
-        chrome.runtime.sendMessage({ // todo add "time" param (to prevent race condition)
+        chrome.runtime.sendMessage({ // todo: add "time" param (to prevent race condition)
             command: `set-${this.keyName}--message`,
             data: newValue
         });

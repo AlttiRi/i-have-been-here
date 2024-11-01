@@ -75,8 +75,8 @@ watchEffect(() => {
 
 
 const browserName = ref("");
-commonSettings.onReady.then((cs) => {
-  browserName.value = cs.browserName;
+commonSettings.onReady.then(() => {
+  browserName.value = commonSettings.value.browserName;
   watch(browserName, value => {
     void commonSettings.setValue({
       ...commonSettings.value,
