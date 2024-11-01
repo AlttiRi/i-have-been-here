@@ -64,6 +64,15 @@ export type TabCaptureResponse = {
     scd_id: ScreenshotDataId
 };
 
+export type TabsRequest = {
+    extra?: {
+        onTheRight?:    boolean
+        sameWindow?:    boolean
+        sameWorkspace?: boolean
+    }
+    query?: chrome.tabs.QueryInfo
+};
+
 /**
  * Like a bookmark, but simpler.
  * Just to mark a page that it was visited.

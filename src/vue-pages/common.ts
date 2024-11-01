@@ -25,12 +25,13 @@ export const onBgReady = new Promise<void>(_resolve => {
 })();
 
 
-type GetTabsArgs = Parameters<typeof TabsGetting.get>;
-type GetTabsRets = ReturnType<typeof TabsGetting.get>;
-export async function getTabs(...args: GetTabsArgs): GetTabsRets {
-    if (!isReady) {
-        await onBgReady;
+type GetTabsArgs = Parameters<typeof TabsGetting.send>;
+type GetTabsRets = ReturnType<typeof TabsGetting.send>;
+export const getTabs = new Proxy(TabsGetting.send, {
+    async apply(target: typeof TabsGetting.send, _thisArg: any, args: GetTabsArgs): GetTabsRets {
+        if (!isReady) {
+            await onBgReady;
+        }
+        return Reflect.apply(target, TabsGetting, args);
     }
-    return TabsGetting.get(...args);
-}
-
+});

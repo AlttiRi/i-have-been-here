@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import {ref, toRaw, watch} from "vue";
+import {isString} from "@alttiri/util-js";
+import {getActiveTab} from "@/utils/util-ext";
 import {getHash, iAmReady, waitMe} from "@/vue-pages/header/router";
 import {getTabs} from "@/vue-pages/common";
 import {defaultIgnore, filterUrls, ignoreFilter, logTabs, onlyFilter, updateHash} from "./core-tabs";
+import {TabsRequest} from "@/common/types";
 import Filters from "./Filters.vue";
 
 
@@ -11,28 +14,41 @@ onlyFilter.value   = sp.get("only")   || "";
 ignoreFilter.value = sp.get("ignore") || defaultIgnore;
 void updateHash();
 
+const onTheRight = ref(false);
 
-const tabs = ref<chrome.tabs.Tab[]>();
-watch([onlyFilter, ignoreFilter], update);
-async function update() {
-  const _tabs = await getTabs();
-  const _tabs_filtered = _tabs.filter(tab => {
+const allTabs = ref<chrome.tabs.Tab[]>([]);
+const tabs    = ref<chrome.tabs.Tab[]>([]);
+watch([onlyFilter, ignoreFilter, allTabs], filterTabs);
+watch(onTheRight, fetchTabs);
+
+function filterTabs() {
+  tabs.value = allTabs.value.filter(tab => {
     return tab.url && filterUrls([tab.url]).length;
   });
+  logTabs(tabs.value);
+}
 
-  tabs.value = _tabs_filtered;
-  logTabs(_tabs_filtered);
+async function fetchTabs() {
+  const query: TabsRequest = {
+    extra: {
+      sameWindow:    true,
+      sameWorkspace: true,
+      onTheRight:    onTheRight.value,
+    }
+  };
+  allTabs.value = await getTabs(query);
+  console.log(toRaw(allTabs.value));
 }
 
 waitMe();
-void update().then(iAmReady);
+void fetchTabs().then(iAmReady);
 
 function getTitle(tab: chrome.tabs.Tab) {
   return (tab.title || "").replaceAll(`"`, "&quot;");
 }
 
 function getUrls(): string[] {
-  return tabs.value?.map(tab => tab.url).filter((u: string | undefined): u is string => Boolean(u)) || [];
+  return tabs.value?.map(tab => tab.url).filter(isString) || [];
 }
 function copyText() {
   const text = getUrls().join(" ");
@@ -65,6 +81,21 @@ function removeClicked(event: MouseEvent) {
     target.closest("tr")!.classList.remove("clicked");
   }
 }
+
+// todo: check tab's `workspaceId`
+const currentTab = ref<chrome.tabs.Tab>();
+getActiveTab()
+  .then(tab => currentTab.value = tab)
+
+chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInfo) => {
+  if (onTheRight.value) {
+    fetchTabs();
+  }
+  console.log(tabId, moveInfo);
+  console.log(toRaw(currentTab.value));
+});
+
+
 </script>
 
 <template>
@@ -72,11 +103,27 @@ function removeClicked(event: MouseEvent) {
     <div id="controls" class="row row-cols-lg-3 g-3 align-items-center">
       <Filters/>
       <div class="col-12">
-        <button class="btn btn-primary" id="copy-btn"
+        <button class="btn btn-primary mx-1" id="reload"
+                :title="''"
+                @click="fetchTabs"
+        >🔄</button>
+        <button class="btn btn-primary mx-1" id="copy-btn"
                 :title="'Copy URLs\nCopy URLs as lines (RMB click)'"
                 @click="copyText"
                 @contextmenu.prevent="copyTextAsLines"
         >Copy</button>
+        <span class="on-the-right mx-1">
+          <label class="form-check-label btn btn-light" tabindex="-1"
+                 title=""
+          >
+            <input type="checkbox"
+                   class="form-check-input"
+                   v-model="onTheRight"
+                   :checked="onTheRight"
+            >
+            Only to right
+          </label>
+        </span>
       </div>
     </div>
     <hr>
