@@ -47,7 +47,7 @@ export function importStore() {
             logOrange("[importStore] json is not an object")();
             return;
         }
-        if (!("version" in json)) { // todo: remove later
+        if (!("__version" in json) && !("version" in json)) { // todo: remove later
             json.version = 1;
         }
 
