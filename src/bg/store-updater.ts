@@ -27,9 +27,9 @@ export function initStartupListeners() {
         if (details.reason === "install") {
             logIndigo("[⚒]", "The extension was installed")();
             wasInstalled = true;
-            await setToStoreLocal("version", lastStoreVersion);
+            await setToStoreLocal("__json_name", "ihbh-extension-storage");
+            await setToStoreLocal("version", lastStoreVersion); // todo: rename to __version
             logIndigo("[⚒]", "Set", lastStoreVersion, "store version")();
-            // void setToStoreLocal("jsonName", "ihbh-extension-storage"); // todo
         } else if (details.reason === "update") {
             logIndigo("[⚒]", "The extension was reloaded")();
         } else {
