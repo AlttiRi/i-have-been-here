@@ -13,7 +13,7 @@ import {getScdId} from "@/common/image-data";
 import {commonSettingsDefault} from "@/common/reactive-store";
 
 
-const lastStoreVersion = 5;
+const lastStoreVersion = 6;
 let wasInstalled = false;
 
 /**
@@ -210,7 +210,12 @@ export async function updateStoreModel(): Promise<void> {
 
         await bumpVersion(); // -> 5
     }
+
+    if (version === 5) {
+        await setToStoreLocal("__json_name", "ihbh-extension-storage");
+        await bumpVersion(); // -> 6
+    }
 }
 // [note] Do not forget to update `lastStoreVersion` above! And use `bumpVersion()`.
 
-// todo (?) handle errors/broken data
+// todo?: handle errors/broken data

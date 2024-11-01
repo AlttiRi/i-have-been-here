@@ -30,7 +30,7 @@ export type StoreLocalModel = {
     visits: Visit[] | undefined
     screenshots: ScreenshotInfo[] | undefined
     [scd_id: ScreenshotDataId]: Base64
- // __json_name: "ihbh-extension-storage" // todo: use this value to mark the storage JSON
+    __json_name: "ihbh-extension-storage"
 } & StoreLocalBase;
 
 export type ScreenshotEntry = [ScreenshotDataId, StoreLocalModel[ScreenshotDataId]];

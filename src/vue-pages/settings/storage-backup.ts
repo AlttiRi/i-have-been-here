@@ -1,4 +1,5 @@
 import {downloadBlob} from "@alttiri/util-js";
+import {logOrange} from "@/utils/util";
 
 /** To export the entire `chrome.storage.local`. */
 export function exportStore(browserName = "") {
@@ -41,8 +42,21 @@ export function importStore() {
     input.addEventListener("change", async event => {
         // @ts-ignore
         const json = JSON.parse(await input.files[0].text());
-        if (!("version" in json)) {
+
+        if (Array.isArray(json) || typeof json !== "object") {
+            logOrange("[importStore] json is not an object")();
+            return;
+        }
+        if (!("version" in json)) { // todo: remove later
             json.version = 1;
+        }
+
+        if (json.__json_name !== "ihbh-extension-storage") {
+            logOrange(`Missed or wrong "__json_name" mark property`)();
+            const response = confirm(`Missed or wrong "__json_name" mark property. Import?`);
+            if (!response) {
+                return;
+            }
         }
 
         console.log("json", json);
