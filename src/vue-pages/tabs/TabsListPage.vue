@@ -130,7 +130,7 @@ chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInf
     <div id="list-block" @click="addClicked" @mousedown="removeClicked">
       <table class="table table-borderless">
         <tbody id="list-content">
-        <tr v-for="tab of tabs">
+        <tr v-for="tab of tabs" :key="tab.id">
           <td>
             <img class="favicon" :src="tab.favIconUrl || '/images/empty.png'" alt=""/>
             <a class="url link-primary"
