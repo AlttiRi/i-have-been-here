@@ -2,8 +2,8 @@ import {TCCompiledRules, TCRuleString, TitleCleaner} from "@alttiri/string-magic
 import {ScreenshotDataId, ScreenshotInfo, StoreLocalBase, URLString, Visit} from "@/common/types";
 import {
     Base64,
-    logIndigo,
-}                 from "@/utils/util";
+    logIndigo, logOrange,
+} from "@/utils/util";
 import {
     getFromStoreLocal,
     removeFromStoreLocal,
@@ -27,8 +27,7 @@ export function initStartupListeners() {
         if (details.reason === "install") {
             logIndigo("[⚒]", "The extension was installed")();
             wasInstalled = true;
-            await setToStoreLocal("__json_name", "ihbh-extension-storage");
-            await setToStoreLocal("__version", lastStoreVersion);
+            await onInstallInit();
             logIndigo("[⚒]", "Set", lastStoreVersion, "store version")();
         } else if (details.reason === "update") {
             logIndigo("[⚒]", "The extension was reloaded")();
@@ -40,6 +39,10 @@ export function initStartupListeners() {
         logIndigo("[⚒]", "Browser startup")();
     });
 }
+async function onInstallInit() {
+    await setToStoreLocal("__json_name", "ihbh-extension-storage");
+    await setToStoreLocal("__version", lastStoreVersion);
+}
 
 export async function updateStoreModel(): Promise<void> {
     let version: number = await getFromStoreLocal("__version");
@@ -49,6 +52,11 @@ export async function updateStoreModel(): Promise<void> {
     }
     if (version === undefined && wasInstalled) {
         logIndigo("[⚒]", "Skip store updating")();
+        return;
+    }
+    if (version === undefined) {
+        logOrange("Storage was wiped. Re-init it.")();
+        await onInstallInit();
         return;
     }
     if (version === lastStoreVersion) {
