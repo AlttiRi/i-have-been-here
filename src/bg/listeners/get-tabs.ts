@@ -2,7 +2,7 @@ import {queryTabs}   from "@/utils/util-ext";
 import {TabsGetting} from "@/common/message-center";
 
 
-export function initGS_GetTabs(): void {
+export function initTabsGetting(): void {
     TabsGetting.addListener(async function getTabsHandler(data, sender): Promise<chrome.tabs.Tab[]> {
         if (!sender.tab || !data) {
             return queryTabs();

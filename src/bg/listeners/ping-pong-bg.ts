@@ -1,6 +1,6 @@
 import {PingPonging} from "@/common/message-center";
 
-export function initPP_PongFromBG(): void {
+export function initPingPonging(): void {
     PingPonging.addListener(function pong(): true {
         return true;
     });

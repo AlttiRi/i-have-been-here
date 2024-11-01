@@ -4,8 +4,8 @@ import {addVisit, getVisit}     from "@/common/data/visits-ex";
 import {updateIconBy}           from "@/bg/inits/badges-icons";
 import {Visit} from "@/common/types";
 
-/** Init `Visit` message handlers */
-export function initMH_Visit(): void {
+
+export function initVisitListeners(): void {
     VisitCreating.addListener(addVisitForActiveTab);
     VisitGetting.addListener(getVisitForActiveTabIfExists); // todo?: for any url (not only active tab's url)
 }

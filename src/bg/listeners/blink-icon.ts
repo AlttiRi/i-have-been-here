@@ -4,7 +4,7 @@ import {getActiveTab, setIcon} from "@/utils/util-ext";
 import {IconBlinking}      from "@/common/message-center";
 import {updateIconBy}      from "@/bg/inits/badges-icons";
 
-export function initPS_ChangeIcon() {
+export function initIconBlinking() {
     IconBlinking.addListener(blinkDownloadEmoji);
 }
 

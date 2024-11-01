@@ -4,7 +4,7 @@ import {LastActiveTabsQueue}   from "@/bg/classes/last-active-tabs-queue";
 import {NewTabInfo} from "@/common/types";
 
 
-export function initES_FocusOrCreateNewTab() {
+export function initTabCreatingOrFocusing() {
     TabCreatingOrFocusing.addListener(focusOrCreateNewTab);
 }
 

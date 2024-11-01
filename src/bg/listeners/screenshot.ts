@@ -10,8 +10,8 @@ import {PagePaths}      from "@/common/page-paths";
 import {commonSettings} from "@/common/reactive-store";
 
 
-/** Init `Screenshot` message handlers */
-export function initMH_Screenshot(): void {
+
+export function initScreenshotListeners(): void {
     ScreenshotDownloading.addListener(downloadScreenshot);
     ScreenshotSaving.addListener(saveScreenshot);
     ScreenshotLogging.addListener(logScreenshot);

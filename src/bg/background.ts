@@ -11,13 +11,13 @@ import {initLogEverything}            from "@/bg/inits/message-logger";
 import {initBadgesAndIcons}           from "@/bg/inits/badges-icons";
 import {initContextMenu}              from "@/bg/inits/context-menu";
 import {initQuickAccessUrlOpenerMode} from "@/bg/inits/quick-access-url-opener";
-import {initPS_ChangeIcon}          from "@/bg/listeners/ps-change-icon";
-import {initGS_GetTabs}             from "@/bg/listeners/gs-get-tabs";
-import {initGS_GetLastTabs}         from "@/bg/listeners/gs-get-last-tabs";
-import {initES_FocusOrCreateNewTab} from "@/bg/listeners/ss-create-new-tab";
-import {initMH_Visit}               from "@/bg/listeners/mh-visit";
-import {initMH_Screenshot}          from "@/bg/listeners/mh-screenshot";
-import {initPP_PongFromBG}          from "@/bg/listeners/pp-pong-from-bg";
+import {initIconBlinking}          from "@/bg/listeners/blink-icon";
+import {initTabsGetting}           from "@/bg/listeners/get-tabs";
+import {initLastTabsGetting}       from "@/bg/listeners/get-last-tabs";
+import {initTabCreatingOrFocusing} from "@/bg/listeners/new-tab";
+import {initVisitListeners}        from "@/bg/listeners/visits";
+import {initScreenshotListeners}   from "@/bg/listeners/screenshot";
+import {initPingPonging}           from "@/bg/listeners/ping-pong-bg";
 
 
 void (async function mainBG(): Promise<void> {
@@ -34,13 +34,13 @@ void (async function mainBG(): Promise<void> {
     void initQuickAccessUrlOpenerMode();
     initContextMenu(["reload_extension", "yandex_images", "download_shelf", "open_list"]);
 
-    initPS_ChangeIcon();
-    initGS_GetTabs();
-    initGS_GetLastTabs();
-    initES_FocusOrCreateNewTab();
-    initMH_Visit();
-    initMH_Screenshot();
-    initPP_PongFromBG();
+    initIconBlinking();
+    initTabsGetting();
+    initLastTabsGetting();
+    initTabCreatingOrFocusing();
+    initVisitListeners();
+    initScreenshotListeners();
+    initPingPonging();
 
     const end = Date.now();
     void setToStoreLocal("bgLoadingEndTime", end);
