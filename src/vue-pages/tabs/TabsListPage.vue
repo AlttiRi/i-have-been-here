@@ -95,7 +95,10 @@ chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInf
   console.log(toRaw(currentTab.value));
 });
 
-
+// todo:
+// icon of about:addons
+// Security Error: Content at moz-extension://.../.../pages.html
+//   may not load or link to chrome://mozapps/skin/extensions/extension.svg
 </script>
 
 <template>
