@@ -87,6 +87,23 @@ export function setToStoreLocal<K extends keyof StoreLocalModel>(key: K, value: 
     });
 }
 
+export function setToStoreLocalMany<K extends keyof StoreLocalModel>(object: Record<K, StoreLocalModel[K]>):  Promise<void>;
+export function setToStoreLocalMany<K extends keyof StoreLocalModel>(records: [K, StoreLocalModel[K]][]): Promise<void>;
+// [note] Don't use Array<...>, either it will suggest Array's method for the object input.
+export function setToStoreLocalMany<K extends keyof StoreLocalModel>(records: Record<K, StoreLocalModel[K]> | [K, StoreLocalModel[K]][]): Promise<void> {
+    if (Array.isArray(records)) {
+        records = Object.fromEntries(records) as Record<K, StoreLocalModel[K]>;
+    }
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.set(records, () => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError.message);
+            }
+            resolve();
+        });
+    });
+}
+
 export function getFromStoreLocal(): Promise<StoreLocalModel>;
 export function getFromStoreLocal<K extends keyof StoreLocalModel>(key:  K): Promise<StoreLocalModel[K]>
 export function getFromStoreLocal<K extends keyof StoreLocalModel>(key?: K): Promise<StoreLocalModel[K] | StoreLocalModel> {

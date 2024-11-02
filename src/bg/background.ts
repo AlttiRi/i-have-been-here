@@ -4,7 +4,8 @@ import {
     logPicture, logBlue,
 } from "@/utils/util";
 import {
-    extensionName, inIncognitoContext, getFromStoreLocal, removeFromStoreLocal, setToStoreLocal
+    extensionName, inIncognitoContext,
+    getFromStoreLocal, removeFromStoreLocal, setToStoreLocal, setToStoreLocalMany,
 } from "@/utils/util-ext";
 import {initStartupListeners, updateStoreModel} from "@/bg/store-updater";
 import {initLogEverything}            from "@/bg/inits/message-logger";
@@ -75,6 +76,7 @@ Object.assign(globalThis, {
     getFromStoreLocal,
     removeFromStoreLocal,
     setToStoreLocal,
+    setToStoreLocalMany,
 });
 Object.defineProperty(globalThis, "reload", {
     get: () => { chrome.runtime.reload() }

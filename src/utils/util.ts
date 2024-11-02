@@ -176,7 +176,7 @@ const defaultEncodeMap: Map<string, string> = new Map([
     // [ "~", "%7E"], // Since Chrome replaces `~` with `_` on file downloading // todo: option
     // [ "·", "%C2%B7"],
 ]);
-function getEncoder(replacingArray: Array<Array<string>>) {
+function getEncoder(replacingArray: [string, string][]) {
     const map = new Map(defaultEncodeMap);
     for (const [a, b] of replacingArray) {
         map.set(a, b);
