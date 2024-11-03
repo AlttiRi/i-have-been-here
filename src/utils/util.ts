@@ -8,8 +8,37 @@ declare global {
 }
 globalThis.logPicture = logPicture;
 
-export const isFirefox: boolean = typeof navigator === "object" && navigator.userAgent.includes("Firefox");
-export const isOpera:   boolean = typeof navigator === "object" && navigator.userAgent.includes("OPR") || typeof window === "object" && typeof window.opr !== "undefined";
+const agent = window.navigator.userAgent.toLowerCase();
+export const browserName =
+      agent.indexOf("edg")     > -1 ? "edge"
+    : agent.indexOf("opr")     > -1 && window.opr    ? "opera"
+    : agent.indexOf("chrome")  > -1 && window.chrome ? "chrome"
+    : agent.indexOf("firefox") > -1 ? "firefox"
+    : agent.indexOf("safari")  > -1 ? "safari"
+    : "";
+
+export async function getBrowserName() {
+    if (browserName === "chrome") {
+        if (await isVivaldi()) {
+            return "vivaldi";
+        }
+    }
+    return browserName;
+}
+
+export const isFirefox: boolean = browserName === "firefox";
+export const isOpera:   boolean = browserName === "opera";
+
+/* Extension API */
+function isVivaldi() {
+    return new Promise(resolve => {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            resolve("vivExtData" in tabs[0]);
+        });
+    });
+}
+
+
 
 export async function logPicture(url: string, scale: number = 0.5): Promise<void> {
     let imgSrc: string;
