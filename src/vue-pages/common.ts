@@ -11,14 +11,18 @@ export const onBgReady = new Promise<void>(_resolve => {
 ;(async function awaitBg() {
     console.log("Ping-Pong BG.");
     const title = document.title;
-    while (!(await PingPonging.ping())) {
+    let pong = await PingPonging.ping();
+    while (!pong) {
         document.title = "Loading...";
-        console.log("Awaiting the background script loading end.");
+        console.log("Awaiting the background script loading.");
         await sleep(10);
+        pong = await PingPonging.ping();
     }
     console.log("BG is ready.");
     if (document.title === "Loading...") {
-        document.title = title;
+        sleep(150).then(() => { /* Vivaldi fix */
+            document.title = title;
+        });
     }
     isReady = true;
     resolve!();

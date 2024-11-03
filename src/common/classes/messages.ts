@@ -110,7 +110,11 @@ export class PingService extends SendService<void> {
 export class PingPongService extends GetService<boolean> {
     async ping(): Promise<boolean> {
         try {
-            await super.get();
+            const pong: boolean = await super.get();
+            if (pong === undefined) { /* Firefox fix */
+                logOrange("No result from BG.")();
+                return false;
+            }
             return true;
         } catch (error) { // When BG is not loaded yet
             // "Could not establish connection. Receiving end does not exist."

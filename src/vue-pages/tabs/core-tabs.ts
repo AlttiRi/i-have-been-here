@@ -51,6 +51,6 @@ declare global {
 }
 export function logTabs(tabs: chrome.tabs.Tab[]): void {
     console.log(toRaw(tabs));
-    globalThis.__tabs = tabs
+    globalThis.__tabs = tabs;
     globalThis.__urls = tabs.map(tab => tab.url).filter(isNonEmptySting);
 }
