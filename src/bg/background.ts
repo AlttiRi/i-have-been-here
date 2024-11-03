@@ -4,8 +4,8 @@ import {
     logPicture, logBlue,
 } from "@/utils/util";
 import {
-    extensionName, inIncognitoContext,
-    getFromStoreLocal, removeFromStoreLocal, setToStoreLocal, setToStoreLocalMany,
+    extensionName, inIncognitoContext, manifest,
+    getFromStoreLocal, removeFromStoreLocal, setToStoreLocal, setToStoreLocalMany, getTitle,
 } from "@/utils/util-ext";
 import {initStartupListeners, updateStoreModel} from "@/bg/store-updater";
 import {initLogEverything}            from "@/bg/inits/message-logger";
@@ -46,7 +46,8 @@ void (async function mainBG(): Promise<void> {
     const end = Date.now();
     void setToStoreLocal("bgLoadingEndTime", end);
     logBlue("[background.js]", "loading time", end - start)();
-})().then(() => {
+})().then(async () => {
+    await addVersionToTitle();
     // void tests(); /* un/comment to en/dis-able */
 });
 
@@ -70,6 +71,12 @@ async function tests(): Promise<void> {
 
         // chrome.downloads.setShelfEnabled(false);
     })();
+}
+
+async function addVersionToTitle() {
+    return new Promise<void>(async (resolve) => {
+        chrome.browserAction.setTitle({title: (await getTitle()) + ` (IHBH: ${manifest.version})` }, resolve);
+    });
 }
 
 Object.assign(globalThis, {

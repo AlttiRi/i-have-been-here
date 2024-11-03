@@ -1,7 +1,7 @@
 {
     "name": "i-have-been-here",
     "keywords": ["extension", "bookmarks", "screenshots", "visits", "typescript", "vue"],
-    "version": "1.41.3.20241102",
+    "version": "1.42.0.20241103",
     "type": "module",
     "license": "GPL-3.0",
     "devDependencies": {
@@ -11,10 +11,10 @@
         "@types/chrome": "0.0.142",
         "@types/node": "20.12.12",
         "typescript": "5.5.3",
-        "vite": "5.2.11",
-        "vue": "3.4.26",
-        "@vitejs/plugin-vue": "5.0.4",
-        "vue-router": "4.3.2",
+        "vite": "5.4.10",
+        "vue": "3.5.12",
+        "@vitejs/plugin-vue": "5.1.4",
+        "vue-router": "4.4.5",
         "archiver": "7.0.1",
         "@types/archiver": "6.0.2"
     },
