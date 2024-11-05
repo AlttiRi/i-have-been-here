@@ -75,7 +75,11 @@ async function tests(): Promise<void> {
 
 async function addVersionToTitle() {
     return new Promise<void>(async (resolve) => {
-        chrome.browserAction.setTitle({title: (await getTitle()) + ` (IHBH: ${manifest.version})` }, resolve);
+        const title = await getTitle();
+        const versionPostfix = ` (IHBH: ${manifest.version})`;
+        if (!title.endsWith(versionPostfix)) { // prevent duplicate adding on an incognito window opening
+            chrome.browserAction.setTitle({title: title + versionPostfix}, resolve);
+        }
     });
 }
 
