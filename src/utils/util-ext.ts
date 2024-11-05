@@ -1,4 +1,5 @@
 import {StoreLocalModel} from "@/common/types";
+import {logOrange} from "@/utils/util";
 
 
 export const extensionName = chrome.i18n.getMessage("extension_name");
@@ -199,7 +200,7 @@ export async function getActiveTab(currentWindow: boolean = true): Promise<chrom
         currentWindow
     });
     if (tabs.length === 0) {
-        console.warn("[warning][getActiveTab] tabs.length === 0");
+        logOrange("[warning][getActiveTab] tabs.length === 0")(); // When DevTools was focused.
         return;
     }
     return tabs[0];
