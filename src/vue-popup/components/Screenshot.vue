@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import {sleep} from "@alttiri/util-js";
 import {ref} from "vue";
-import {JpgDataURL, logPicture}          from "@/utils/util";
-import {getActiveTab}      from "@/utils/util-ext";
-import {captureVisibleTab} from "@/utils/util-ext-extra";
+import {JpgDataURL, logPicture} from "@/utils/util";
+import {captureVisibleTab}      from "@/utils/util-ext-extra";
 import {TabCapture} from "@/common/types";
 import {
+  ActiveTabsGetting,
   IconBlinking,
   ScreenshotDownloading,
   ScreenshotLogging,
   ScreenshotSaving,
 } from "@/common/message-center";
-import {core} from "./core-popup";
+import {activeTab} from "./core-popup";
 
 
 const imageHeight = ref("auto");
@@ -26,7 +26,7 @@ const image = ref({
 let tabCapture: TabCapture | null = null;
 updatePreview();
 async function updatePreview(): Promise<void> {
-  const tab: chrome.tabs.Tab | undefined = await getActiveTab();
+  const tab: chrome.tabs.Tab | undefined = await ActiveTabsGetting.send(); // todo: move to the parent comp
   if (!tab) {
     console.log("[warning] no active tab available");
     return;
@@ -37,7 +37,7 @@ async function updatePreview(): Promise<void> {
     imageHeight.value = 320 / tab.width * tab.height + "px";
   }
 
-  core.value = tab;
+  activeTab.value = tab;
 
   const date: number = Date.now();
   const screenshotUrl: JpgDataURL | null = await captureVisibleTab();

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {ref, toRaw, watch} from "vue";
 import {isString} from "@alttiri/util-js";
-import {getActiveTab} from "@/utils/util-ext";
 import {getHash, iAmReady, waitMe} from "@/vue-pages/header/router";
 import {getTabs} from "@/vue-pages/common";
 import {defaultIgnore, filterUrls, ignoreFilter, logTabs, onlyFilter, updateHash} from "./core-tabs";
@@ -82,17 +81,12 @@ function removeClicked(event: MouseEvent) {
   }
 }
 
-// todo: check tab's `workspaceId`
-const currentTab = ref<chrome.tabs.Tab>();
-getActiveTab()
-  .then(tab => currentTab.value = tab)
 
 chrome.tabs.onMoved.addListener((tabId: number, moveInfo: chrome.tabs.TabMoveInfo) => {
   if (onTheRight.value) {
     fetchTabs();
   }
   console.log(tabId, moveInfo);
-  console.log(toRaw(currentTab.value));
 });
 
 // todo:

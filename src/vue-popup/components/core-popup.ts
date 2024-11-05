@@ -1,3 +1,3 @@
 import {Ref, ref} from "vue";
 
-export const core: Ref<chrome.tabs.Tab | null> = ref(null);
+export const activeTab: Ref<chrome.tabs.Tab | null> = ref(null);

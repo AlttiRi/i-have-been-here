@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {ref, watchEffect} from "vue";
 import {getTrimmedTitle} from "@/common/titles";
-import {core} from "./core-popup";
+import {activeTab} from "./core-popup";
 
 
 watchEffect(() => {
-  if (core.value) {
-    void updateBottomHtml(core.value);
+  if (activeTab.value) {
+    void updateBottomHtml(activeTab.value);
   }
 });
 

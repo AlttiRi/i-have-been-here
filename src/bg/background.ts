@@ -15,6 +15,7 @@ import {initQuickAccessUrlOpenerMode} from "@/bg/inits/quick-access-url-opener";
 import {initIconBlinking}          from "@/bg/listeners/blink-icon";
 import {initTabsGetting}           from "@/bg/listeners/get-tabs";
 import {initLastTabsGetting}       from "@/bg/listeners/get-last-tabs";
+import {initActiveTabsGetting}     from "@/bg/listeners/get-active-tab";
 import {initTabCreatingOrFocusing} from "@/bg/listeners/new-tab";
 import {initVisitListeners}        from "@/bg/listeners/visits";
 import {initScreenshotListeners}   from "@/bg/listeners/screenshot";
@@ -38,6 +39,7 @@ void (async function mainBG(): Promise<void> {
     initIconBlinking();
     initTabsGetting();
     initLastTabsGetting();
+    initActiveTabsGetting();
     initTabCreatingOrFocusing();
     initVisitListeners();
     initScreenshotListeners();

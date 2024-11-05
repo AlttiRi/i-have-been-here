@@ -74,6 +74,10 @@ export type TabsRequest = {
     query?: chrome.tabs.QueryInfo
 };
 
+export type ActiveTabRequest = {
+    currentWindow?: boolean
+};
+
 /**
  * Like a bookmark, but simpler.
  * Just to mark a page that it was visited.

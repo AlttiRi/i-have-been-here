@@ -15,7 +15,7 @@ type ExchangeHandler<T, R> = (data: T, sender: chrome.runtime.MessageSender) => 
 type SendResponse<R> = (response: R) => void;
 
 
-class Service<C extends string> {
+class Service<C extends string> { // todo: rename to Channel
     protected readonly command: C;
     /** Just logs a warning if `false` and there are multiple listeners */
     protected readonly allowMultiple: boolean;

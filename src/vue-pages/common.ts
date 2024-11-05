@@ -1,5 +1,7 @@
 import {sleep} from "@alttiri/util-js";
 import {PingPonging, TabsGetting} from "@/common/message-center";
+import {ExchangeService}          from "@/common/classes/messages";
+
 
 let isReady = false;
 let resolve: Function;
@@ -28,14 +30,15 @@ export const onBgReady = new Promise<void>(_resolve => {
     resolve!();
 })();
 
-
-type GetTabsArgs = Parameters<typeof TabsGetting.send>;
-type GetTabsRets = ReturnType<typeof TabsGetting.send>;
-export const getTabs = new Proxy(TabsGetting.send, {
-    async apply(target: typeof TabsGetting.send, _thisArg: any, args: GetTabsArgs): GetTabsRets {
-        if (!isReady) {
-            await onBgReady;
+function proxifyExchangeChannel<D, R>(eXs: ExchangeService<D, R>) {
+    return new Proxy(eXs.send, {
+        async apply(target: typeof eXs.send, _thisArg: any, args: Parameters<typeof eXs.send>): ReturnType<typeof eXs.send> {
+            if (!isReady) {
+                await onBgReady;
+            }
+            return Reflect.apply(target, eXs, args);
         }
-        return Reflect.apply(target, TabsGetting, args);
-    }
-});
+    });
+}
+
+export const getTabs = proxifyExchangeChannel(TabsGetting);
