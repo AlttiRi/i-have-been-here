@@ -1,4 +1,4 @@
-import {getActiveTab} from "@/utils/util-ext";
+import {getActiveTab, getTab} from "@/utils/util-ext";
 import {ActiveTabsGetting} from "@/common/message-center";
 import {ActiveTabRequest}  from "@/common/types";
 import {LastActiveTabsQueue} from "@/bg/classes/last-active-tabs-queue";
@@ -12,9 +12,10 @@ export function initActiveTabsGetting() {
         const res = await getActiveTab(currentWindow);
         if (res === undefined) {
             const tabs = await LastActiveTabsQueue.getLastActiveTabsForCurrentWindow();
-            if (tabs && tabs.length) {
+            const tabId = tabs?.[tabs.length - 1]?.id;
+            if (tabId) {
                 logOrange("[fallback] Get active tab from LastActiveTabsQueue")();
-                return tabs[tabs.length - 1];
+                return getTab(tabId); // to get the updated info
             }
         }
         return res;

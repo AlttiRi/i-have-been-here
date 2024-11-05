@@ -184,8 +184,14 @@ export function queryTabs(queryInfo?: chrome.tabs.QueryInfo): Promise<chrome.tab
     return new Promise(resolve => chrome.tabs.query(queryInfo || {}, resolve));
 }
 
-export function getTab(tabId: number): Promise<chrome.tabs.Tab> {
-    return new Promise(resolve => chrome.tabs.get(tabId, resolve));
+export function getTab(tabId: number): Promise<chrome.tabs.Tab | undefined> {
+    return new Promise(resolve => chrome.tabs.get(tabId, (tab) => {
+        if (chrome.runtime.lastError) {
+            logOrange("[warning][getTab]", chrome.runtime.lastError.message)();
+            resolve(undefined);
+        }
+        return resolve(tab);
+    }));
 }
 
 

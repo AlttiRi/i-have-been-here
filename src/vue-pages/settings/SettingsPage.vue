@@ -39,7 +39,7 @@ watchEffect(() => {
 });
 
 
-const lastActiveTab   = ref<chrome.tabs.Tab | null>(null);
+const lastActiveTab   = ref<chrome.tabs.Tab | undefined>();
 const lATCleanedTitle = ref<string>("");
 
 async function getLastActiveTab() {

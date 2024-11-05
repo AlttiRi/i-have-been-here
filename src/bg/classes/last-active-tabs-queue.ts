@@ -1,4 +1,6 @@
-export class LastActiveTabsQueue {
+import {getActiveTab} from "@/utils/util-ext";
+
+export class LastActiveTabsQueue { // todo only keep id or listen for updates
     static instance = new LastActiveTabsQueue();
     private windowIdsToTabs: Map<number, chrome.tabs.Tab[]>;
 
@@ -23,7 +25,16 @@ export class LastActiveTabsQueue {
             self.windowIdsToTabs.set(window.id, tabs);
         }
 
-        chrome.tabs.onActivated.addListener(({tabId, windowId}) => {
+        const activeTab = await getActiveTab();
+        if (activeTab && activeTab.id) {
+            onActivated({tabId: activeTab.id, windowId: activeTab.windowId});
+        }
+
+        chrome.tabs.onActivated.addListener(onActivated);
+        chrome.tabs.onCreated.addListener(onCreated);
+        chrome.tabs.onRemoved.addListener(onRemoved);
+
+        function onActivated({tabId, windowId}: chrome.tabs.TabActiveInfo) {
             // console.log("onActivated", tabId, windowId);
             const tabs = self.windowIdsToTabs.get(windowId);
             if (tabs === undefined) {
@@ -39,9 +50,9 @@ export class LastActiveTabsQueue {
             tabs.splice(tabs.indexOf(tab), 1);
             tabs.push(tab);
             // console.log(self.windowIdsToTabs);
-        });
+        }
 
-        chrome.tabs.onCreated.addListener(tab => {
+        function onCreated(tab: chrome.tabs.Tab) {
             // console.log("onCreated", tab);
             if (!self.windowIdsToTabs.has(tab.windowId)) {
                 self.windowIdsToTabs.set(tab.windowId, []);
@@ -52,9 +63,9 @@ export class LastActiveTabsQueue {
                 return;
             }
             tabs.push(tab);
-        });
+        }
 
-        chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+        function onRemoved(tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) {
             // console.log("onRemoved", tabId, removeInfo);
             const tabs = self.windowIdsToTabs.get(removeInfo.windowId);
             if (tabs === undefined) {
@@ -70,7 +81,7 @@ export class LastActiveTabsQueue {
             if (!tabs.length) {
                 self.windowIdsToTabs.delete(removeInfo.windowId);
             }
-        });
+        }
     }
 
     static async getLastActiveTabsForCurrentWindow(): Promise<chrome.tabs.Tab[] | null> {
