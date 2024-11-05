@@ -68,8 +68,10 @@ function addListeners() {
     chrome.tabs.onRemoved.addListener(tabOnRemoved);
     chrome.windows.onFocusChanged.addListener(windowOnFocusChanged);
 
+
+    // todo: show the count of the tab in current window, also, use a delay for the first tab of new window (updateBadge)
     function tabOnCreated(tab: chrome.tabs.Tab) {
-        logGreen("[tabOnCreated]", tab)();
+        logGreen("[tabOnCreated]", tab, tab.id)();
         if (tab.id === undefined) {
             console.warn("[tabOnCreated] tab.id === undefined");
             return;
@@ -107,10 +109,10 @@ function addListeners() {
 
     function windowOnFocusChanged(windowId: number, _filters?: chrome.windows.WindowEventFilter) {
         logGreen("[windowOnFocusChanged]", windowId)();
-        // Does not seem to be required anymore
-        // if (windowId !== chrome.windows.WINDOW_ID_NONE) { // incognito, devtools
-        //     setDefaultIcon(imgPath);
-        // }
+        // To fix the icon blinking on tab creating in common windows after opening an incognito window
+        if (windowId !== chrome.windows.WINDOW_ID_NONE) { // incognito, devtools
+            void setDefaultIcon(imgPath); // it sets for ALL (both incognito and common ones) windows
+        }
     }
 }
 
@@ -200,7 +202,7 @@ function updateBadgeTextForAllTabs(): void {
     }
 }
 async function updateBadgeTextByTabId(tabId: number): Promise<void> {
-    logTeal("[updateBadgeTextByTabId]",tabId)();
+    logTeal("[updateBadgeTextByTabId]", tabId)();
     try {
         await setBadgeText({
             text: openedTabs.size.toString(),
