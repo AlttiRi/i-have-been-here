@@ -1,4 +1,4 @@
-# i-have-been-here
+# [i-have-been-here](https://github.com/AlttiRi/i-have-been-here)
 
 The old demo extension that I use for some tests.
 
